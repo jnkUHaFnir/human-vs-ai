@@ -1,0 +1,13 @@
+
+I realised that if the input is a word starting with 'y' or 'n', it will escape the loop. How can I restrict the loop such that it will continue looping unless the input is a single character?
+do
+{
+    printf("Do you want to try again? (Y/N): ");
+    fflush(stdin);                              
+    scanf("%c", &repeat);
+    repeat = toupper(repeat);
+    if (repeat != 'Y' && repeat != 'N')         
+        printf("Invalid answer. Please enter 'Y' or 'N'.\n\n");
+
+} while (repeat != 'N' && repeat != 'Y'); 
+

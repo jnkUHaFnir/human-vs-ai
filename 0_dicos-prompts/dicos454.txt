@@ -1,0 +1,15 @@
+
+void verification() {
+    char pass[50];
+
+    printf(" Enter Password : ");
+    fgets(pass, 50, stdin);
+
+    if (pass != 'aaanc6400') {   \\ Warning message in here
+        printf("\n Invalid Password.. Please enter the correct password. \n\n");
+        verification();
+    }
+    info();
+}
+
+When I compile the program, on the marked line it shows warning that "Character constant too long for its type" and also "Comparison between pointer and integer". And then when I run the code and enter the correct password, it still prints that the password is wrong. What am I doing wrong?

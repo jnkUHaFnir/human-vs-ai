@@ -1,0 +1,30 @@
+
+I'm trying to remove consecutive repeated characters from a given string.
+Example: 
+
+bssdffFdcrrrtttii        ***#   
+
+output is supposed to be:
+
+bsdfFdcrti *#
+
+This code doesn't work and only prints the first char (b), I want to learn about my mistake.
+when I'm doing a printf test, it works but not for spaces.
+I think the problem might be with the new char array.
+void Ex6() {
+    char* string[80];
+    scanf("%s", &string);
+    puts(removeDup(string));
+}
+
+char* removeDup(char *string) {
+    int i, c = 0;
+    char* newString[80];
+    for (i = 0; i < strlen(string); i++) {
+        if (string[i] != string[i + 1]) {
+            newString[c++] = string[i];
+        }
+    }
+    return newString;
+}
+

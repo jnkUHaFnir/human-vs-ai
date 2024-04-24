@@ -1,0 +1,123 @@
+
+Im working on my school project and lately I have been struggling to find segmentation fault error in my code. Could you please check the code for me? The input is "Hello world!" and the function should convert each characters into bits. The a variable at the end is just for checking whether I can print it or not (I cannot). Thanks
+unsigned char* bit_encrypt(const char* text){
+  char text_copy[strlen(text)];
+  printf("Strlen: %ld\n", strlen(text));
+  bool bits[strlen(text_copy)][8];
+  int dec = 0;
+  int j = 0;
+
+  for(int i = 0; i < strlen(text); i++){
+    text_copy[i] = text[i];
+    dec = (int)text_copy[i];
+
+      if(dec >= 128){
+        bits[i][j] = true;
+        dec = dec - 128;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 64){
+        bits[i][j] = true;
+        dec = dec - 64;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 32){
+        bits[i][j] = true;
+        dec = dec - 32;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 16){
+        bits[i][j] = true;
+        dec = dec - 16;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 8){
+        bits[i][j] = true;
+        dec = dec - 8;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 4){
+        bits[i][j] = true;
+        dec = dec - 4;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec >= 2){
+        bits[i][j] = true;
+        dec = dec - 2;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      j++;
+
+      if(dec == 1){
+        bits[i][j] = true;
+        dec = dec - 1;
+      }
+      else{
+        bits[i][j] = false;
+      }
+      dec = 0;
+      j = 0;
+  }
+  text_copy[strlen(text)] = '\0';
+
+  for(int i = 0; i < strlen(text_copy); i++){
+    printf("%c:  ", text_copy[i]); 
+    for(int j = 0; j < 8; j++){
+      printf("%d ", bits[i][j]);
+    }
+    printf("\n");
+  }
+  int a = 53;
+  printf("%d", a);
+
+
+
+
+ /* unsigned char* vystup = (unsigned char*)calloc(strlen(text_copy), sizeof(unsigned char*));
+*/
+
+  return 0;
+}
+
+OUTPUT IS:
+Strlen: 12
+H:  0 1 0 0 1 0 0 0
+e:  0 1 1 0 0 1 0 1
+l:  0 1 1 0 1 1 0 0
+l:  0 1 1 0 1 1 0 0
+o:  0 1 1 0 1 1 1 1
+ :  0 0 1 0 0 0 0 0
+w:  0 1 1 1 0 1 1 1
+o:  0 1 1 0 1 1 1 1
+r:  0 1 1 1 0 0 1 0
+l:  0 1 1 0 1 1 0 0
+d:  0 1 1 0 0 1 0 0
+!:  0 0 1 0 0 0 0 1
+Segmentation fault
+

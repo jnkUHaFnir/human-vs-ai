@@ -1,0 +1,162 @@
+
+Here's my code:
+#include <stdio.h>
+
+int validate(int low, int high);
+
+int main ()
+{
+    //Declare Variables
+    float strength, speed, defense, intelligence;
+    float strengthRatio, speedRatio, defenseRatio, intelligenceRatio;
+    int strength_F, speed_F, defense_F, intelligence_F;
+    float sum;
+    int luck;
+    float PStrength=10;
+    float PDefense=20;
+    float PIntelligence=40;
+    int PHP=10;
+    float EStrength=30;
+    float EDefense=40;
+    float EIntelligence=25;
+    int EHP=10;
+    int sel;
+    float attackp;
+    float magicp;
+    int low=1;
+    int high=3;
+    int Valid_Selection;
+
+    //Clear Screen
+    system("cls");
+
+    //Display Logo
+    printf("+----------------------+\n");
+    printf("|                      |\n");
+    printf("|     CODE QUEST       |\n");
+    printf("|                      |\n");
+    printf("+----------------------+\n\n");
+
+    //Main Menu
+    printf("--Main Menu--\n");
+    printf("\n");
+    printf("1 - New Game\n");
+    printf("2 - Load Game\n");
+    printf("3 - Exit\n");
+    printf("\n");
+    printf("Selection: \n\n");
+
+    // Validate user input using a function
+    Valid_Selection = validate(int low,int high);
+
+    // Game_Selection = validate();
+
+    printf ("Character Creation \n");
+    printf ("Please enter your desired stats for your character:\n");
+    printf ("\n");
+    printf ("Enter strength: ");
+    scanf  ("%f", &strength);
+    printf ("Enter speed: ");
+    scanf  ("%f", &speed);
+    printf ("Enter defense: ");
+    scanf  ("%f", &defense);
+    printf ("Enter intelligence: ");
+    scanf  ("%f", &intelligence);
+
+    // Calculate the sum of all attributes
+    sum = strength + speed + defense + intelligence;
+
+    // Calculate ratios for each attribute
+    strengthRatio = strength / sum;
+    speedRatio = speed / sum;
+    defenseRatio = defense / sum;
+    intelligenceRatio = intelligence / sum;
+
+    // Calculate the final Stats as whole number
+    strength_F = strengthRatio * 100;
+    speed_F = speedRatio * 100;
+    defense_F = defenseRatio * 100;
+    intelligence_F = intelligenceRatio * 100;
+
+    // Calculate the player's luck
+    luck = (int)sum % 30;
+
+    // Create an empty line for beauty
+    printf ("\n");
+
+    // Display to the user the finalized player stats
+    printf ("Your player's final stats are:");
+    printf ("\n");
+    printf ("Strength: %d\n", strength_F);
+    printf ("Speed: %d\n", speed_F);
+    printf ("Defense: %d\n", defense_F);
+    printf ("Intelligence: %d\n", intelligence_F);
+    printf ("Luck: %d\n", luck);
+
+    // Display "Battle Starts"
+    printf("Battle Start!\n\n");
+
+    while (PHP >= 0 && EHP >= 0) {
+        //Display user and enemy HP and asks user which attack execute
+        printf("Your HP: %d, Enemy HP: %d\n", PHP, EHP);
+        printf("1 - Attack Power\n");
+        printf("2 - Magic Power\n");
+        scanf("%d",&sel);
+
+        //Option 1, Option 2
+        if (sel == 1) {
+            attackp = (PStrength / EDefense) * 5;
+            EHP = EHP - attackp;
+            printf("You attacked the enemy\n");
+        }
+        else {
+            magicp = (PIntelligence / EIntelligence) * 5;
+            EHP = EHP - magicp;
+            printf("You bewitched the enemy!\n");
+        }
+
+        // Enemy reaction based on his own HP
+        if (EHP <= 0)
+            printf("You won!\n");
+        else {
+            attackp = (EStrength / PDefense) * 5;
+            PHP = PHP - attackp;
+            printf("The enemy attacked you\n");
+        }
+
+        // Indicates if user lost the game
+        if (PHP <= 0)
+            printf("You lost!\n");
+
+        printf("\n");
+    }
+
+  return 0;
+
+    }
+
+    int validate(int low, int high) {
+    int s;
+
+    do{
+    scanf("%d", s);
+    if (s<1 || s>3)
+        printf("invalid Input, try again:");
+    } while (s<1 || s>3);
+
+    return s;
+    }
+
+    int validate(int low, int high) {
+        int selection;
+
+        do {
+        scanf("%d", selection);
+        if (selection <0 || selection>3)
+            printf("Invalid Input, try again: ");
+        } while (0<selection<4);
+
+        return selection;
+    }
+
+I want the user to enter a number between 1 and 3 and I need the validate function to verify it. Can anyone explain me where I go wrong please? what is the proper way to do it?

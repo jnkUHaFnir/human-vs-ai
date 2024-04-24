@@ -1,0 +1,90 @@
+
+Code snippet:
+char str[] = "String1::String2:String3:String4::String5";
+char *deli = "::";
+char *token = strtok(str,deli);
+
+while(token != NULL)
+{
+  printf("Token= \"%s\"\n", token);
+  token=strtok(NULL,deli);
+}
+
+The above code snippet produces the output:
+Token="String1"
+Token="String2"
+Token="String3"
+Token="String4"
+Token="String5"
+
+but I want the output to be:
+Token="String1"
+Token="String2:String3:String4"
+Token="String5"
+
+I know that I am not getting the expected output because each character in the second argument of strtok is considered as a delimiter.
+To get the expected output, I've written a program that uses strstr(and other things) to split the given string into tokens such that I get the expected output. Here is the program:
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+int myStrtok(char* str,char* deli)
+{
+    if(str==NULL || deli==NULL)
+        return -1;
+
+    int tokens=0;
+    char *token;
+    char *output=str;
+
+
+    while((token=strstr(output,deli))!=NULL)
+    {
+
+        bool print=true;
+
+        if(output != token)
+        {
+            printf("Token = \"");
+            tokens++;
+            print=false;
+        }
+
+        while(output != token)
+        {
+            putchar(*output);
+            output++;
+        }
+
+        if(print==false)
+            printf("\"\n");
+        output+=strlen(deli);
+    }
+
+    if(strlen(output)>0)
+    {
+        printf("Token = \"%s\"",output);
+        tokens++;
+    }
+    printf("\n\n");
+    return tokens;
+}
+
+int main(void)
+{
+    char str[]="One:1:Two::Three::::";
+    char *deli="::";
+
+    int retval;
+    printf("Original string=\"%s\"\n\n",str);
+
+    if((retval=myStrtok(str,deli))==-1)
+        printf("The string or the delimeter is NULL\n");
+    else
+        printf("Number of tokens=%d\n", retval);
+    return(EXIT_SUCCESS);
+}
+
+The above program produces the expected output.
+I'm wondering if there are any easier/simpler ways to do it. Are there any?

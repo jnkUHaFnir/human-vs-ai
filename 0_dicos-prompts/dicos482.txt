@@ -1,0 +1,88 @@
+
+I am really newbie in C and I want create a program that reads two input files which are only include strings. I have created for its related file's strings. I have dealing with some problem and I couldn't figure out, there is some segmentation fault in there. (asked by-ua)
+Here is my code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+typedef struct linked_list {
+    char my_data[256];
+    struct linked_list *next_it;
+} node_t;
+
+int main(int argc, char *argv[]) {  
+    /*
+    if(argc != 4) {
+        fprintf(stderr, "Requiring 2 input 1 output file name to start!\n");
+        exit(EXIT_FAILURE);
+    }*/
+
+    FILE *my_s;
+    FILE *my_f;
+    // FILE *my_o;
+    bool mybool = true;
+    int my_ch; // our char to read
+    char my_buffer[256];
+    bool check_all = true;
+
+    node_t *set_a = malloc(sizeof(node_t));
+    node_t *set_b = malloc(sizeof(node_t));
+    my_f = fopen(argv[1], "r"); // first textfile to read
+    my_s = fopen(argv[2], "r"); // second textfile to read
+
+    if (my_f != NULL && my_s != NULL) {
+        while (fgetc(my_f) != EOF && mybool != false && check_all != false) {
+            my_ch = fgetc(my_f);
+            int i = 0;
+            while (my_ch >= 0) {
+                my_buffer[i++] = my_ch;
+                my_ch = fgetc(my_f);
+            }
+            strcpy(set_a->my_data, my_buffer);
+            if (feof(my_f)) {
+                mybool = false;
+            } else {
+                set_a->next_it = malloc(sizeof(node_t));
+                set_a = set_a->next_it;
+            }
+        }
+        mybool = false;
+        printf("First File Copy Done!\n");
+        while (fgetc(my_s) != EOF && mybool != true && check_all != false) {
+            my_ch = fgetc(my_s);
+            int i = 0;
+            while (my_ch >= 0) {
+                my_buffer[i++] = my_ch;
+                my_ch = fgetc(my_s);
+            }
+            strcpy(set_b->my_data, my_buffer);
+            if (feof(my_s)) {
+                check_all = false;
+            } else {
+                set_b->next_it = malloc(sizeof(node_t));
+                set_b = set_b->next_it;
+            }
+        }
+        printf("Second File Copy Done!\n");
+    } else {
+        fprintf(stderr, "Cannot read from %s and %s\n", argv[1], argv[2]);
+    }
+
+    while (set_a != NULL) {
+        int j = 0;
+        printf("No: %d, Var: %s",j++, set_a->my_data);
+        node_t *set_c = set_a;
+        set_a = set_a->next_it;
+        free(set_c);
+    }
+    while (set_b != NULL) {
+        int j = 0;
+        printf("No: %d, Var: %s",j++, set_b->my_data);
+        node_t *set_c = set_b;
+        set_b = set_b->next_it;
+        free(set_c);
+    }
+    return 0;
+}
+

@@ -1,0 +1,14 @@
+
+I want to throw the last three character from file name and get the rest?
+I have this code:
+char* remove(char* mystr) {
+
+    char tmp[] = {0};
+    unsigned int x;
+
+    for (x = 0; x < (strlen(mystr) - 3); x++)
+        tmp[x] = mystr[x];
+
+    return tmp;
+}
+

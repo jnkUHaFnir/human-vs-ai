@@ -1,0 +1,60 @@
+
+I am trying to code a small test-server for completion ports.
+But when I try to call AcceptEx... it always returns WSAEINVAL as the winsock error code...
+I don´t really get what was my mistake
+http://codepad.org/NEXG3Ssh <- code on codepad
+and
+StartWinsock();
+ cout << "Winsock initiated\n";
+ //Get the number of processors
+ DWORD ulProcessors = GetNumberOfProcessors();
+ cout << "Number of Processors/Threads, that will be used: " << ulProcessors << endl;
+ //Create an completion port
+ hCompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, ulProcessors);
+ if(hCompletionPort == NULL)
+  ErrorAbort("Could not create completion port");
+ cout << "Completion Port created\n";
+
+ //Create threads
+ CreateThreads(ulProcessors);
+ cout << "Threads created\n";
+
+ //Create socket
+ AcceptorSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+ addrinfo *final, hints;
+ memset(&hints, 0, sizeof(hints));
+ hints.ai_family = AF_INET;
+ hints.ai_flags = AI_PASSIVE;
+ if(getaddrinfo(NULL,"12345", &hints, &final))
+  ErrorAbort("Could not retrieve address information");
+ if(bind(AcceptorSock,final->ai_addr, final->ai_addrlen))
+  ErrorAbort("Could not bind socket");
+ freeaddrinfo(final);
+ cout << "Acceptor socket created and bound\nStarting to listen on the acceptor socket\n";
+ if(listen(AcceptorSock, 2))
+  ErrorAbort("Can´t listen on the socket");
+
+ //Add acceptor socket file handle to be observed by the completion port
+ if(CreateIoCompletionPort((HANDLE)AcceptorSock, hCompletionPort, NEW_CONNECTION, 0) != hCompletionPort)
+  ErrorAbort("A new completion port has been created instead of using the existing one");
+ cout << "Acceptor socket associated with the completion port\n";
+
+ ResumeThreads(2);
+ char lpOutputBuf[1024];
+ int outBufLen = 1024;
+ DWORD dwBytes;
+ OVERLAPPED over;
+ SOCKET newSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+
+ while(true)
+ {
+  memset(&over, 0, sizeof(over));
+  if(AcceptEx(AcceptorSock, newSock, lpOutputBuf, outBufLen - ((sizeof(sockaddr_in) + 16) * 2), sizeof(sockaddr_in)+16, sizeof(sockaddr_in)+16, &dwBytes, &over) == FALSE)
+  {
+   int x = WSAGetLastError();
+   if( x != WSA_IO_PENDING)
+    ErrorAbort("Could not acceptex a new connection");
+  }
+ }
+

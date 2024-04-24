@@ -1,0 +1,31 @@
+
+I have two equal strings, I need to delete a portion of one of them, and store it in another.
+My code is not working:
+int main(int argc, char *argv[])
+{
+    char *imagetmp = argv[1];
+    char *imagefile = imagetmp;
+    char *unpackdir = imagetmp;
+
+    // Remove substring from char imagefile
+    char * pch;
+    pch = strstr (imagefile,".img");
+    strncpy (pch,"",6);
+
+    // Print strings
+    puts (imagefile);
+    puts (unpackdir);
+    return 0;
+}
+
+Here is the expected output:
+./imgtools mysuperimage.img
+mysuperimage.img
+mysuperimage
+
+Here is the actual output:
+./imgtools mysuperimage.img
+mysuperimage
+mysuperimage
+
+How can I fix this?

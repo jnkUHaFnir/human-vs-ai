@@ -1,0 +1,1 @@
+In this code, `program` acts as your main program that you want to rerun. The loop continues as long as the character `'n'` has not been inputted. Note the additional space given before `%c` in `scanf(" %c", &answer)` is used to skip any leading whitespace. Also, `while(getchar() != '\n');` is used to ensure any trailing inputs (including '\n') are read and discarded.

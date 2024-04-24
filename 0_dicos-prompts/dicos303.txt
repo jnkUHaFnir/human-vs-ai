@@ -1,0 +1,151 @@
+
+I just did this question out of KN King's C Programming: A Modern Aprroach. It's not homework, I'm just teaching myself out of the book...
+
+The following table shows the daily flights from one city to another:
+Departure time -  Arrival time
+  8:00am - 10:16am
+  9:43am - 11:52am
+  11:19am - 1:31pm
+  12:47pm - 3:00pm
+  2:00pm - 4:08pm
+  3:45pm - 5:55pm
+  7:00pm - 9:20pm
+  9:45pm - 11:58pm   
+Write a program that asks user to enter a time (expressed in hours and minutes, using the 24 hour clock). The program then displays the departure and arrival times for the flight whose departure time is closest to that entered by the user:  
+Enter a 24 hour time: 13:15
+Closest depature time is 12:47pm., arriving at 3:00pm.
+Hint: Convert the input into a time expressed in minutes since midnight, and compare it to the departure times, also expressed in minutes since midnight. For example, 13:15 is 13 x 60 + 15 = 795 minutes since midnight, which is closer to 12:47pm (767 minutes since midnight) than to any of the other departure times.
+
+So far we have only covered basic comparison expressions and the if and switch statement, so my answer has to be based around these obviously and nothing too fancy. My code that I've come up with is below, I'm wondering if someone would be willing to take a look at it and see if I'm on the right track, it seems to work but seems to be a lot of code for such a small thing. Maybe it was just to teach us the logic involved. I haven't pasted the whole code, the rest is just the same thing over and over as it compares the values. I have no programming experience, so please be gentle!
+Thanks for your time,
+Andrew
+#include <stdio.h>
+
+int main (int argc, const char * argv[]) {
+
+
+// Flight departure times since midnight
+// 8am, 9:45am, 11:19am, 12:47pm
+// 2pm, 3:45pm, 7pm, 7:45pm
+int a = 480, b = 585, c = 679, d = 767,
+    e = 840, f = 945, g = 1140, h = 1185;
+
+// Flight arrival times for respective departure times.
+int a1 = 616, b1 = 712, c1 = 811, d1 = 900,
+    e1 = 968, f1 = 1075, g1 = 1280, h1 = 1438;
+
+int hours, minutes, time, t, u;
+
+// Get the users time
+
+printf("Enter a 24 hour time (hh:mm): \n");
+scanf("%d:%d", &hours, &minutes);
+
+time = hours * 60 + minutes;
+
+printf("Closest departure time is ");
+
+if (time <= a)
+    printf("8:00am");
+else
+    if (time > a && time <= b) {
+                t = time - a; 
+                u = b - time;
+                if (t < u) {
+                    printf("%.2d:%.2d", a / 60, a % 60);
+                        if (a / 60 == 0)
+                            printf("am");
+                        else if (a / 60 < 12)
+                            printf("am");
+                        else if (a / 60 == 12)
+                            printf("pm");
+                        else
+                            printf("pm");
+                    printf(", arriving at %d:%.2d", a1 / 60, a1 % 60);
+                        if (a1 / 60 == 0)
+                            printf("am");
+                        else if (a1 / 60 < 12)
+                            printf("am");
+                        else if (a1 / 60 == 12)
+                            printf("pm");
+                        else
+                            printf("pm");
+                }
+                else {
+                        printf("%.2d:%.2d", b / 60, b % 60);
+                        if (b / 60 == 0)
+                            printf("am");
+                        else if (b / 60 < 12)
+                            printf("am");
+                        else if (b / 60 == 12)
+                            printf("pm");
+                        else
+                            printf("pm");
+                    printf(", arriving at %d:%.2d", b1 / 60, b1 % 60);
+                        if (b1 / 60 == 0)
+                            printf("am");
+                        else if (b1 / 60 < 12)
+                            printf("am");
+                        else if (b1 / 60 == 12)
+                            printf("pm");
+                        else
+                            printf("pm");
+                }
+    }
+
+Changes as per advice I've been given: (Thanks xamypah and Gabe)
+    ...
+int hours, minutes, time, t, u, x, y;
+
+// Get the users time
+
+printf("Enter a 24 hour time (hh:mm): \n");
+scanf("%d:%d", &hours, &minutes);
+
+time = hours * 60 + minutes;
+
+printf("Closest departure time is ");
+
+if (time <= a)
+    printf("8:00am");
+else
+    if (time > a && time <= b) {
+                t = time - a; 
+                u = b - time;
+
+                if (t <= u) {
+                    x = a;
+                    y = a1;
+                }
+                else {
+                    x = b;
+                    y = b1;
+                }
+
+Then at the end of the program after several of the above:
+printf("%.2d:%.2d", x / 60, x % 60);
+
+if (x / 60 < 12)
+    printf("am");
+else 
+    printf("pm");
+    printf(", arriving at %d:%.2d", y / 60, y % 60);
+
+if (y / 60 < 12)
+    printf("am");
+else
+    printf("pm");
+
+Actually I had to make some changes to that end print statement, or else it was displaying the times in 24 hour format with am and pm after:
+if (x / 60 < 12)
+    printf("%d:%.2d am", x / 60, x % 60);
+else 
+    printf("%d:%.2d pm", (x / 60) - 12, x % 60);
+
+printf(", arriving at ");
+
+if (y / 60 < 12)
+    printf("%d:%.2d am", y / 60, y % 60);
+else
+    printf("%d:%.2d pm", (y / 60) - 12, y % 60);
+

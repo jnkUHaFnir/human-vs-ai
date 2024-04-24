@@ -1,0 +1,5 @@
+
+I have binary data in an unsigned char variable.
+I need to convert them to PEM base64 in c.
+I looked in openssl library but i could not find any function.
+Does any body have any idea?

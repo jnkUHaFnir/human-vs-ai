@@ -1,0 +1,65 @@
+
+I"m trying to load values into my structure but it's attaching the first element of every new structure to the last of the previous.
+Initially I had the 'godiste' field as an int and noticed it wasn't working so I changed it to a char and noticed that for some reason my input function 'upis' was attaching the value of the second member of igraci's 'Ime' to the first member's 'godiste'. Can't seem to figure out why this is happening.
+I put a printf in main that just prints the 'godiste' of igraci member 0 to make sure it wasn't an issue with my writing function 'ispis' and it is in fact making the value of 'godiste' the 'godiste' of member 0 + the 'ime' of member 1.
+'ime' is the player name
+'prezime' is the players last name
+'pozicija' is the players position
+'godiste' is the players birth year
+and 'igraci' is a list of players.
+The program first asks for the number of players you'd like to input then asks you for their details and prints out what you put in.
+#include <stdio.h>
+
+struct futbaler
+    {
+        char ime[15];
+        char prezime[20];
+        char pozicija[15];
+        char godiste[4];
+    };
+
+void upis(struct futbaler* pok, int n)
+{
+    int i;
+
+    for(i=0; i<n;i++)
+    {
+        printf("Ime igraca #%d: ",i+1);
+        scanf("%s",(pok+i)->ime);
+        printf("Prezime igraca #%d: ",i+1);
+        scanf("%s",(pok+i)->prezime);
+        printf("Pozicija igraca #%d: ",i+1);
+        scanf("%s",(pok+i)->pozicija);
+        printf("Godiste igraca #%d: ",i+1);
+        scanf("%s",(pok+i)->godiste);
+    }
+}
+
+void ispis(struct futbaler* pok, int n)
+{
+    int i;
+
+    for(i=0; i<n;i++)
+    {
+        printf("\nIme igraca #%d je: %s\n",i+1,(*(pok+i)).ime);
+        printf("\nPrezime igraca #%d je: %s\n",i+1,(*(pok+i)).prezime);
+        printf("\nPozicija igraca #%d je: %s\n",i+1,(*(pok+i)).pozicija);
+        printf("\nGodiste igraca #%d je: %s\n",i+1,(*(pok+i)).godiste);
+    }
+}
+
+main()
+{
+    int n;
+    printf("Koliko bi igraca uneli? ");
+    scanf("%d",&n);
+    struct futbaler* pok;
+    struct futbaler igraci[n];
+    pok = igraci;
+    upis(pok,n);
+    ispis(pok,n);
+
+    printf("%s",igraci[0].godiste);
+}
+
+I just want to figgure out why and how it's attaching these values that have nothing to do with eachother together.

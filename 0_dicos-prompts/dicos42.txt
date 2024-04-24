@@ -1,0 +1,122 @@
+
+I am trying to write a linux kernel module that communicates with user process using netlink. I am using netlink because the user program I want to communicate to communicates only using sockets and I can't change that to add ioctl() or anything.
+I can't figure out how to do that, though! I found old examples like this one that are no longer valid for current kernel versions. I have also looked at this SO question but the sample here uses libnl for socket operations, and I want to stick to standard socket functions (defined by sys/socket.h). Can some one please guide me here to some tutorial or guide or some thing that can help me understand the interface and usage of netlink? I would highly appreciate a working example; nothing fancy, just a very basic example of how to establish a connection from a socket in user program to a socket in kernel and then send data from user process to kernel and receive back from kernel.
+Please do not tell me to look at kernel code. I am already doing that, but it will take a lot of time and I don't have lot of it left.
+After lot of trial and error I have following code which sends a message from a user program to the kernel, but the message from the kernel to the user program (using netlink_unicast()) is not working. It's not only not working, but the call hangs the systems and then I have to restart the machine. Can some one please take a look and tell me what I'm doing wrong? The netlink_unicast() call is commented in the following code. It should be uncommented for the kernel to user program message.
+User Program
+#include <sys/socket.h>  
+#include <linux/netlink.h>  
+#define NETLINK_USER 31  
+#define MAX_PAYLOAD 1024  /* maximum payload size*/  
+
+struct sockaddr_nl src_addr, dest_addr;  
+struct nlmsghdr *nlh = NULL;  
+struct iovec iov;  
+int sock_fd;  
+struct msghdr msg;  
+ 
+void main()  
+{  
+    sock_fd=socket(PF_NETLINK, SOCK_RAW, NETLINK_USER);  
+    if(sock_fd<0)  
+        return -1;  
+
+    memset(&src_addr, 0, sizeof(src_addr));  
+    src_addr.nl_family = AF_NETLINK;  
+    src_addr.nl_pid = getpid();  /* self pid */  
+    /* interested in group 1<<0 */  
+    bind(sock_fd, (struct sockaddr*)&src_addr,  
+      sizeof(src_addr));  
+
+    memset(&dest_addr, 0, sizeof(dest_addr));  
+    memset(&dest_addr, 0, sizeof(dest_addr));  
+    dest_addr.nl_family = AF_NETLINK;  
+    dest_addr.nl_pid = 0;   /* For Linux Kernel */  
+    dest_addr.nl_groups = 0; /* unicast */  
+
+    nlh = (struct nlmsghdr *)malloc(  
+                          NLMSG_SPACE(MAX_PAYLOAD));  
+    memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));  
+    nlh->nlmsg_len = NLMSG_SPACE(MAX_PAYLOAD);  
+    nlh->nlmsg_pid = getpid();  
+    nlh->nlmsg_flags = 0;  
+
+    strcpy(NLMSG_DATA(nlh), "Hello");  
+
+    iov.iov_base = (void *)nlh;  
+    iov.iov_len = nlh->nlmsg_len;  
+    msg.msg_name = (void *)&dest_addr;  
+    msg.msg_namelen = sizeof(dest_addr);  
+    msg.msg_iov = &iov;  
+    msg.msg_iovlen = 1;  
+
+    printf("Sending message to kernel\n");  
+    sendmsg(sock_fd,&msg,0);  
+    printf("Waiting for message from kernel\n");  
+
+    /* Read message from kernel */  
+    recvmsg(sock_fd, &msg, 0);  
+    printf(" Received message payload: %s\n",  
+        NLMSG_DATA(nlh));  
+    close(sock_fd);  
+}
+
+Kernel Code
+#include <linux/module.h>  
+#include <linux/kernel.h>  
+#include <linux/init.h>  
+#include <net/sock.h>  
+#include <linux/socket.h>  
+#include <linux/net.h>  
+#include <asm/types.h>  
+#include <linux/netlink.h>  
+#include <linux/skbuff.h>  
+ 
+#define NETLINK_USER 31  
+
+struct sock *nl_sk = NULL;  
+
+static void hello_nl_recv_msg(struct sk_buff *skb)  
+{
+        struct nlmsghdr *nlh;  
+        int pid;  
+
+        printk(KERN_INFO "Entering: %s\n", __FUNCTION__);  
+
+        nlh=(struct nlmsghdr*)skb->data;  
+        printk(KERN_INFO "Netlink received msg payload: %s\n",
+            (char*)NLMSG_DATA(nlh));  
+        pid = nlh->nlmsg_pid; /*pid of sending process */  
+        NETLINK_CB(skb).dst_group = 0; /* not in mcast group */  
+        NETLINK_CB(skb).pid = 0;      /* from kernel */  
+        //NETLINK_CB(skb).groups = 0; /* not in mcast group */  
+        //NETLINK_CB(skb).dst_pid = pid;  
+        printk("About to send msg bak:\n");  
+        //netlink_unicast(nl_sk,skb,pid,MSG_DONTWAIT);  
+
+}  
+
+static int __init hello_init(void)  
+{  
+
+        printk("Entering: %s\n",__FUNCTION__);  
+        nl_sk=netlink_kernel_create(&init_net, NETLINK_USER, 0,
+               hello_nl_recv_msg, NULL, THIS_MODULE);  
+        if(!nl_sk)  
+        {   
+                printk(KERN_ALERT "Error creating socket.\n");  
+                return -10;  
+        }  
+        return 0;  
+}  
+
+static void __exit hello_exit(void)  
+{
+
+        printk(KERN_INFO "exiting hello module\n");  
+        netlink_kernel_release(nl_sk);  
+}  
+
+module_init(hello_init);  
+module_exit(hello_exit);  
+

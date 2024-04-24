@@ -1,0 +1,34 @@
+
+
+
+
+i want to make program using pointer that delete all number from text, for example when the input from keyboard is "ab1c9" then the program result "abc" only. so i actually think about using the pointer and overwrite it using the word without number result but it doesnt seem work :/ and im still confuse about when should i use * or not
+is this program logic true ?.?
+#include <stdio.h>
+#include <stdlib.h>
+
+void deldigit(char* str) {
+    int count = 0;
+
+    while(*str != '\0') {
+        if(*str >= '1' && *str <= '9')
+            count++;
+        else
+            *(str - count) = *str; /* want this *str after increment to overwrite *(str-count) */
+        str++;
+    }
+
+    *(str - count) = '\0';
+    printf("%s", str);
+}
+
+int main() {
+    char str[100];
+
+    printf("inset word");
+    scanf("%s", &str);
+    deldigit(str);
+
+    return 0;
+}
+

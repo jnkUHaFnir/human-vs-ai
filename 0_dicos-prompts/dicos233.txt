@@ -1,0 +1,28 @@
+
+I am having some issues trying to get my code to work.  It prints ALMOST the right data but maybe it isn't looping correctly?  I don't think it repeats the key through the alphabet.  It's all lowercase and doesn't exceed 26.  
+void vigenereEncrypt( const char  plaintext[], char ciphertext[], const char key[] )
+
+{
+int idx;
+int j;
+
+for( idx = 0, j = 0; idx <= strlen(plaintext); idx++ )
+{
+    if ( CHAR_OUT_OF_RANGE(plaintext[idx]) )
+    {
+        ciphertext[idx] = plaintext[idx];
+    }
+    else
+    {
+        ciphertext[idx] = plaintext[idx];
+        ciphertext[idx] += key[j] - MIN_ASCII_VALUE;
+
+        if (ciphertext[idx] >= MAX_ASCII_VALUE) ciphertext[idx] += -MAX_ASCII_VALUE + MIN_ASCII_VALUE - 1;
+    }
+    j = (j + 1) % strlen(key);
+}
+
+ciphertext[idx] = 0;    
+}
+
+for instance:  if I enter the plaintext toner with a key of jerry the output will be csevé.  It should change it to csevp

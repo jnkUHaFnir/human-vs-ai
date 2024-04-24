@@ -1,0 +1,21 @@
+
+I am trying to copy a char from a char type function to a var in the main function using strcpy, but the program always give me a random value as return and the program is finished. Is there some syntax error I'm missing in the code or maybe another way to do this copy?
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+char text()
+{
+    char palavra1[]= "tata";
+    return palavra1;
+}
+
+char main()
+{
+    char saida[50];
+    strcpy(saida,text());   // this line is supposed to copy the string from text to the var saida
+    printf("%s", saida);
+    return 0;
+}
+

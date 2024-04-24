@@ -1,0 +1,4 @@
+
+So I have something cast as an int, and from my understanding maximum value for an int is 32676, and any value above this will be truncated in C.
+If my program has the user inputting data, how can I check if this data can be fully stored in an int, because if it is not I need to tell the user to reinput the data.
+For example, if the user tries to put in 450000, I need to tell them to re-input the data, however, a simple comparison seems to truncate the value first before comparing it to INT_MAX?

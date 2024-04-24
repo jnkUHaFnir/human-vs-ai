@@ -1,0 +1,27 @@
+
+I have written the following program that is intended to read a string from a file into variable "title":
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int m, b;
+    char *title;
+    FILE *fp;
+
+    fp = fopen("input2.txt", "r");
+    if (fp == NULL)
+    {
+         printf ("Error: file cannot be found\n");
+         return 1;
+    }
+
+    fscanf(fp, "<%d>\n<%d>", &m, &b);
+    printf("%d\n%d", m, b);
+    fscanf(fp, "<%s>", title);
+
+    fclose(fp);
+    return 0;
+}
+
+The above program crashes at the second call to fscanf. Why does this happen?

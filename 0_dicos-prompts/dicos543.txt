@@ -1,0 +1,35 @@
+
+I have the following code and I haven't worked in C for years and I'm confused by the syntax. How could I initialize two patrons within the init function? I assume I need to do some sizeof/malloc magic but really I'm confused on the syntax.
+I believe I can access patron data like this:
+t->seating[0].first_name 
+
+However, I cannot get the dang array of seating created. Yes, my init function is empty as I've deleted all the crazy code I tried.
+#include <stdio.h>
+
+struct patron {
+   char last_name[30];
+   char first_name[30];
+};
+
+struct theatre_seating {
+    struct patron **seating;
+};
+
+void init(int elem, struct theatre_seating *t);
+
+
+int main() {
+    struct theatre_seating theatre_seating;
+
+    int elem = 2;
+
+
+    init(elem, &theatre_seating);
+
+    return 1;
+}
+
+void init(int elem, struct theatre_seating *t) {
+
+}
+

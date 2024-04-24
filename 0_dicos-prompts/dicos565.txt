@@ -1,0 +1,7 @@
+
+I want to extract the base name from a string, like 
+/opt/home/etc/sample
+
+That is, I want to parse a string of large length returning sample, or the substring
+after the last / character. The string can be of any length.
+How could this be done?

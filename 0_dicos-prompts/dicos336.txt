@@ -1,0 +1,25 @@
+
+I have the following code which is about 7 times faster than inet_addr . I was wondering if there is a way to improve this to make it even faster or if a faster alternative exists.
+This code requires that a valid null terminated IPv4 address is supplied with no whitespace, which in my case is always the way, so I optimized for that case. Usually you would have more error checking, but if there is a way to make the following even faster or a faster alternative exists I would really appreciate it.
+UINT32 GetIP(const char *p)
+{
+    UINT32 dwIP=0,dwIP_Part=0;
+    while(true)
+    {
+        if(p[0] == 0)
+        {
+            dwIP = (dwIP << 8) | dwIP_Part;
+            break;
+        }
+        if(p[0]=='.') 
+        {       
+            dwIP = (dwIP << 8) | dwIP_Part;                     
+            dwIP_Part = 0;
+           p++;
+        }
+        dwIP_Part = (dwIP_Part*10)+(p[0]-'0');
+        p++;
+    }
+    return dwIP;
+}
+

@@ -1,0 +1,32 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+int main()
+{
+   int *p=(int*)malloc(10*4);
+   int i,a,count=1;
+   printf("Input :\n");
+   for(i=0;i<10*count;i++)
+   {
+     scanf("%d",p+i);
+     if(*(p+i)==22){
+         break;
+        }
+     if(i==9+(count-1)*10){
+          realloc(p,(10+10*count)*sizeof(int));
+          count++;
+       }
+    }
+    printf("\nOutput :\n");
+    i=0;
+    for(;;){
+        if(*(p+i)==22){
+           break;
+        }
+        printf("%d\n",*(p+i));
+        i++;
+     }
+}
+
+The mooto the the code is to take the inputs continously untill 22 is encountered and when 22 is encountered then it prints all the values which I have entered precedding it
+SPOJ runs the code on Ideone.com

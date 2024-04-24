@@ -1,0 +1,11 @@
+
+I have a structure as below:
+struct Query {  
+    int     pages[];
+    int     currentpage;
+};
+
+I was wondering if it was possible to set the size of this array after creating the structure.
+Query new = malloc(sizeof(struct Query));
+
+After this, I will perform some calculations which will then  tell me the size that pages[] needs to be. If pages[] needed to be of size 4, how can I set it as such?

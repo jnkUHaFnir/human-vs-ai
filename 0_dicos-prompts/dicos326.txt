@@ -1,0 +1,61 @@
+
+I want to search the structure (and print other details of book) I have added for the book for a particular issueNumber entered by user in the .txt file.
+When I run the code it terminates after asking for user input (issueNumber-issuenumber).
+I don't understand the issue behind this, I think there there is some issue with the while loop (code inside it).
+Also I am not finding any good resource on file handling on the internet (maybe only for text mode). It would be helpful if someone suggest good resource.
+Below is my code for searching for issueNumber and printing other details too.
+My structure:
+struct data
+{
+    char author[25];
+    int issueNumber;
+    char title[25];
+    int issued;
+};
+
+My search function:
+void searchBookByIssueNumber(FILE *fp)
+{
+    struct data data2;
+    data2.issued = 0;
+    int issuenumber = 0;
+    printf("enter issue no.");
+
+    scanf("%d", &issuenumber);
+
+    while (fscanf(fp, "%s %d %s %d\n", data2.author, &data2.issueNumber, data2.title, &data2.issued) != EOF)
+    {
+
+        if (data2.issueNumber == issuenumber)
+        {
+            fseek(fp, -5, SEEK_CUR);
+            printf("%s %d %s", data2.author, data2.issueNumber, data2.title);
+        }
+    }
+    fclose(fp);
+}
+
+Start function:
+void start(FILE *fp)
+{
+    printf("---------------------------------------------------\n");
+    printf("|                                                 |\n");
+    printf("|      WELCOME TO LIBRARY MANAGEMENT              |\n");
+    printf("|                                                 |\n");
+    printf("---------------------------------------------------\n");
+
+    /*login();*/
+    /*addBook(fp);*/
+    searchBookByIssueNumber(fp);
+}
+
+Main function:
+int main()
+{
+    FILE *fp;
+    fp = fopen("c1.txt", "w+");
+    start(fp);
+
+    return 0;
+}
+

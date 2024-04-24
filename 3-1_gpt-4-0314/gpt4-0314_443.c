@@ -1,0 +1,10 @@
+int length = strlen(buffer);
+int header = htonl(length);
+n = write(sockfd, &header, sizeof(header));
+n = write(sockfd, buffer, length);
+int header;
+n = read(newsockfd, &header, sizeof(header));
+if (n < 0) error("ERROR reading header from socket");
+int length = ntohl(header);
+bzero(buffer, 256);
+n = read(newsockfd, buffer, length);

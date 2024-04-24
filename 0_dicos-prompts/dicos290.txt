@@ -1,0 +1,27 @@
+
+So I have this bit of code
+int main(int argc, char *argv[]) {
+    char *vendas[1];
+    int size = 1;
+    int current = 0;
+    char buffer[50];
+    char *token;
+    FILE *fp = fopen("Vendas_1M.txt", "r");
+
+    while(fgets(buffer, 50, fp)) {
+        token = strtok(buffer, "\n");
+        if (size == current) {
+            *vendas = realloc(*vendas, sizeof(vendas[0]) * size * 2);
+            size *= 2;
+        }
+        vendas[current] = strdup(token);
+        printf("%d - %d - %s\n", current, size, vendas[current]);
+        current++;
+    }
+}
+
+Here's the thing... Using GDB it's giving a segmentation fault on 
+vendas[current] = strdup(token);
+
+but the weirdest thing is it works up until the size it at 1024. The size grows up to 1024 and then it just spits a segmentation fault at around the 1200 element. 
+I know the problem is on the memory reallocation, because it worked when I had a static array. Just can't figure out what.

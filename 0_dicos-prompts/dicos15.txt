@@ -1,0 +1,2 @@
+
+8 years ago, Stephen Lavavej published this blog post containing a simple allocator implementation, named the "Mallocator". Since then we've transitioned to the era of C++11 (and soon C++17) ... does the new language features and rules affect the Mallocator at all, or is it still relevant as is?

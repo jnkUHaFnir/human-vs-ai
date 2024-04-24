@@ -1,0 +1,1 @@
+        while (token != NULL && *token != '.') {    /* compare != '.' */

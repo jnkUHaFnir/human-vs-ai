@@ -1,0 +1,9 @@
+
+I've made an app that parses HTTP headers. I'm trying to find if there is a better way to filter HTTP packets by POST method than the one I've come up with. What I am trying to accomplish is to take advantage of the fact that I know that all the POST methods packet strings start with "POST". Is there a way to search for the first word of a string, store it and then use a condition with it? My code works but I would prefer not to search for the whole packet for a "POST" - you never know when you get the word "POST" inside a GET packet, for example.   
+   char re[size_data];
+   strncpy(re,data,size_data);   //data is the buffer and size_data the buffer size
+   char * check;
+   check = strstr(re,"POST"); 
+   if(check!= NULL)
+  { *something happens* }
+

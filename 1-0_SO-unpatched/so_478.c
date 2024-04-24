@@ -1,0 +1,1 @@
+    hypo_table[0][0] = fopen("00.txt", "w");

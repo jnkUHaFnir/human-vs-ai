@@ -1,0 +1,52 @@
+
+
+Write a program that takes nouns and
+  forms their plurals on the basis of
+  these rules:  a. If noun ends in “y”
+  remove the “y” and add “ies”  b. If
+  noun ends in “s” , “ch”, or “sh”, add 
+  “es”  c. In all other cases,  just add
+  “s”  Print each noun and its plural. 
+  Try the following data:  chair
+  dairy    boss    circus  fly   dog 
+  church  clue  dish
+
+This is what I've got so far but it just isn't quite functioning like it's supposed to: 
+#include<stdlib.h>
+#include <Windows.h>
+#include <stdio.h>
+#include <string.h>
+#define SIZE    8
+
+char *replace_str(char *str, char *orig, char *rep)
+{
+    static char buffer[4096];
+    char *p;
+    if(!(p = strstr(str, orig)))
+        return str;
+    strncpy(buffer, str, p-str);
+    buffer[p-str] = '\0';
+    sprintf(buffer+(p-str), "%s%s", rep, p+strlen(orig));
+    return buffer;
+}
+
+int main(void)
+{
+    char plural[SIZE];
+    printf("Enter a noun: ");
+    scanf("%c",&plural);
+    bool noreplace = false;
+
+    puts(replace_str(plural, "s","es"));
+    puts(replace_str(plural, "sh","es"));
+    puts(replace_str(plural, "ch","es"));
+    puts(replace_str(plural, "y", "ies"));
+    if(noreplace) {
+    puts(replace_str(plural, "","s"));
+    }
+    system("pause");
+    return 0;
+}
+
+I haven't taken a C class in a while can anyone help me out? 
+Thanks.

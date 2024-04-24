@@ -1,0 +1,19 @@
+
+Let's say I had 4 threads, a producer and three consumers, a single mutex and a single condition variable, every consumer runs the same function that does the below:
+mutexlock(mutex)
+signal[i] = 1;
+while(signal[i] == 1) {
+condwait(cond, mutex)
+}
+mutexunlock(mutex)
+
+And the producer does the below
+if(signal == 1) 
+{
+set 0 - atomically using CAS
+mutexlock(mutex)
+condbroadcast(cond)
+mutexunlock(mutex)
+}
+
+Let's say if more than one consumer were in that lock, wouldn't they fight for the cond variable? Should I create one for each thread or can p_thread condition variables be shared accross multiple threads without any race conditions?

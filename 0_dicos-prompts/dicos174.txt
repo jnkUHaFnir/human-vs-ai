@@ -1,0 +1,9 @@
+
+I am trying to create an algorithm to read a file with this shape:
++6.590472E-01;+2.771043E+07;+
+-5.003500E-02;-8.679890E-02;-
+
+As you can see, it has three columns. Two of them are numbers, and the last one is a signal.
+I've already have the line as a char[30] and the columns split by semicolon.
+Now, let's assume the number "+6.590472E-01". I need to split it in four information: The sign (+ or -), the number before the dot (0 to 9, in this case 6), the numbers between the dot and the exponent (590472) and finally the exponent (-01).
+How can I use fscanf to retrieve those information? Which pattern do I have to use?

@@ -1,0 +1,42 @@
+
+I'm trying to scan the file "data.txt" using this:
+void read_file(int *sk, sask mas[]){
+
+    FILE *data = fopen("data.txt", "r");
+
+    if (data != NULL){
+        fscanf(data, "%d", sk);
+        printf("%d", *sk);
+
+        realloc(mas, *sk * sizeof(sask));
+
+        for(int i = 0; i < *sk; i++){
+            fscanf(data, "%s%s%d%lf%s", mas[i].vard, mas[i].pav, &mas[i].num, &mas[i].suma, mas[i].val);
+        }
+    }
+    fclose(data);
+}
+
+But I can't even get the first number that shows how many lines to read.
+I don't know what I'm doing wrong here.
+I'm calling the function like this:
+int sk;
+sask *mas = malloc(1 * sizeof(sask));
+read_file(&sk, mas);
+
+This is the struct I'm using:
+typedef struct sask {
+    char vard[256];
+    char pav[256];
+    int num;
+    double suma;
+    char val[5];
+} sask;
+
+data.txt :
+4
+name1 surname1 12345678 1000000.00 €
+name2 surname2 87654321 -123456.00 $
+name3 surname3 13572468 543636.00 $
+name4 surname4 86849854 -13233222.00 €
+

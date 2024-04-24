@@ -1,0 +1,5 @@
+
+How do I write a function to split and return an array for a string with delimiters in the C programming language?
+char* str = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC";
+str_split(str,',');
+

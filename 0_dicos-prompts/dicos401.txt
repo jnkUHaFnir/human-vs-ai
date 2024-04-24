@@ -1,0 +1,22 @@
+
+this is my firs question on this website. 
+I am (desperately) trying to invert a big matrix in my program. 
+I would like to use lapack in order to do this, and I found this thread which looks quite promising, but I think it's in C++ language. Could you help me out?
+Computing the inverse of a matrix using lapack in C
+Thank you.
+Update: you are right, the answer is a bit unclear. After incorporating the program i posted into mine, I get the following error:
+mymatrixmalloc_2.c:15:18: fatal error: cstdio: non existing File or directory 
+#include <cstdio>
+              ^
+compilation terminated.
+
+I guess the prolem is that I havent's properly installed the llapack library, or that I am including it while compiling. 
+This is how I installed the library (from terminal, I have Ubuntu):
+sudo apt-get install build-essential
+sudo apt-get install liblapack*
+sudo apt-get install libblas*
+
+And this is how I compile:
+davide@John:~$ gcc -Wall -lm -llapack -lblas mymatrixmalloc_2.c -o mymatrixmalloc_2.exe
+
+What am I doing wrong? 

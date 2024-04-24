@@ -1,0 +1,70 @@
+
+I'm trying to solve an exercise that wants me to first create 2 arrays, sort them in ascending order and then count how many times a number from the first array appears in the second array. I'm almost finished. Everything seems to work perfectly fine except for one line that ruins the whole code. And I can't figure out why. I'm very new to C this is my very first exercise in this language.
+Here's the code. I have commented the line that is not working:
+#include <stdio.h>
+
+void sort(int a[]) {
+    int i, j, l, t; 
+    l = sizeof(a) / sizeof(a[0]);
+
+    for (i = 0; i < l + 1; i++) {
+        for (j = 0; j < (l - i); j++) {
+            if (a[j] > a[j + 1]) {
+                t = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = t;
+            }
+        }
+    }
+}
+
+void numberOfTimes(int a[], int b[]) {
+    int al = sizeof(a) / sizeof(a[0]);
+    int bl = sizeof(b) / sizeof(b[0]);
+    int i, p, c = 0;
+
+    for (i = 0; i <= al; i++) {
+        for (p = 0; i <= bl; p++) {
+            if (a[i] == b[p]) {
+                c++;       // <-------- This line doesn't work. Why?
+            }
+        }   
+        printf("(%d, %d) ", a[i], c);
+    }
+}
+
+void main() {
+    int maxarraylen = 1000, i;
+    int a[maxarraylen];
+    int b[maxarraylen];
+    int v, t;
+
+    printf("Type elements of A seperated by spaces. Do not enter duplicates (type 'end' to stop): ");
+    while (scanf("%d", &a[i]) == 1)
+        i++;
+    scanf("%*s");
+    i = 0;
+
+    printf("Type elements of B seperated by spaces(type 'end' to stop): ");
+    while (scanf("%d", &b[i]) == 1)
+        i++;
+    scanf("%*s");
+
+    sort(a);
+    sort(b);
+
+    numberOfTimes(a, b);
+}
+
+The idea is that the code will first sort both arrays and then print it out in the format (n, m). n is an int from array a and m is how many times it appears in array b.
+For example you enter this:
+a = {3, 2 ,1}
+b = {1, 3, 2, 3, 3, 2, 1}
+
+And the code does first sort:
+a = {1, 2, 3}
+b = {1, 1, 2, 2, 3, 3, 3}
+
+And then prints out how many times a number from an array a appears in b:
+(1, 2) (2, 2) (3, 3)
+

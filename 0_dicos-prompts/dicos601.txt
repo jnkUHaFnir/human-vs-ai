@@ -1,0 +1,29 @@
+
+When i run code it show realloc() invalid pointer error.
+Is anything wrong in input() function?
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<time.h>
+char *input(void)
+{
+    int n = 1;
+    char *str = malloc(sizeof(char));
+    *str = '\0';
+    while((*str=getchar())!='\n')
+    {
+        n++;
+        str = realloc(str,sizeof(char)*n);
+        str++;
+    }
+    return str;
+}
+
+int main(int argc, char const *argv[])
+{
+    char *str = input();
+    printf("%s",str);
+    free(str);
+    return 0;
+}
+

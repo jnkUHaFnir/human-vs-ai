@@ -1,0 +1,62 @@
+
+Just a quick one: in C I have a buffer full of data like below:
+char buffer[255]="CODE=12345-MODE-12453-CODE1-12355"
+
+My question is how to search through this. For example for the CODE=12345, section bear in mind that the numbers change, so I would like to search like this CODE=***** using wildcard or preset amount of spaces after the CODE= part.
+This method wont compile last one left to try 
+#include <stdio.h>
+#include <string.h>
+#include <windows.h>
+
+int main ()
+{
+    char buf[255]="CODE=12345-MODE-12453-CODE1-12355";
+
+#define TRIMSPACES(p) while(*p != '\0' && isspace((unsigned char)*p) != 0) ++p 
+#define NSTRIP(p, n) p += n 
+#define STRIP(p) ++p 
+
+char* getcode(const char *input) 
+{ 
+  char *p = (char*) input, *buf, *pbuf; 
+
+  if((buf = malloc(256)) == NULL) 
+    return NULL; 
+
+  pbuf = buf; 
+  while(*p != '\0') { 
+    if(strncmp(p, "CODE", 3) == 0) { 
+      NSTRIP(p, 4); //remove 'code' 
+      TRIMSPACES(p);//trim white-space after 'code' 
+
+     if(*p != '=')  
+       return NULL; 
+
+      STRIP(p); // remove '=' 
+      TRIMSPACES(p); //trim white-spaces after '=' 
+
+/* copy the value until found a '-'  
+   note: you must be control the size of it,  
+   for avoid overflow. we allocated size, that's 256 
+   or do subsequent calls to realloc() 
+*/ 
+      while(*p != '\0' && *p != '-') 
+    *pbuf ++ = *p++; 
+
+    //  break; 
+    } 
+    p ++; 
+  } 
+
+//put 0-terminator. 
+  *pbuf ++ = '\0'; 
+
+  return buf; 
+} 
+
+
+
+
+//   
+}
+

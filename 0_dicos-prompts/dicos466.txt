@@ -1,0 +1,91 @@
+
+I want to get a fast access to the pixels of a game which uses directX9 or 10. Therefore I used the D3D9 library. Do I have to use the D3D10 library when it is a directX10 game? If this is true, the next part is irrelevant. 
+The following code works except I'm only get zeros in qDebug("%.2f, %.2f, %.2f, %.2f", pixel[0].r, pixel[0].g, pixel[0].b, pixel[0].a); although it should have an other color and I have no clue why. Is there an error in swapping the data?
+Initialization:
+IDirect3D9 *m_d3d;
+IDirect3DDevice9 *m_d3ddev;
+D3DDISPLAYMODE *m_d3ddm;
+HRESULT hr;
+m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
+if (m_d3d == NULL)
+{
+    qFatal("Cannot create Direct3D!");
+}
+
+m_d3ddm = (D3DDISPLAYMODE *)calloc(1, sizeof(D3DDISPLAYMODE));
+hr = m_d3d->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, m_d3ddm);
+if (hr != D3D_OK)
+{
+    m_d3d->Release();
+    qFatal("Cannot get DisplayMode!");
+}
+
+D3DPRESENT_PARAMETERS d3dpp;
+ZeroMemory(&d3dpp, sizeof(d3dpp));
+d3dpp.Windowed = TRUE;
+d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+d3dpp.hDeviceWindow = m_target;
+d3dpp.BackBufferWidth = m_d3ddm->Width;
+d3dpp.BackBufferHeight = m_d3ddm->Height;
+d3dpp.BackBufferFormat = m_d3ddm->Format;
+
+hr = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_target, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &m_d3ddev);
+if (FAILED(hr))
+{
+    m_d3d->Release();
+    qFatal("Failed  CreateDevice!");
+}
+else 
+{
+    qDebug("Created Device with %i * %i", m_d3ddm->Width, m_d3ddm->Height);
+}
+
+Capture:
+IDirect3DSurface9 *renderTarget= NULL;
+IDirect3DSurface9 *destTarget = NULL;
+hr = m_d3ddev->GetRenderTarget(0, &renderTarget);
+if (FAILED(hr))
+{
+    qFatal("Failed  GetRenderTarget!");
+}
+hr = m_d3ddev->CreateOffscreenPlainSurface(m_d3ddm->Width, m_d3ddm->Height, m_d3ddm->Format, D3DPOOL_SYSTEMMEM, &destTarget, NULL);
+if (FAILED(hr))
+{
+    qFatal("Failed  CreateOffscreenPlainSurface!");
+}
+hr = m_d3ddev->GetRenderTargetData(renderTarget, destTarget);
+if (FAILED(hr))
+{
+    qFatal("Failed  GetRenderTargetData!");
+}
+
+D3DLOCKED_RECT lr;
+ZeroMemory(&lr, sizeof(D3DLOCKED_RECT));
+hr = destTarget->LockRect(&lr, 0, D3DLOCK_READONLY);
+if (FAILED(hr))
+{
+    qFatal("Cannot lock rect!");
+}
+ARGB *pixel = (ARGB *)lr.pBits;
+if (!pixel)
+{
+    qFatal("No data!");
+}
+qDebug("%.2f, %.2f, %.2f, %.2f", pixel[0].r, pixel[0].g, pixel[0].b, pixel[0].a);
+
+hr = destTarget->UnlockRect();
+if (FAILED(hr))
+{
+    qFatal("Cannot unlock rect!");
+}
+renderTarget->Release();
+destTarget->Release(); 
+
+Cleaning
+m_d3ddev->Release();
+m_d3d->Release();
+
+delete m_d3ddm;
+delete m_d3d;
+delete m_d3ddev;
+

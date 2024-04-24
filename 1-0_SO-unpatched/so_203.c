@@ -1,0 +1,1 @@
+    words = realloc(words, (sizeof(char *) * number_of_words));

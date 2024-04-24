@@ -1,0 +1,41 @@
+
+I have to do a function that reads a text file with characters. It is obligatory to use malloc and realloc. I made this code, whitout errors, but when I try to read file, I get runtime error. And I can't understand where is the problem in this code.
+void openFile(FILE** file,char* filename)
+{
+int SIZE=10;
+char* data,*data2;
+int n = 0;
+char c;
+printf("filename:");
+scanf("%s",&*filename);
+if (!((*file) = fopen(filename, "r")))
+    perror("Error:");
+else
+{   
+    if ((data = (char*)malloc(SIZE * sizeof(char))) == NULL)
+    {
+        perror("malloc:");
+    }   
+    while (fscanf((*file),"%s",c) != EOF)
+    {
+        if (n < SIZE)
+        {
+            data[n++] = c;
+        }
+        else
+        {
+            if ((data2 = (char*)realloc(data, SIZE * sizeof(char))) != NULL)
+            {
+                data = data2;
+                data[n++] = c;  
+            }
+            else
+            {
+                free(data);
+            }
+        }
+
+    }
+}
+}
+

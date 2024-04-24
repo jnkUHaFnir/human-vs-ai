@@ -1,0 +1,42 @@
+
+I am doing a homework to programming in C. Bonus points are for quick writing to the file in there upload test system.
+I am trying to write a number of lines each comprising three space delimited decimal integer strings and then '\n' in file. The problem is, that fprintf is too slow (their reference time is more or less 1/3 faster).
+I have tried a lots of possibilities (everything is in one for loop).
+fprintf (too slow):
+fprintf(f, "%d %d %d\n", a[i], b[i], c[i]);
+
+converting to string and then put the string into it - even worse:
+sprintf(buffer, "%d", a[i]); //or: _itoa(_itoa(a[i], buffer, 10);
+fputs(buffer, f);
+fputc(' ', f);
+
+is there any quick way to write integer numbers to simple text file (.txt) (the last solution has time 220ms, reference is 140ms for you to picture the time)? I have been trying and googling as hell, but nothing is working. But if the time is this short, there has to be some way!
+PS: The numbers are integers all the time, size is 4 bytes, all the time in format:
+a0 b0 c0
+a1 b1 c1
+a2 b2 c2
+a3 b3 c3
+etc...
+
+More info: When I send the solution, I send only two files: file.h and file.c. No main etc... so everything is in their optimization. The solution should be in commands/algorithm (even in the description of the problem is statement, that fprintf is too slow and we should try something else to speed things up).
+Thank you for everything!
+Edit: since you want the whole code, here it is:
+void save(const str_t * const str, const char *name)
+{
+  FILE* f;
+  int i;
+
+  if(str->cnt == 0)
+      return;
+
+  f = fopen(name, "w");
+  if(f == NULL)
+      return;
+
+  for(i = 0; i < str->cnt; i++)
+  {
+      fprintf(f, "%d %d %d\n", str->a[i], str->b[i], str->c[i]);
+  }
+  fclose(f);
+}
+

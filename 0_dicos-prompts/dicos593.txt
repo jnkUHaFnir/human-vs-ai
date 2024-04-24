@@ -1,0 +1,64 @@
+
+I want to use a function to scanf up to 10 values for an array with the size 10, and also keep track of the number of values that are in the array because I'll need it later for solving some maths about the array, (max value, min value, etc.).
+#include <stdio.h>
+
+int enter(int MeasurmentData[], int nrOfmeasurments)
+    {
+    for(int i=0;i<10;++i) 
+    {
+
+        int MeasurmentData[10];
+        scanf("%d",&MeasurmentData[i]);
+
+        int nrOfmeasurments = 0;
+        nrOfmeasurments ++;
+        return nrOfmeasurments;
+
+     }
+
+int main()
+    {
+    int MeasurmentData[10];
+    int nrOfmeasurments;
+    char menuoption;
+
+    while (1) 
+    {
+        printf("Measurment tool 2.0\n");
+        printf("v (View)\n");
+        printf("e (Enter)\n");
+        printf("c (Compute)\n");
+        printf("r (Reset)\n");
+        printf("q (Quit)\n");
+
+        printf("enter your option:\n");
+        scanf(" %c", &menuoption);
+
+        if (menuoption =='e') \\ enter values
+        {
+            int MeasurmentData[10];
+            int nrOfmeasurments;
+
+            enter(MeasurmentData, nrOfmeasurments);
+
+        }
+        else if(menuoption == 'v') \\\ view values
+        {
+        //printf("%d", MeasurmentData[]);
+        }
+        else if(menuoption == 'c')
+        {
+
+        }
+        if(menuoption == 'q')
+        {
+        printf("Exiting Measurment tool 2.0\n");
+        return 0; 
+
+        }
+    }
+}
+
+When I run the program it should print Measurment tool 2.0, after the the user has the choice of inputting e(enter) which will scan in up to 10 values into an array, if the user clicks q(quit) while in the enter option already he will be returned to the main menu where he can do whatever. 
+V(view) prints out the array for the user so that he can view what elements are inside.
+C(compute) uses the elements inside and the nr of elements to calculate the highest value element, lowest.

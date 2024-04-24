@@ -1,0 +1,5 @@
+
+With use of 
+MPI_Scatterv(sendbuf[], sendcounts[], displs[], sendtype, recvbuf[], recvcount, recvtype, root, comm)
+
+two arrays are used to handle variable length of chunk sizes of data to be sent to particular processes: sendcounts and displs. The first one is the number of elements to send to each process and displs is start index of sendbuf from which sendcounts is counted - but receive buffer has same length for each process. In such situation how can I tell each process how many elements of its recbuf[] should it read to process? I.e. Process 0 will get 1 element, Process 1 will get 3 elements, but both of them have recbuf[] with 4 elements in length.

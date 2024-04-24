@@ -1,0 +1,1 @@
+    char ** ReSizeBuffer(char ***str, unsigned int size);

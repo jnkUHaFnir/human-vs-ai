@@ -1,0 +1,97 @@
+
+I am trying to solve the following problem: 
+Assume we have a 8 times 8 grid (of course it could be a larger grid). 
+We label all outer boundary points of the square as 'n', and points adjacent to them as 't', and all other points are 'f'. 
+I want to program a process that transfers all points to be 'n' by the following rule (I need to follow this rule, because this problem is a part of a bigger problem while the rest part is irrelevant to my question here): 
+I need to put all 't' points in order, and transfer the first element to be 'n'. Then I need to delete the first element which has been changed to 'n', and move the last element to the first location. Also, I need to relabel all 'f' points that are adjacent to the changed point as 't' and put them to the end of the sequence of 't' points. I need to continue this process until there is no 't' or 'f'.
+To do this I used array with variable size, and my code is as the following:
+int i,j;
+char c[n+1][n+1];
+int count=0;
+int newi[4];
+int newj[4];
+int ind;
+//initialization
+for(i=0; i<n+1;i++){
+    for(j=0;j<n+1;j++){
+        if(i==0||j==0||i==n||j==n){
+            c[i][j]='n';           //tagged as newly known
+        }
+        else if(i==1||j==1||i==n-1||j==n-1){
+            c[i][j]='t';               //trial points
+        }
+        else{
+            c[i][j]='f';               //far away points
+        }
+    }
+}
+for(i=0; i<n+1;i++){
+    for(j=0;j<n+1;j++){
+        if(c[i][j]=='t'){
+            count=count+1;           //count is number of 't'
+        }
+    }
+}
+
+int ri[count]; //array that stores the row index of trial points;
+int ci[count]; //array that stores the column index of trial points;
+int k=0;
+for(i=0; i<n+1;i++){
+    for(j=0;j<n+1;j++){
+        if(c[i][j]=='t'){
+            ri[k]=i;
+            ci[k]=j;
+            k=k+1;
+        }
+    }
+}
+while(count>0){
+    int num=0;
+    i=ri[0];
+    j=ci[0];
+    c[i][j]='n';
+    ri[0]=ri[count-1];
+    ci[0]=ci[count-1];
+    count--;
+    int newcount=0;
+    if(c[i-1][j]=='f'){
+        c[i-1][j]='t';
+        newcount++;
+        newi[newcount-1]=i-1;
+        newj[newcount-1]=j;
+    }
+    if(c[i+1][j]=='f'){
+        c[i+1][j]='t';
+        newcount++;
+        newi[newcount-1]=i+1;
+        newj[newcount-1]=j;
+    }
+    if(c[i][j-1]=='f'){
+        c[i][j-1]='t';
+        newcount++;
+        newi[newcount-1]=i;
+        newj[newcount-1]=j-1;
+    }
+    if(c[i][j+1]=='f'){
+        c[i][j+1]='t';
+        newcount++;
+        newi[newcount-1]=i;
+        newj[newcount-1]=j+1;
+    }
+   count=count+newcount;
+    for(ind=count-newcount;ind<count;ind++)/////
+    {
+        ri[ind]=newi[ind-count+newcount];
+        ci[ind]=newj[ind-count+newcount];
+    } 
+}
+
+It works fine for several loops at the beginning. However, after my careful check, then in a loop the code
+for(ind=count-newcount;ind<count;ind++)/////
+    {
+        ri[ind]=newi[ind-count+newcount];
+        ci[ind]=newj[ind-count+newcount];
+    }
+
+not only add new elements to the end of index arrays 'ri' and 'ci', but also changed the first element of 'ri', and then mess up everything.
+My question is that how this happens. Is it a problem caused by using array with variable length? Should I avoid using arrays with variable length?

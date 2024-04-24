@@ -1,0 +1,69 @@
+
+I am working on a program that will convert a binary to a decimal, the user inputs the original number or presses q to quit. My while loop does not exit, the q is being interpreted as a decimal number. What is the best way to stop this and work around this issue? Below is expected output, actual output and my code.
+Expected output:
+Enter binary byte or press q to quit: 111
+7
+
+Enter binary byte or press q to quit: q
+Goodbye!
+
+Actual outout:
+Enter binary byte or press q to quit: 111
+7
+
+Enter binary byte or press q to quit: q
+65
+
+Code:
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define STOP "q"
+
+int convertbinary(char *binarynumber);
+
+
+int main()
+{
+    int binaryreturn; 
+    char *bnumber;
+    int len; 
+    bnumber = (char *) malloc(10 * sizeof(char *));
+
+    printf("Enter binary byte or type q to quit:?\n");
+
+    while (fgets(bnumber, 10, stdin) != STOP)
+    {
+        len = strlen(bnumber);
+        if (bnumber[len - 1] == '\n')
+        {
+            bnumber[len - 1] = 0;
+        }
+        else
+        {
+            //blank line
+        }
+
+        binaryreturn = convertbinary(bnumber);
+        printf("%d\n", binaryreturn); 
+        printf("Enter binary byte or type q to quit:?\n");
+    }
+
+
+    free(bnumber);
+
+    return 0; 
+}
+
+int convertbinary(char *binarynumber)
+{
+    int val = 0;
+
+    while (*binarynumber != '\0')
+        val = 2 * val + (*binarynumber++ - '0');
+
+    return val;
+}
+

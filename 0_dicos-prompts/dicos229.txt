@@ -1,0 +1,30 @@
+
+While this code is hideous and I've clearly solved the problem incorrectly, the code works (for the moment). I want to mess around with it, but I truly don't know what I'm doing wrong here. The goal is to, without using any built in functions, take the string "This is a test" and replace the "te" with "gho" to spell out "This is a ghost". 
+int main(int argc, const char * argv[]) {
+
+    char *s = "This is a test";
+    char *newstring = malloc(strlen(s));
+
+
+    for (int i = 0 ; s[i] != '\0' ; i++){
+        if (s[i] == 't' && s[i+1] == 'e') {
+            newstring[i] = 'g';}
+        else if (s[i] == 'e' && s[i+1] == 's') {
+            newstring[i] = 'h';}
+        else if (s[i] == 's' && s[i+1] == 't') {
+            newstring[i] = 'o';
+        }
+        else if (s[i] == 't') {
+            newstring[i] = 's';
+        }
+        else {
+            newstring[i] = s[i];
+        }
+        }
+    printf("%st",newstring);
+
+
+    return 0;
+}
+
+My problem is that I don't know how to append characters to a new string in C so that I can maintain the integrity of the original string while just replacing single characters. 

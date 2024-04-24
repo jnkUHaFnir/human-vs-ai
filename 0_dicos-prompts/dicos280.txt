@@ -1,0 +1,16 @@
+
+In Linux, the kernel doesn't allocate any physical memory pages until we actually using that memory, but I am having a hard time here trying to find why it does in fact allocate this memory:
+   for(int t = 0; t < T; t++){
+      for(int b = 0; b < B; b++){
+         Matrix[t][b].length = 0;
+         Matrix[t][b].size = 60;
+         Matrix[t][b].pointers = (Node**)malloc(60*sizeof(Node*)); 
+         }
+   }
+
+I then access this data structure to add one element to it like this:
+   Node* elem = NULL;
+   Matrix[a][b].length++;
+   Matrix[a][b]->pointers[ Matrix[a][b].length ] = elem;
+
+Essentially, I run my program with htop on the side and Linux does allocate more memory if I increase the no. "60" I have in the code above. Why? Shouldn't it only allocate one page when the first element is added to the array? 

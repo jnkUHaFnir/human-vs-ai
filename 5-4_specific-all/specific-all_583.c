@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    const char input[] = "ABCDEFGHIJ";
+    int input_len = strlen(input);
+    int output_len = 2 * input_len - 1;
+    
+    char output[output_len + 1]; // +1 for the null terminator
+    
+    int j = 0;
+    for (int i = 0; i < input_len; i++) {
+        output[j++] = input[i];
+        if (i < input_len - 1) {
+            output[j++] = ' ';
+        }
+    }
+    output[output_len] = '\0'; // Null terminate the string
+    
+    printf("Input: %s\n", input);
+    printf("Output: %s\n", output);
+
+    return 0;
+}

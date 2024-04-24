@@ -1,0 +1,41 @@
+
+I wrote a code in C where the user has to have a "$", a number and a capital number in their password for it to be valid, but I'm confused as to what to do so that the password can be as long as they want, without me having to write char password[100000000000]or something like that. 
+int something = 100;
+char password[something];
+int index = 0;
+int x = 0;
+int y = 0;
+int z = 0;
+
+printf("Enter Password: "); //Mike$4
+scanf("%s", password);
+
+do{ // If index is strlen, then we checked every char of pw
+    // Ex. Password is length 6, then index 0 - 5 will be checked
+    if(index == strlen(password) && x>0 && y>0 && z>0){
+        printf("Good password!");
+        break;
+    }
+    if(index == strlen(password) && (x==0 || y==0 || z==0)){
+        printf("BAD PASSWORD");
+        break;
+    }
+
+    if(isupper(password[index]) ||  isdigit(password[index]) ||
+       password[index] == '$'){
+
+         if(isupper(password[index])){
+                x++; index++;
+                continue;}
+         if(isdigit(password[index])){
+                y++; index++;
+                continue;}
+         if(password[index] == '$'){
+                z++; index++;
+                continue;}
+    }else{index++;
+          continue;
+          }
+}while(index <= strlen(password));
+
+This is my code. Thanks!

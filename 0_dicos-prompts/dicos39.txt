@@ -1,0 +1,26 @@
+
+I'm currently studying C, if this question seems an easy one or a newbie ones, then you know why.
+So, I know there are a lot of ways to remove the '\n' left by fgets(), as already discussed on SO here, here and here.
+I'm going to focus this topic about these three methods :
+
+char *strchr(const char *s, int c);
+if (fgets(sentence, 11, stdin) != NULL) {
+    p = strchr(sentence, '\n');
+    *p = '\0';
+}
+
+char *strtok(char *str, const char *delim);
+if (fgets(sentence, 11, stdin) != NULL)
+    token = strtok(sentence, "\n");
+
+size_t strcspn(const char *s, const char *reject);
+if (fgets(sentence, 11, stdin) != NULL)
+    sentence[strcspn(sentence, "\n")] = '\0';
+
+
+Assume that the variables p and token are declared as char *p = NULL, *token = NULL;
+They do their job but, as far as performance are concerned, do they differ?
+Once, surfing on the web (I'm sorry that I haven't proof of this, because I forgot the link) I found that strspn is not a real good way to do that if one is interested in performance, hence my question.
+Before posting this on SO I've searched here without finding what I want to know. I've also tried profiling that myself, both using time ./executable and this method found on SO. However I had no luck, because the results were inconsistent.
+Can someone help me finding out if I profiled wrong or if they are really equal?
+EDIT : Here is the link where I found that strcspn is not efficient.

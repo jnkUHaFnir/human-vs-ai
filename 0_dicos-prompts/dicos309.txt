@@ -1,0 +1,46 @@
+
+I am writing a C++ code where a sequence of N different frames is generated after performing some operations implemented therein. After each frame is completed, I write it on the disk as IMG_%d.png, and finally I encode them to a video through ffmpeg using the x264 codec.
+The summarized pseudocode of the main part of the program is the following one:
+std::vector<int> B(width*height*3);
+for (i=0; i<N; i++)
+{
+  // void generateframe(std::vector<int> &, int)
+  generateframe(B, i); // Returns different images for different i values.
+  sprintf(s, "IMG_%d.png", i+1);
+  WriteToDisk(B, s); // void WriteToDisk(std::vector<int>, char[])
+}
+
+The problem of this implementation is that the number of desired frames, N, is usually high (N~100000) as well as the resolution of the pictures (1920x1080), resulting into an overload of the disk, producing write cycles of dozens of GB after each execution.
+In order to avoid this, I have been trying to find documentation about parsing directly each image stored in the vector B to an encoder such as x264 (without having to write the intermediate image files to the disk). Albeit some interesting topics were found, none of them solved specifically what I exactly want to, as many of them concern the execution of the encoder with existing images files on the disk, whilst others provide solutions for other programming languages such as Python (here you can find a fully satisfactory solution for that platform).
+The pseudocode of what I would like to obtain is something similar to this:
+std::vector<int> B(width*height*3);
+video_file=open_video("Generated_Video.mp4", ...[encoder options]...);
+for (i=0; i<N; i++)
+{
+  generateframe(B, i+1);
+  add_frame(video_file, B);
+}
+video_file.close();
+
+According to what I have read on related topics, the x264 C++ API might be able to do this, but, as stated above, I did not find a satisfactory answer for my specific question. I tried learning and using directly the ffmpeg source code, but both its low ease of use and compilation issues forced me to discard this possibility as a mere non-professional programmer I am (I take it as just as a hobby and unluckily I cannot waste that many time learning something so demanding).
+Another possible solution that came to my mind is to find a way to call the ffmpeg binary file in the C++ code, and somehow manage to transfer the image data of each iteration (stored in B) to the encoder, letting the addition of each frame (that is, not "closing" the video file to write) until the last frame, so that more frames can be added until reaching the N-th one, where the video file will be "closed". In other words, call ffmpeg.exe through the C++ program to write the first frame to a video, but make the encoder "wait" for more frames. Then call again ffmpeg to add the second frame and make the encoder "wait" again for more frames, and so on until reaching the last frame, where the video will be finished. However, I do not know how to proceed or if it is actually possible.
+Edit 1:
+As suggested in the replies, I have been documenting about named pipes and tried to use them in my code. First of all, it should be remarked that I am working with Cygwin, so my named pipes are created as they would be created under Linux. The modified pseudocode I used (including the corresponding system libraries) is the following one:
+FILE *fd;
+mkfifo("myfifo", 0666);
+
+for (i=0; i<N; i++)
+{
+  fd=fopen("myfifo", "wb");
+  generateframe(B, i+1);
+  WriteToPipe(B, fd); // void WriteToPipe(std::vector<int>, FILE *&fd)
+  fflush(fd);
+  fd=fclose("myfifo");
+}
+unlink("myfifo");
+
+WriteToPipe is a slight modification of the previous WriteToFile function, where I made sure that the write buffer to send the image data is small enough to fit the pipe buffering limitations.
+Then I compile and write the following command in the Cygwin terminal:
+./myprogram | ffmpeg -i pipe:myfifo -c:v libx264 -preset slow -crf 20 Video.mp4
+
+However, it remains stuck at the loop when i=0 at the "fopen" line (that is, the first fopen call). If I had not called ffmpeg it would be natural as the server (my program) would be waiting for a client program to connect to the "other side" of the pipe, but it is not the case. It looks like they cannot be connected through the pipe somehow, but I have not been able to find further documentation in order to overcome this issue. Any suggestion?

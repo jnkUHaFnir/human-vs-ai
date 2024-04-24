@@ -1,0 +1,28 @@
+
+I have an array declared inside a recursive function. Is it possible to sort it before outputting? The size I get from another recursive function.
+void listFilesRecursively(char *basePath, int size) {
+    char path[1000];
+    struct dirent *dp;
+    struct file files[size];
+    struct stat buf;
+    DIR *dir = opendir(basePath);
+    int counter = 0;
+    if (!dir) return;
+    while ((dp = readdir(dir)) != NULL) {
+        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
+            strcpy(path, basePath);
+            strcat(path, "/");
+            strcat(path, dp->d_name);
+            files[counter].name = path;
+            stat(path, &buf);
+            files[counter].file_info.st_size = buf.st_size;
+            printf("%s%s%ld%s\n", files[counter].name, " - ",
+                   files[counter].file_info.st_size, "bytes");
+            counter++;
+
+            listFilesRecursively(path, size);
+        }
+    }
+    closedir(dir);
+}
+

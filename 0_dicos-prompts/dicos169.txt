@@ -1,0 +1,19 @@
+
+I'm using fgetc and fopen to read a file in C. I'd like to get the first line in a variable and a second line in a separate variable like so:
+f = fopen("textfile", "r");
+
+if (!f) {
+   printf("error");
+} else {
+   loop until end of newline and save entire line to a variable
+   1st line ==> line1
+   2nd line ==> line2
+}
+
+So if textfile has:
+hello world
+goodbye world
+
+line1 = "hello world"
+line2 = "goodbye world"
+I'm thinking of looping until a \n but how should I store the characters? Think this is a simple question and maybe I'm missing something?

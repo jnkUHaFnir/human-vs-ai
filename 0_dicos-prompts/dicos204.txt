@@ -1,0 +1,26 @@
+
+I have a problem with reading the numbers. After I run the program everything is fine but there are no numbers in the array. I have tried different ways of writing the numbers in the file with no result.
+FILE *myFile;
+myFile = fopen("numbers.txt", "r");
+if (myFile==NULL)
+{
+    printf("Error Reading File\n");
+}
+else
+{
+tek=0;
+for (i=0;i++)
+{
+//  tek=fgetc(myFile);
+    fscanf(myFile,"%d",&tek);
+    if (tek!=EOF)
+    {
+        redica[i]=tek;
+    }
+    else
+    {
+        break;
+    }
+}
+getch();
+

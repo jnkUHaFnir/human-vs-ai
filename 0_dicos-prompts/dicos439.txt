@@ -1,0 +1,49 @@
+
+
+
+
+I'm making a simple code in C programming. To Be Honest with you guys I have quite a while that I don't program in it. So I wanted to make a simple program to reintroduce myself to this programming language.
+This is the code:
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char email;
+    char temppass[64];
+    char pass[] = "password";
+
+    printf("Enter your email: \n");
+    scanf("%s", &email);
+
+    printf("Enter your password: \n");
+    scanf("%s" , &temppass);
+
+
+    if(strcmp(temppass, pass) == 0){
+
+        printf("This is the password");
+
+    }
+
+
+    else{
+
+        printf("You Failed!");
+
+
+    }
+
+return 0;
+
+}
+
+Though I'm having some problems which I can't solve. The first problem is that it is giving me an warning:
+strcmp2.c: In function ‘main’:
+strcmp2.c:14:13: warning: format ‘%s’ expects argument of type ‘char *’, but argument 2 has type ‘char (*)[64]’ [-Wformat=]
+     scanf("%s" , &temppass);
+            ~^    ~~~~~~~~~ 
+I'm pretty aware that this question might look duplicate as other questions but as far as I have searched and read all questions and answers, none of them could help me since they were different and didn't helped me.
+At first, I tried to solve it with fgets() as an input function. When compiling the code, it didn't gave me nor warnings or errors but the problem with it is that fgets puts a \n new line character at the end of input. So the user input and the string I'm comparing are not the same. I tried adding the new line character at char pass[]="password\n" to see if it solves anything, but it failed again.
+Though, when I run it and inputs the requested info, the strcmp() function will not successfully compare the two strings, even if the password input is the same.
+If anyone would help me, I really appreciate you and your precious time. Many Thanks In Advance :)

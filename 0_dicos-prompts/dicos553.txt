@@ -1,0 +1,39 @@
+
+
+
+
+I need help reading the commas and periods as spaces in a .txt file. The program runs smoothly and outputs the correct number of words and numbers, but I need the numbers that have periods and commas to read as separate numbers.
+#include <iostream>
+#include <iterator>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    int countWords = 0, countNumbers = 0;
+
+    ifstream file;
+    file.open ("input1.txt");
+    string word;
+
+    while (file >> word)            // read the text file word-by-word
+    {
+        if (isdigit(word.at(0)))    // if the first letter a digit it counts as number
+        {
+            countNumbers++;
+        }
+        else
+        {
+            countWords++;
+        }
+        cout << word << " ";
+    }
+
+    cout << endl;
+    cout << "Words = " << countWords << "      Numbers = " << countNumbers << endl;
+
+    system("pause");
+    return 0;
+}
+

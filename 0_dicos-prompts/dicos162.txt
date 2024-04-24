@@ -1,0 +1,39 @@
+
+I want here to implement the value of array[i][j] into itself, but firstly I have to check if it is in range between example: -99 and 99. If the input is out of these boundaries, it should stop the program.
+I tried it with a do-while loop and just now I tried while loop.
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+    int array[2][2], i, n, j;
+
+    /*
+    do
+    {
+        printf("Value= ");
+        scanf("%d", &n);
+        array[i][j] = n;
+        i++;
+        j++;
+    }
+
+    while(n < 99 && n > -99);
+    */
+    while(array[i][j] < 99 && array[i][j] > -99){
+
+        for(i = 0; i < 2; ++i){
+            for(j = 0; j < 2; ++j){
+                printf("Value= ");
+                scanf("%d", &array[i][j]);
+            }
+        }
+    }
+    // Print the result
+    for(i = 0; i < 2; ++i){
+        for(j = 0; j < 2; ++j){
+            printf("\n[%d][%d]: ", array[i][j]);
+        }
+    }
+}
+
+I got a endless loop which doesn't exit if the value is incorrect (out of these boundaries).

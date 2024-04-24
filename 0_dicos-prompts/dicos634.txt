@@ -1,0 +1,47 @@
+
+I am experimenting with OpenMP and the target directives. I am using omp_target_alloc() to allocate a buffer on the device directly, and then I try to write to this buffer inside a target region. Unfortunately, when I try to do so, I get a segmentation fault. Interestingly, if I use directives instead of the function omp_target_alloc(), the program does not crash. And to make things even more interesting, both omp_get_num_devices() and omp_get_default_device() return 0. Here is my code:
+#include <iostream>
+#include <omp.h>
+
+//#define USE_TARGET // Uncomment this to see the segmentation fault
+
+int main(int argc, char** argv)
+{
+    const unsigned long int N = 100000;
+
+    std::cout << "Number of devices: " << omp_get_num_devices() << std::endl;
+    std::cout << "Default device: " << omp_get_default_device() << std::endl;
+
+    // Allocate
+#ifdef USE_TARGET
+    float* buffer = (float*)omp_target_alloc(N*sizeof(float), 0);
+#else
+    float* buffer = (float*)malloc(N*sizeof(float));
+#endif
+
+    // Evaluate
+#ifdef USE_TARGET
+    #pragma omp target is_device_ptr(buffer)
+    {
+#else
+    #pragma omp target data map(tofrom:buffer[0:N])
+    {
+#endif
+        #pragma omp parallel for
+        for(unsigned long int i = 0; i < N; ++i)
+            buffer[i] = i;
+    }
+
+    // Cleanup
+#ifdef USE_TARGET
+    omp_target_free(buffer, 0);
+#else
+    free(buffer);
+#endif
+
+    return 0;
+}
+
+Can someone explain to me why the above code produces a segmentation fault when I define USE_TARGET? What do I need to do to fix this code?
+I use "device 0" in my call to omp_target_alloc(). I assume that device 0 is the CPU itself. Right? I know that the target directives and the omp_target_alloc() are a bit pointless, but my aim is to write a code that runs both on accelerators and CPUs.
+Also, g++ --version gives me this: g++ (Debian 7.3.0-5) 7.3.0

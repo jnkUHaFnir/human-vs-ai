@@ -1,0 +1,29 @@
+
+I need to read white space separated words from stdin, then use an emalloc function to allocate memory for each word as it is read in.
+I am finding this very confusing, here is what I have written so far.
+#include <stdio.h>
+#include <stdlib.h>
+
+int main (void)
+{
+    #define SIZE 100
+    char* username[100]; 
+    int i;
+    int p;
+
+    /* Read words into array */
+    for(i = 0; i < 100; i++)
+    {
+        username[i] = calloc(SIZE, sizeof(char)); 
+        scanf("%s",username[i]);
+    }
+
+    /* Print out array */
+    for (p = 0; p < 100; p++) {
+        printf("%s", username[p]);
+    }
+
+    return 0;
+}
+
+I am not sure whether I am reading words in correctly using scanf and I am pretty sure my memory allocation is not quite correct. Coming from Java, memory allocation is tricky to wrap my mind around. How come I do not include an & infront of username[i] in the scanf function?

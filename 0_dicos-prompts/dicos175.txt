@@ -1,0 +1,32 @@
+
+I am given an assignment to take in and store a string using a function, however, I am given some restrictions.
+
+Only able to use getchar() to take in user input character by character
+No assumption of length of the input (Not allowed to create a array of size 100 for example)
+Not allowed to read the input twice, for example, using the first round of input to count string size and then ask the user to input again after creating an array of the string's size that was counted on the first round.
+Not allowed to create a large buffer so a constant size buffer means memory will be wasted if the input is 1 character for example
+int read_string()
+{
+    char* input;
+    int counter = 0;
+
+while (( input = getchar()) != '\n')   //read until detect '\n'
+{
+    printf("%c\n",input);
+    counter = counter + 1;
+}
+printf("Length of string: %d\n", counter);
+
+}
+
+
+I currently have no idea how to store character by character and dynamically resize an "array" like vectors equivalent in C++. C does not have vectors based on my research.
+Based on my code now, when i type in "Hello",
+the output will be
+h
+e
+l
+l
+o
+
+but I do not know how to store each character in a dynamic array

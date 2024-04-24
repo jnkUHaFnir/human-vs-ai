@@ -1,0 +1,33 @@
+
+Im trying to find a way to assign a value to a specific colour/word. This is just a test code that I tried but it didnt work, any suggestions? input = green and red. output = 6.
+#include <stdio.h>
+
+int main()
+#define green 2, red 3;
+
+{
+
+
+    char bands, color1, color2;
+    int mult;
+
+
+    printf("Select how many bands the resistor has");
+    printf("\n A. 4 bands");
+    printf("\n B. 5 bands");
+    printf("\n C. 6 bands");
+    scanf("%c", &bands);
+
+    switch (bands)
+
+    case 'a':
+    case 'A':
+    printf("Enter the colors");
+    scanf("%s %s", &color1, &color2);
+    mult = color1 * color2;
+    printf("%d", mult);
+
+    getchar();
+    return 0;
+}
+

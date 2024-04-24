@@ -1,0 +1,7 @@
+
+Just having a tiny issue with the C open() system call regarding the filepath, on Linux (Ubuntu).
+If I put the absolute path ie open("/home/bob/Desktop/folder/file", O_RDONLY); it opens fine
+But say if I run my program on another computer that filepath would not be correct ie username may not be bob
+So, when I try open("./Desktop/folder/file", O_RDONLY); the file wont open, is this correct way. I know (~/) wont work but not sure why (./) wont work?
+Any suggestions please?
+Thanks,

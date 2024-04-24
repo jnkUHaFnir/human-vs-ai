@@ -1,0 +1,6 @@
+    int *p;
+    p = malloc(n * sizeof(int));  // n is size of the array
+    ....
+    .....
+    // After all use of the memory is over.
+    free(p);

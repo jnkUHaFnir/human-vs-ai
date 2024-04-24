@@ -1,0 +1,102 @@
+
+I've got a problem with reading words from file and passing it to binary tree. When I debug it, it says:
+Unhandled exception at 0x76E7773B(ntdll.dll) in Projekt.exe: 0.C00000005:
+    Access violation reading location 0x0037902A.
+
+Here is the source code:
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+typedef struct Tree {
+    int val;
+    char *word;
+    struct Tree *left;
+    struct Tree *right;
+} Tree;
+
+void show(Tree *hd) {
+    if (hd != NULL) {
+        show(hd->left);
+        show(hd->right);
+        printf("%s -- %d\n", hd->word, hd->val);
+    }
+}
+
+void zero(Tree *aTree) {
+    if (aTree == NULL)
+        return;
+
+    zero(aTree->left);
+    free(aTree);
+    zero(aTree->right);    
+}
+
+int alpha(char *word1, char *word2) {
+    if (word1[0] == 0 && word2[0] == 0)
+        return 2;
+    else
+    if (word1[0] == word2[0])
+        return alpha(&word1[1], &word2[1]);
+    else
+    if (word1[0] < word2[0])
+        return 1;
+    else
+        return 0;
+}
+
+Tree *create(char *word) {
+    Tree *temp;
+    temp = (Tree*)malloc(sizeof(Tree));
+    temp->left = temp->right =  NULL;
+    temp->val = 1;
+    temp->word = (char*)malloc(sizeof(char));
+    strcpy(temp->word, word);
+    return temp;
+}
+
+Tree *insert(Tree *aTree, char *word) {
+    if (aTree == NULL) {
+        aTree = create(word);
+    } else
+    if (alpha(aTree->word, word) == 0) {
+        aTree->left = insert(aTree->left,word);
+    } else
+    if (alpha(aTree->word, word) == 1) {
+        aTree->right = insert(aTree->right, word);
+    } else
+    if (alpha(aTree->word, word) == 2) {
+        aTree->val++;
+    }
+    return aTree;
+}
+
+int main(int argc, char *argv[]) {
+    Tree *myTree = NULL;
+    char buffer[256] = { 0 };
+    char temp = 0;
+    int i = 0;
+    FILE *fp = fopen(argv[1], "r");
+    if (fp)  {
+        while (temp != EOF) {
+            temp = getc(fp);
+            temp = toupper(temp);
+            if (temp >= 65 && temp <= 90) {
+                buffer[i] = temp;
+                i++;
+            } else {
+                if (buffer[0] != 0) {
+                    puts(buffer);
+                    myTree = insert(myTree, buffer);
+                    memset(buffer, 0, sizeof(buffer));
+                    i = 0;
+                }
+            }
+        }
+    }
+    fclose(fp);
+    show(myTree);
+    return 0;
+}
+

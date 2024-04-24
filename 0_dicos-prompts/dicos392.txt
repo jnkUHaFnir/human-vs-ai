@@ -1,0 +1,23 @@
+
+This is a long shot, if you think the question is too localized, please do vote to close. I have searched on the caffe2 github repository, opened an issue asking the same question, opened another issue at the caffe2_ccp_tutorials repository because its author seems to understand it best, read the doxygen documentation on caffe2::Tensor and caffe2::CUDAContext, 
+and even gone through the caffe2 source code, and in specific the tensor.h, context_gpu.h and context_gpu.cc.
+I understand that currently caffe2 does not allow copying device memory to a tensor. I am willing to expand the library and do a pull request in order to achieve this. My reason behind this is that I do all image pre-processing using cv::cuda::* methods which operate on device memory, and as such I think it is clearly a problem doing the pre-processing on the gpu, only to download the result back on the host, and then have it re-uploaded to the network from host to device.
+Looking at the constructors of Tensor<Context> I can see that maybe only
+template<class SrcContext , class ContextForCopy > 
+Tensor (const Tensor< SrcContext > &src, ContextForCopy *context)
+
+might achieve what I want, but I have no idea how to set the <ContextForCopy> and then use it for construction.
+Furthermore, I see that I can construct the Tensor with the correct dimensions, and then maybe using 
+template <typename T>
+T* mutable_data()
+
+I can assign/copy the data.
+The data itself is stored in std::vector<cv::cuda::GpuMat, so I will have to iterate it, and then use either cuda::PtrStepSz or cuda::PtrStep to access the underlying device allocated data.
+That is the same data that I need to copy/assign into the caffe2::Tensor<CUDAContext>.
+I've been trying to find out how internally the Tensor<CPUContext> is copied to Tensor<CUDAContext> since I've seen examples of it, but I can't figure it out, although I think the method used is CopyFrom. The usual examples as already mentioned, copy from CPU to GPU:
+TensorCPU tensor_cpu(...);
+TensorCUDA tensor_cuda = workspace.CreateBlob("input")->GetMutable<TensorCUDA>();
+tensor_cuda->ResizeLike(tensor_cpu);
+tensor_cuda->ShareData(tensor_cpu);
+
+I am quite suprised nobody has run into this task yet, and a brief search yields only one open issue where the author (@peterneher) is asking the same thing more or less.

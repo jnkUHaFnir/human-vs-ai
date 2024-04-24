@@ -1,0 +1,1 @@
+    if (strcmp(data2.issueNumber, issuenumber) == 0) {//...}

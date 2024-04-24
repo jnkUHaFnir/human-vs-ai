@@ -1,0 +1,82 @@
+
+I am trying to delete a none-empty directory without system calls and without using extensive libraries. My code so far is...
+int rmrf(char *path) {
+    char* path_copy = (char *) malloc(1024 * sizeof(char));
+    strcpy(path_copy, path);
+    DIR *directory = opendir(path_copy);
+    struct dirent *entry = readdir(directory);
+    while (entry != NULL) {
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) { //skip /. and /..
+        } else if (entry->d_type == DT_DIR) { //directory recurse
+            strcat(path_copy, "/");
+            strcat(path_copy, entry->d_name);
+            rmrf(path_copy);
+            remove(path);
+        } else { //file delete
+            strcat(path_copy, "/");
+            strcat(path_copy, entry->d_name);
+            remove(path_copy);
+        }
+        entry = readdir(directory);
+    }
+    closedir(directory);
+    return 0;
+}
+
+my current file structure looks something like this...
+Who
+|---Region 1
+    |---County 1
+        |---SubCounty 1
+    |---County 2
+|---Region 2
+    |---County 1
+|---Region 3
+
+currently I am getting seg faults but in different places as the day progresses. Earlier today I would get about two levels of recursion deep and then seg fault out but as of now I can't even make past a full level down. I can't figure out what is wrong and when I use gdb to look into the problem I get...
+malloc.c: No such file or directory.
+
+Any help would be appreciated!
+UPDATE:
+I have taken suggestions from paxdiablo and came up with the resulting function...
+int rmrf(char *path) {
+    char* path_copy = malloc(1024);
+    DIR *directory = opendir(path);
+    struct dirent *entry = readdir(directory);
+    while (entry != NULL) {
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) { //skip /. and /..
+        } else if (entry->d_type == DT_DIR) { //directory recurse
+            strcpy(path_copy, path);
+            strcat(path_copy, "/");
+            strcat(path_copy, entry->d_name);
+            rmrf(path_copy);
+            remove(path);
+        } else { //file delete
+            strcpy(path_copy, path);
+            strcat(path_copy, "/");
+            strcat(path_copy, entry->d_name);
+            remove(path_copy);
+        }
+        entry = readdir(directory);
+    }
+    closedir(directory);
+    free(path_copy);
+    return 0;
+}
+
+however I am still getting a seg fault though it is getting further in the recursion. The gdb output for the seg fault is as followed...
+Program received signal SIGSEGV, Segmentation fault.
+_int_malloc (av=av@entry=0x7ffff7dd1b20 <main_arena>, bytes=bytes@entry=32816) at malloc.c:3802
+3802    malloc.c: No such file or directory.
+(gdb) where
+#0  _int_malloc (av=av@entry=0x7ffff7dd1b20 <main_arena>, bytes=bytes@entry=32816) at malloc.c:3802
+#1  0x00007ffff7a91184 in __GI___libc_malloc (bytes=32816) at malloc.c:2913
+#2  0x00007ffff7ad51ba in __alloc_dir (statp=0x7fffffffe190, flags=0, close_fd=true, fd=6) at ../sysdeps/posix/opendir.c:247
+#3  opendir_tail (fd=6) at ../sysdeps/posix/opendir.c:145
+#4  __opendir (name=<optimized out>) at ../sysdeps/posix/opendir.c:200
+#5  0x0000000000401bca in rmrf ()
+#6  0x0000000000401c8d in rmrf ()
+#7  0x0000000000401c8d in rmrf ()
+#8  0x0000000000402380 in main ()
+
+Thoughts?

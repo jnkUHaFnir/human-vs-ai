@@ -1,0 +1,1 @@
+    int snprintf( char* buffer, std::size_t buf_size, const char* format, ... );

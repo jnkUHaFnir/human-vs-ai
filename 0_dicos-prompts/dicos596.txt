@@ -1,0 +1,15 @@
+
+I'm new to C, and trying to understand why the following works with a fixed-size character array but not with a pointer:
+float number = 1245.12;
+
+// allocate a character array for the buffer
+char number_as_string[50];
+sprintf(number_as_string, "%f", number);
+
+But allocating a pointer (which I thought would point to a location in memory, and allow iterating to the next memory point, etc.) would not work:
+float number = 1245.12;
+
+// allocate a pointer
+char * number_as_string;
+sprintf(number_as_string, "%f", number);
+

@@ -1,0 +1,42 @@
+
+Im trying to get it to stop but im not quite sure how to do that. Im just starting to learn it. I want it to stop when I type -99.
+Any help would be greatly appreciated!
+this is what I have: 
+#include <stdio.h>
+#define SIZE 5
+int main(void)
+{
+    int hot=0, pleasant=0, cold=0;
+    int sum=0, i, temp;
+    double average;
+
+    for(i=0; i<SIZE; i++)
+    {
+        printf("Enter temperature %d> (-99 to stop)",i+1);
+        scanf("%d",&temp);
+        sum +=temp;
+
+         if(temp >= 85)
+        {
+            ++hot;
+        }
+
+        else if(temp >= 60 && temp <= 84)
+        {
+            ++pleasant;
+        }
+
+        else
+        {
+            ++cold;
+        }
+    }
+    average = (double) sum/SIZE;
+
+    printf("The Collection of hot days is %d\n",hot);
+    printf("The Collection of pleasant days is %d\n",pleasant);
+    printf("The Collection of cold days is %d\n",cold);
+    printf("The Average temperature is %.2f\n",average);
+    return(0);
+}
+

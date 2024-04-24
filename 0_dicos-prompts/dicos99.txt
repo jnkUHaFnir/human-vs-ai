@@ -1,0 +1,2 @@
+
+I've been creating a program requesting the user to input a char value, but if they enter more than one character it will move onto the next function and break the program. I've added in the second method which gets run when multiple inputs are entered.

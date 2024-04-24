@@ -1,0 +1,1 @@
+fgets(buk[i].name),sizeof(buk[i].name),stdin);

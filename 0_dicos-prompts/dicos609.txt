@@ -1,0 +1,53 @@
+
+I am reading a .csv file with:
+FILE * fPointer; = fopen(fileName, "r");
+char singleLineContent[150];
+
+while(fgets(singleLineContent, 150, fPointer))
+{
+     /* data handling */
+}
+
+It stops reading the file at line 40239. I have no idea why.
+Here is the entire file. It returns -1. There are over 1 million lines in the file. I also write another file with this data:
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main()
+{
+    printf("Type the name of a file to be read (30 character max): ");
+    char fileName[30];
+    scanf("%s", fileName);
+    printf("Type the name of destination file (30 character max): ");
+    char fileNameW[30];
+    scanf("%s", fileNameW);
+    FILE * fPointerForWriting = fopen(fileNameW, "w");
+    FILE * fPointer;
+    fPointer = fopen(fileName, "r");
+
+    int i = 1;
+    char singleLineContent[150];
+
+    while(fgets(singleLineContent, 150, fPointer))
+    {
+        char *token = strtok(singleLineContent, ",\n");
+        fprintf(fPointerForWriting, "%d", atoi(token));
+        token = strtok(NULL, ",\n");
+        fprintf(fPointerForWriting, ",%d     %d\n", atoi(token), i);
+        if(token == NULL)
+        {
+            printf("There are no tokens\n");
+            return -3;
+        }
+        i++;
+    }
+
+    fclose(fPointerForWriting);
+    fclose(fPointer);
+
+    return 0;
+}
+
+It says I need to add more details that are not code. It says I need to add more details that are not code. It says I need to add more details that are not code. It says I need to add more details that are not code. It says I need to add more details that are not code. It says I need to add more details that are not code. It says I need to add more details that are not code.

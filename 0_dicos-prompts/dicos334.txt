@@ -1,0 +1,12 @@
+
+
+
+
+I'm trying to read in a text file that's a 10x5 matrix of student ID#s and grades. I have a Chromebook. I've downloaded the file (grades.txt) and it's in downloads. I didn't save it anywhere else. I don't know how to fopen and read it. I eventually have to create another column for the average student score, etc. So far, I've got this:
+int main();
+
+FILE* spTemp
+
+spTemp = fopen("??", "r");
+
+How can I read the text file?

@@ -1,0 +1,38 @@
+
+why not work if more than one answer key:
+can not use the key 
+
+if (resp == 'open')
+
+but if I replace it with one letter only, then he can work
+
+if (resp == 'y')
+
+or replace it with the number, then he can work
+
+if (resp == 1)
+
+I wish she could write more than one letter
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    char resp;
+    index:
+    cout<<endl;
+    cout<<"just an example of course"<<endl;
+    cout<<"type {open} to return to the index\n";
+    cin>>resp;
+    if (resp == 'open'){
+        goto index;
+    }
+    else if(resp == 2)
+        {
+        return EXIT_SUCCESS;
+    }
+
+
+
+}
+

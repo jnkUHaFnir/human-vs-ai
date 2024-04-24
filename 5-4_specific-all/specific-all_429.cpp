@@ -1,0 +1,39 @@
+int processFile(const char *filename, 
+                YAML::Emitter &out_yaml, 
+                char *ground_truth_filename)
+{   
+    std::cout << "Here" << std::endl;
+
+    if (ground_truth_filename == nullptr) {
+        const char default_filename[] = "default_filename.yaml";
+        strcpy(ground_truth_filename, default_filename);
+    }
+
+    std::ifstream imgstrm(filename, std::ios::binary | std::ios::in);
+
+    if (imgstrm.bad() || !imgstrm.is_open())
+    {
+        fprintf(stderr, "Failed to open file: %s\n", filename);
+        return FILE_ERROR;
+    }
+
+    // get ground truth
+    std::ifstream ground_truth_stream(ground_truth_filename);
+
+    if (!ground_truth_stream.is_open()) 
+    {
+        fprintf(stderr, "Failed to open file: %s\n", ground_truth_filename);
+        return FILE_ERROR;
+    }
+}
+char ground_truth_filename[256]; // Assuming a reasonable maximum length
+memset(ground_truth_filename, 0, sizeof(ground_truth_filename)); 
+
+for (int i = 1; i + 1 < argc; i += 2) {
+    if (!strcmp(argv[i], "--snapshot-markup")) {
+        strncpy(ground_truth_filename, argv[i + 1], sizeof(ground_truth_filename) - 1);
+        markupFlag = true;
+    }
+}
+
+processFile(filename, out_yaml, ground_truth_filename);

@@ -1,0 +1,19 @@
+
+I have written a program employing the following concept: 
+I create an integer x pass by address to a function, along with a filename, said function opens file if available, scans the first line and sets the value that pX points to equal to the scanned line. 
+Only it's not working, and I don't see what I'm doing wrong. As far as I can tell the code below is generally how one would accomplish it, but I'm not sure if I'm not using scanf() correctly with the pointer or what.
+void foo() {
+    char input[20] = "test.txt";
+    int x = 1;
+    bar(input, &x);
+}
+
+void bar(char *fileName, int *pX) {
+    FILE *fp = fopen(fileName, "r");
+    char *buffer = malloc(15 * sizeof(int));
+    fgets(buffer, 15, fp);
+    scanf(buffer, "%d", *pX);
+    free(buffer);
+    fclose(fp);
+}
+

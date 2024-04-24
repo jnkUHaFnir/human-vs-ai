@@ -1,0 +1,1 @@
+    newNode->name = malloc(nameLength + 1);

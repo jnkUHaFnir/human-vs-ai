@@ -1,0 +1,52 @@
+
+The task is to sort a list in alphabetical order. That is to be done by changing the pointer variables and not just switching the content of the nodes.
+I first wanted to implemend a swap function. that function shall swap 2 nodes. After that I wanted to implement a sorting algorithm. My problem is, that the swaping function does not really work as it should and the algorithm doesnt either (ofc, since the swapping function doesnt even work).
+    struct student {
+      char Vorname[51];
+      char Nachname[51];
+      int MatNr;
+      char Adresse[51];
+      int Kurse;
+      struct student *next;
+      struct student *previous;
+    };
+
+    struct student *first = NULL;
+    struct student *last = NULL;  
+
+    void swap(struct student *pointer) {
+      struct student *pointer1, *pointer3, *pointer4;
+      pointer1 = pointer->previous;
+      pointer3 = pointer->next;
+      pointer4 = pointer->next->next;
+
+      pointer4->previous = pointer;
+      pointer->next = pointer4;
+      pointer1->next = pointer3;
+      pointer3->previous = pointer1;
+      pointer->previous = pointer3;
+      pointer3->next = pointer;
+    }
+
+This is the not finished sort function. I didnt implement it correctly yet, since the swap function took my attention first.
+void sort(void) {
+  struct student *pointer1, *pointer2, *pointer3, *pointer4;
+  pointer1 = first->previous;
+  pointer2 = pointer1->next;
+  pointer3 = pointer2->next;
+  pointer4 = pointer3->next;
+
+  while(pointer2 != NULL){
+    if((strcmp(pointer2->Nachname, pointer3->Nachname)) > 0) {
+           swap(pointer2);
+    }
+    pointer1 = pointer1->next;
+    printList();
+  }
+}  
+
+When I run swap(first); the first element doesnt get displayed since the pointer first is now pointing at the second node. Well, thats easily done with first = pointer3;
+When I run swap(first->next); there is a similar problem, since it also leaves out one node of the list.
+I'm not really sure how to get this function right, since first shouldnt get involved in swapping the 2nd and 3rd node of the list.
+I'd appreciate any help that could help me solving this, maybe I'm just overlooking some minor mistake, but I can't really get the solution of this.
+Thank you!

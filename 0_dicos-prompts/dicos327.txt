@@ -1,0 +1,8 @@
+
+I did this, but sadly it is not working, and crashing when input is char/string, etc.
+How do I fix it?
+while((scanf("%d",&numOfDef) != 1 ) && (numOfDef>0 ))
+{
+  printf("not a pos num try again");
+}
+

@@ -1,0 +1,29 @@
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main(){
+
+string m;
+int n;
+
+cout << "How many elements would you like to sort?" << endl;
+
+cin >> n;  //index for the array
+
+
+
+cout << "Enter " << n << " numbers seperated by a comma to be sorted" <<   endl;
+
+cin >> m;
+
+string unsortedNumbers[n]={m};  // values inputed stored as array values
+cout << m << endl;
+
+std::sort(m.begin() , m.end());  //sorting string m
+std::cout<< m << endl;
+
+}
+
+I understand that the code is wrong, if you run the code the 'string' works properly until sorting. When sorting numbers above 10 it breaks them down as 1 and 0. Also all the commas get sorted and say your input was 2,3,4,5 your output will look something like ,,,,2345. So my question is how can I let the user select the index size while then allowing whatever number they input to determine the number of variables to then be sorted?

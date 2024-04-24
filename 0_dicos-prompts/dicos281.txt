@@ -1,0 +1,11 @@
+
+Hi I was told during my first class about arrays in C that you cannot declare them using a variable, for example: int array[n]. Yet if I write a code like this:
+#include <stdio.h>
+int main()
+{
+    int n;
+    scanf("%d",&n);
+    int array[n];
+}
+
+Codeblocks doesn't give me any warning or error. How do I know that what I wrote isn't correct?

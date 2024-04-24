@@ -1,0 +1,27 @@
+
+I am facing a problem. Whenever I want to fetch something and type that word, the result gives the complete sentence after that word. Means it starts from that word and print the whole sentence.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(){
+
+  FILE * fp = fopen("file.txt","r");
+  const char string[100];
+  char found[100];
+  char *result;
+  const char fetch[11] = "learning";
+
+  while(fgets(string, 100, fp))
+  {
+    strcpy(found, string);
+    printf("Your result: %s", found);
+
+    result = strstr(found, fetch);
+    printf("Your result is: %s",result);
+    break;
+  }
+
+  return 0;
+}
+

@@ -1,0 +1,1 @@
+    scanf(" %19[^\n]",name); /* giving space before % prevents reading extra characters */

@@ -1,0 +1,23 @@
+
+I am using user input to fill a 2d array. A user inputs numbers in one line and I then use nested loops to fill the array like so:
+//User inputs: "1 2 3 4 5"
+
+for(i = 0; i < r; i++){
+    for(j = 0; j < c; j++){
+            scanf("%d", &arr[i][j]);
+    }
+ }
+
+However, the problem is if the user enters 5 ints when there is room for 6, it just waits for another input. How can I detect if there are insufficient numbers?
+I have tried using this but it didn't work:
+for(i = 0; i < r; i++){
+    for(j = 0; j < c; j++){
+        if (!feof(stdin)){
+            scanf("%d", &arr[i][j]);
+        }
+        else{
+            printf("insufficient datapoints\n");
+        }
+    }
+ }
+

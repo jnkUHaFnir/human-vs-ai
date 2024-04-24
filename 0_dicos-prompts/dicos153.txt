@@ -1,0 +1,16 @@
+
+I'm new to low level programming and have been stuck with the following problem:
+I get a string in the following format:
+?cmd=ASET&<hour>&<minute>
+
+where the hour and minute values always consist of 2 decimal numbers.
+So an example of the string that can be received is:
+"?cmd=ASET&08&30"
+
+I am trying to write an if statement that recognizes that the string starts with "?cmd=ASET" and changes two global variables called minute and hour to the values in the String. I've been trying to do this with strtok(), but have not had any luck so far. So the global layout of my if statement would be:
+if (String starts with "?cmd=ASET") {
+   minute = value found in the string;
+   hour = value found in the string;
+}
+
+I would really appreciate any help.

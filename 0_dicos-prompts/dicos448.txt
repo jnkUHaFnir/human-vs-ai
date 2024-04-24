@@ -1,0 +1,28 @@
+
+I'm trying to use this code to read values between 0 to 255 (unsigned char). 
+#include<stdio.h>
+int main(void)
+{
+    unsigned char value;
+
+    /* To read the numbers between 0 to 255 */
+    printf("Please enter a number between 0 and 255 \n");
+    scanf("%u",&value);
+    printf("The value is %u \n",value);
+
+    return 0;
+}
+
+I do get the following compiler warning as expected.
+
+warning: format ‘%u’ expects type ‘unsigned int *’, but argument 2 has type ‘unsigned char *’
+
+And this is my output for this program.
+
+Please enter a number between 0 and 255
+45
+The value is 45 
+Segmentation fault
+
+I do get the segmentation fault while running this code. 
+What is the best way to read unsigned char values using scanf? 

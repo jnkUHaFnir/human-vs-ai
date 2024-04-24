@@ -1,0 +1,41 @@
+
+This is a follow-up to my original post. But I'll repeat it for clarity:
+As per DICOM standard, a type of floating point can be stored using a Value Representation of Decimal String. See Table 6.2-1. DICOM Value Representations:
+
+Decimal String: A string of characters representing either a fixed
+  point number or a floating point number. A fixed point number shall
+  contain only the characters 0-9 with an optional leading "+" or "-"
+  and an optional "." to mark the decimal point. A floating point number
+  shall be conveyed as defined in ANSI X3.9, with an "E" or "e" to
+  indicate the start of the exponent. Decimal Strings may be padded with
+  leading or trailing spaces. Embedded spaces are not allowed.
+"0"-"9", "+", "-", "E", "e", "." and the SPACE character of Default
+  Character Repertoire. 16 bytes maximum
+
+The standard is saying that the textual representation is fixed point vs. floating point.  The standard only refers to how the values are represented within in the DICOM data set itself. As such there is not requirement to load a fixed point textual representation into a fixed-point variable.
+So now that this is clear that DICOM standard implicitely recommend double (IEEE 754-1985) for representing a Value Representation of type Decimal String (maximum of 16 significant digits). My question is how do I use the standard C I/O library to convert back this binary representation from memory into ASCII onto this limited sized string ?
+From random source on internet, this is non-trivial, but a generally accepted solution is either:
+printf("%1.16e\n", d); // Round-trippable double, always with an exponent
+
+or
+printf("%.17g\n", d); // Round-trippable double, shortest possible
+
+Of course both expression are invalid in my case since they can produce output much longer than my limited maximum of 16 bytes. So what is the solution to minimizing the loss in precision when writing out an arbitrary double value to a limited 16 bytes string ?
+
+Edit: if this is not clear, I am required to follow the standard. I cannot use hex/uuencode encoding.
+Edit 2: I am running the comparison using travis-ci see: here
+So far the suggested codes are:
+
+Serge Ballesta
+chux
+Mark Dickinson
+chux
+
+Results I see over here are:
+
+compute1.c leads to a total sum error of: 0.0095729050923877828
+compute2.c leads to a total sum error of: 0.21764383725715469
+compute3.c leads to a total sum error of: 4.050031792674619
+compute4.c leads to a total sum error of: 0.001287056579548422
+
+So compute4.c leads to the best possible precision (0.001287056579548422 < 4.050031792674619), but triple (x3) the overall execution time (only tested in debug mode using time command).

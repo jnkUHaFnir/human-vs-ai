@@ -1,0 +1,47 @@
+
+I'm writing a basic HTTP client and have ran into a problem - some HTTP servers are forcing resets, causing a "Connection reset by peer" error. Many HTTP servers do close the connection gracefully, though none seem to keep the connection alive.
+However, I'm sure it's my client because HTTP clients using very similar source code don't exhibit the same behaviour: their connections to the same servers are either closed gracefully or kept alive.
+What is causing this seemingly inconsistent problem?
+Relevant code:
+/* socket */
+if ((context->socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
+    perror("Failed to create socket");
+    exit(-1);
+}
+
+/* connect */
+if (connect(context->socket, &context->tx_addr, sizeof(struct sockaddr)) != 0) {
+    perror("Couldn't connect to server");
+    exit(-1);
+}
+
+/* create header */
+snprintf(context->packet, BUFF_SIZE,
+         "GET %s HTTP/1.1\r\n" \
+         "Host: %s\r\n\r\n", 
+         conf->request, conf->host);
+
+/* send header */
+if ((sendto(context->socket, context->packet, BUFF_SIZE, 0, 
+            NULL, 0))) != BUFF_SIZE) {
+    perror("Failed to send");
+    exit(-1);
+}
+
+/* receive response */
+do {
+    if ((received = recvfrom(context->socket, context->packet, BUFF_SIZE, 0, NULL, 
+                             NULL)) < 0) {
+
+        /* THIS is where RST occurs with some servers */
+
+        perror("Failed to receive");
+        exit(-1)
+    }
+
+    if (received >= 0)     
+            context->packet[received] = '\0';
+    printf("%s", context->packet);
+
+} while (received > 0);
+

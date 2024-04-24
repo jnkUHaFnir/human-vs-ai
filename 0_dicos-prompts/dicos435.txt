@@ -1,0 +1,29 @@
+
+I am working on an application whose performance is critical. 
+In this application I have a lot of messages(i.e. several thousands) needed to be signed (and verified of course) separately with a same private key/public key. I am using the OpenSSL library.
+A naive approach with DSA functions (see below) will take tens of seconds to sign which is not nice. I tried to useDSA_sign_setup() function to speed things up but I can't figure out the correct way to use it.
+I also tried ECDSA but I am lost in getting the correct configuration.
+What is the proper way to do this if I really care about efficiency?
+#include <openssl/dsa.h>
+#include <openssl/engine.h>
+#include <stdio.h>
+#include <openssl/evp.h>
+
+int N=3000;
+
+int main()
+{
+    DSA *set=DSA_new();
+    int a;
+    a=DSA_generate_parameters_ex(set,1024,NULL,1,NULL,NULL,NULL);
+    printf("%d\n",a);
+    a=DSA_generate_key(set);
+    printf("%d\n",a);
+    unsigned char msg[]="I am watching you!I am watching you!";
+    unsigned char sign[256];
+    unsigned int size;
+    for(int i=0;i<N;i++)
+        a=DSA_sign(1,msg,32,sign,&size,set);
+    printf("%d %d\n",a,size);
+}
+

@@ -1,0 +1,42 @@
+
+This program does the following:
+
+Scans a string of text char input[15];
+Compares it to char password[ ] = "1sure";
+Loops if the strings do not match.
+Terminates if the strings match.
+
+The program loops while the strings do not match. However, I also want the program to loop if nothing is input and the user simply presses enter. I tried using an isgraph function but this causes the program to crash. I commented that section out in the code. Can someone suggest how to get the program to loop if there is no input?
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char password[] = "1sure";
+    char input[15];
+
+    do
+    {
+        printf("Password: ");
+        scanf("%s", input);
+
+        if(strcmp(password,input)==0)
+        {
+            printf("Password accepted.");
+            putchar('\n');
+            return(0);
+        }
+        /*else if(isgraph(input)==0)
+        {
+            printf("No input detected."); //Program crashes with this segment.
+            continue;
+        }*/
+        else
+        {
+            printf("\nInvalid password.\n");
+            continue;
+        }
+    }
+    while(1);
+}
+

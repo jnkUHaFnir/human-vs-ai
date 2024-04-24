@@ -1,0 +1,38 @@
+
+I'm trying to separate my input values into 2 different categories. The first array call teamname would hold the the team names and the second array would hold the score for that week. My input file is .csv with the code the way it is everything is stored in the as a string instead of 2 separate variables. Also I'm not to program savvy and am only familiar with the  library.
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+#define FILEIN "data.csv"
+#define FILEOUT "matrix.csv"
+
+int main (void)
+{
+    double nfl[32][32], teamscore[32];
+    char teamname[30];
+    int n;
+    FILE *filein_ptr;
+    FILE *fileout_ptr;
+
+    filein_ptr = fopen (FILEIN, "r");
+    fileout_ptr = fopen (FILEOUT, "w");
+
+    for (n = 1; n <= 32; n++) {
+        fscanf (filein_ptr, "%s  %lf\n", &teamname, &teamscore[n]);
+        fprintf (fileout_ptr, "%s    %f\n", teamname, teamscore);
+    }
+
+    fclose (filein_ptr);
+    fclose (fileout_ptr);
+
+    return 0;
+}
+
+I should say that the input file has the first column with team names and the second column with team scores. Any help would be great. Thanks!
+Here is a sample input file
+
+Steelers,20 
+Patriots,25
+Raiders,15
+Chiefs,35
+

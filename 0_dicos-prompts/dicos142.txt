@@ -1,0 +1,10 @@
+
+
+
+
+I want to half the number of elements that the data-structure contains. And I have to do that multiple times.
+The problem is similar to this:
+I have 'n' sorted integers and I have to add consecutive two numbers. Thus the number of the number of integers I am left with is n/2.And I have to loop this till I get a single number. ( I simplified the problem, I have to do other operations side by side)
+I thought trying an array of size n, then thought I will create an array of size n/2 and will fill this new array, and finally will free the original array(was created using a pointer). Note that I also have to store the data I evaluated each time through the loop.
+If I am not able to explain, please refer to this problem
+MIXTURE

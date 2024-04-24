@@ -1,0 +1,197 @@
+
+I try to read numbers from a file using a father process and child process.
+I have a file containing the prime numbers between 1 and 100. I try to read the 10 first numbers using the father process (it works well). After that I create a child process using fork and read the next 10 numbers (it works also well). I use wait() to make the father process wait for the child to finish. Then I kill the child process using kill(). Then, I try continue to read the remaining numbers from the file with the father process but the results are not the same as expected:
+Here is my code:
+pid_t create_process()
+{
+    pid_t pid;
+
+do {
+
+    pid = fork();       
+
+} while (pid == -1 && errno == EAGAIN); 
+
+return pid;
+}
+
+int main()
+{
+FILE *fichier = fopen("entiers.txt","r");
+int i=0;
+int n=0;
+
+if (fichier != 0)
+{
+
+    printf("I am the father process of the pid %d\n",getpid());
+    for(i=0; i<10; i++)
+    {
+        fscanf(fichier, "%d\n", &n);
+        printf("%d\n",n);
+    }
+
+    pid_t pid = create_process();
+
+    if(pid)
+    {
+        wait(NULL);
+
+        printf("I am the father process of the pid %d\n",getpid());
+        do
+        {   
+            n = fgetc(fichier);
+            printf("%d\n",n);               
+        } while (n != EOF);
+
+        fclose(fichier);
+
+        kill(pid,SIGKILL);
+    }
+
+    if (!pid)
+    {
+        printf("I am the child process of the pid %d\n",getpid());
+
+        for(i=0; i<10; i++)
+        {
+            fscanf(fichier, "%d\n", &n);
+            printf("%d\n",n);
+        }
+
+
+    }
+
+}
+
+return EXIT_SUCCESS;
+}
+
+This is my file:
+1
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+
+And this my output:
+
+I am the father process of the pid: 8213
+
+1
+2
+3
+5
+7
+11
+13
+17
+19
+23
+
+I am the child process of the pid: 8214
+
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+
+I am the father process of the pid: 8213
+
+50
+57
+10
+51
+49
+10
+51
+55
+10
+52
+49
+10
+52
+51
+10
+52
+55
+10
+53
+51
+10
+53
+57
+10
+54
+49
+10
+54
+55
+10
+55
+49
+10
+55
+51
+10
+55
+57
+10
+56
+51
+10
+56
+57
+10
+57
+55
+10
+55
+49
+10
+55
+51
+10
+55
+57
+10
+56
+51
+10
+56
+57
+10
+57
+55
+10
+-1
+
+
+Any help?

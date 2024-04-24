@@ -1,0 +1,63 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int add_even(int);
+int add_odd(int);
+
+int main() {
+    int num, result_odd, result_even, even_count, odd_count;
+    char name;
+
+    printf("What is your name?\n");
+    scanf("%s", &name);
+
+    while (num != 0) {
+        printf("Enter a number:\n");
+        scanf("%d", &num);
+
+        if (num % 2 == 1) {
+            printf ("odd\n");
+            odd_count++;
+        } else
+        if (num == 0) {
+            printf("%s, the numbers you have entered are broken down as follows:\n",
+                  name);
+            result_even = add_even(num);
+            printf("You entered %d even numbers with a total value of %d\n",
+                   even_count, result_even);
+            result_odd = add_odd(num);
+            printf("You entered %d odd numbers with a total value of %d\n",
+                   odd_count, result_odd);
+        } else {
+            printf("even\n");
+            even_count++;
+        }
+    }
+    return 0;
+} 
+
+int add_even(int num) {
+    static int sum = 0;
+
+    if (num % 2 != 0) {
+        return 0;
+    }
+
+    sum += add_even(num);
+    return sum;
+}
+
+int add_odd(int num) {
+    static int sum = 0;
+
+    if (num % 2 == 0) {
+        return 0;
+    }
+    sum += add_odd(num);
+    return sum;
+}
+
+Can anyone give me some insight as to what I did wrong exactly?
+The point of the code is to get inputs from the user until they decide to stop by inputting 0. Separating the evens from the odd. Tell them how many even/odd they put and the total of all the even/odd numbers.
+I understand how to separate the evens from the odds. I think my issue is with my function.

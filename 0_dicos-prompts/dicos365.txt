@@ -1,0 +1,49 @@
+
+I am creating a simple program (code below), which asks user for his/her name, and says hello back to you. I was just wondering if the comments I made in the code are correct. I am trying to understand how arrays are created, and how we allocate space for them, and deal with them, so we don't go out of bounds in memory.
+#include <stdio.h>
+
+// "-" (no quotes, just the dash) means garbage values
+int main() {
+
+    char name[5];
+    // name = [0] [1] [2] [3] [4] [5]
+    //         -   -   -   -   -   -
+
+    char fav_nums[5];
+    // fav_nums = [0] [1] [2] [3] [4] [5]
+    //             -   -   -   -   -   -
+
+    printf("What is your name (max characters 5)?\n");
+    scanf("%s\n", name);
+    // I typed "Sammy" (no quotes)
+    // name = [0] [1] [2] [3] [4] [5]
+    //         S   a   m   m   y   \0
+
+    printf("Hi, %s\n", name);
+
+    printf("Enter your 5 favorite numbers!\n");
+    int i = 0;
+    while (i < 5) {
+        scanf("%d", fav_nums[i]);
+        i++;
+    }
+    // I typed 2 3 6 7 1
+    // fav_nums = [0] [1] [2] [3] [4] [5]
+    //             2   3   6   7   1   -
+
+    fav_nums[5] = '\0';
+    // fav_nums = [0] [1] [2] [3] [4] [5]
+    //             2   3   6   7   1   \0
+
+
+    printf("Cool, I love");
+    i = 0;
+    while (i < 5) {
+        printf(" %d", fav_num[i]);
+        i++;
+    }
+    printf("\n");
+
+    return 0;
+}
+

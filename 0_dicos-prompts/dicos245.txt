@@ -1,0 +1,73 @@
+
+Here is my full code, it looks like to work, but it's not working very well.
+I would accept any code, that is working like this.
+Firstly, the code works, but when I want to add the third name to the struct, it crashes.
+Is there any other way to do this?
+I need struct, because in the future, I want to add some other params, like age, average, gender, etc.
+Please, help me out.
+//The student table
+typedef struct students {
+    char name[50];
+} students;
+
+//Global params
+int scount = 0;
+students *s;
+
+//Basic functions
+void addNewStudent();
+
+int main()
+{
+    int loop = 1;
+    char in;
+    int ch;
+    printf("Willkommen.\n Wahlen Sie bitte von die folgenden Optionen:\n");
+    while (loop)
+    {
+        printf("\t[1] Neue Student eingeben\n");
+        printf("\t[9] Programm beenden\n");
+
+        scanf(" %c", &in);
+        while ((ch = getchar()) != '\n');
+        switch (in)
+        {
+        case '1':
+            addNewStudent();
+            break;
+        case '9':
+            loop = 0;
+            break;
+        default: printf("------\nOption nicht gefunden.\n------\n");
+            break;
+        }
+    }
+    free(s);
+    return 0;
+}
+
+void addNewStudent()
+{
+    int index = 0;
+    if (scount == 0)
+    {
+        s = (students*)malloc(sizeof(students));
+    }
+    else
+    {
+        realloc(s, sizeof(students) * scount);
+    }
+
+    printf("Geben Sie Bitte die Name:\n");
+    fgets(s[scount].name, sizeof(s[scount].name), stdin);
+
+    while (s[scount].name[index] != '\n')
+    {
+        index++;
+    }
+    s[scount].name[index] = '\0';
+    scount++;
+}
+
+I'm using Visual Studio.
+Thanks for help!

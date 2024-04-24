@@ -1,0 +1,2 @@
+
+In the above example, we initialize `ground_truth_filename` with an empty string of length 256. Then, we check if the `--snapshot-markup` option is specified by the user, and if it is, we copy the argument value to `ground_truth_filename`. If it is not specified, we assume the default filename and set it accordingly. Finally, we check if `ground_truth_filename` is empty before proceeding with the rest of the code, and throw an error if it is.

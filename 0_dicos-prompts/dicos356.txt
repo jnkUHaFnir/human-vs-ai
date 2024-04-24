@@ -1,0 +1,28 @@
+
+I have a daemon that reads a configuration file in order to know where to write something. In the configuration file, a line like this exists:
+output = /tmp/foo/%d/%s/output
+
+Or, it may look like this:
+output = /tmp/foo/%s/output/%d
+
+... or simply like this:
+output = /tmp/foo/%s/output
+
+... or finally:
+output = /tmp/output
+
+I have that line as cfg->pathfmt within my program. What I am trying to do now is to come up with some clever way of using it.
+A little more explanation, the path can contain up to two components to be formatted. %d will be expanded as a job ID (int), %s as a job name (string). The user may want to use one, both or none in the configuration file. I need to know what they want and in what order before I finally pass it to snprintf(). I can kind of narrow it down, but I keep wanting to talk to strtok() and that seems ugly.
+I want to give users this kind of flexibility, however I'm getting lost looking for a sensible, portable way to implement it. I'm also at a complete and total loss for how to begin searching for this.
+I'd be very happy if:
+
+Someone could help me narrow down the search phrase to find good examples
+Someone could post a link to some OSS project implementing this
+Someone could post some psuedo code
+
+I don't want the code written for me, I'm just really stuck on what (I think) should be something very simple and need some help taking the first bite. I really feel like I'm over thinking and overlooking the obvious.
+The end result should be a boolean function like this:
+bool output_sugar(const char *fmt, int jobid, const char *jobname, struct job *j);
+
+It would then call snprintf() (sensibly) on j->outpath, returning false if some kind of garbage (i.e. % followed by something not s, d or %) is in the config line (or its null). The sanity checks are easy, I'm just having a bit of a time getting the number (and order) of arguments to format correct.
+Thanks in advance. Also, feel free to edit this title if you have the reputation to do so, as I said, I'm not quite sure how to ask the question in a single line. I think what I need is a parser, but it feels awkward using a full blown lexer / parser to handle one simple string.

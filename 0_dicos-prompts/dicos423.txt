@@ -1,0 +1,8 @@
+
+I want to use infinite type specifiers (%d) in scanf() function.
+For example-
+printf("Enter numbers: \t");
+scanf("--%d SPECIFIERS--");
+
+So its not definite how many nos. the user will enter.  I don't want my program to ask the user the 'numbers of characters'.. but I want to allow any the numbers of characters. But its not possible to enter infinite %d in scanf().
+So can anyone please tell what is the C program of finding average of numbers given by the user (if you dont know how much nos. the user will give and you don't want the program to ask 'how many numbers.')?

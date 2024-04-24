@@ -1,0 +1,27 @@
+
+disclaimer: I'm a struggling beginner
+My assignment is to read integers from an input txt file into a 2D array. When i used printf's to debug/test my fscanf isn't reading the correct values from the file. i can't figure out why.
+my code is as follows:
+void makeArray(int scores[][COLS], FILE *ifp){
+    int i=0, j=0, num, numrows = 7, numcols = 14;
+
+    for(i = 0; i < numrows; ++i){
+        for(j = 0; j < numcols; ++j){
+            fscanf(ifp, "%d", &num);
+            num = scores[i][j];
+        }
+    }
+}
+
+int main(){
+    int scoreArray[ROWS][COLS];
+    int i=0, j=0;
+    FILE *ifp;
+    ifp = fopen("scores.txt", "r");
+
+    makeArray(scoreArray, ifp);
+
+    system("pause");
+    return 0;   
+}
+

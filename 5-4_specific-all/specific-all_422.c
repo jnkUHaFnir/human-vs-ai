@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+char* getString()
+{
+    char buffer;
+    int size = 0;
+    int capacity = 1;
+
+    char* inputString = (char*)malloc(capacity*sizeof(char));
+
+    if (inputString == NULL) {
+        printf("Memory allocation failed. Exiting...\n");
+        exit(1);
+    }
+
+    while(1)
+    {
+        buffer = getchar();
+        if(buffer == '\n')
+            break;
+        if((capacity-1) <= size)
+        {
+            capacity *= 2;
+            char* newString = (char*)realloc(inputString, capacity*sizeof(char));
+
+            if (newString == NULL) {
+                printf("Memory reallocation failed. Exiting...\n");
+                free(inputString);
+                exit(1);
+            }
+
+            inputString = newString;
+        }
+        inputString[size] = buffer;
+        size++;
+    }
+    inputString[size] = '\0';
+    return inputString;
+}
+
+int main()
+{
+    char* str;
+    str = getString();
+    printf("%s", str);
+
+    // Don't forget to free the allocated memory
+    free(str);
+
+    return 0;
+}

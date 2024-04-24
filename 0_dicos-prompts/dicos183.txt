@@ -1,0 +1,9 @@
+
+Does someone know a wrapper which would allow SQLite to load its data from an std::iostream?
+To be more explicit:
+std::fstream dataStream("database.sqlite");
+...
+sqlite3_open(...something using dataStream...);
+
+I want to use streams because of their modularity: being able to load a file while it is still being downloaded from the network, decompressing data on-the-fly, etc.
+It should be possible by using sqlite3_open_v2 after registering your own VFS. After one hour of implementing (badly-documented) functions, my first attempts got me a weird "out of memory" error from SQLite, and I thought I would ask here if someone knows an existing implementation before spending hours debugging mine.

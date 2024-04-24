@@ -1,0 +1,27 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Album {
+    char* title;
+} 
+
+int main(){
+    int i, size;
+
+    struct Album* pAlbum;
+    printf("Enter the number of album: ");
+    scanf_s("%d", &size);
+
+    pAlbum = malloc(sizeof(pAlbum) * size);
+
+    for(i=0; i<size; i++) {
+        printf("Enter the album title: ");
+        scanf_s("%p", pAlbum[i].title);
+    }
+
+    free(pAlbum);
+    return 0;
+}
+
+I want to let the user enter the title for as many albums as they want. The error is that scanf only comes up once for pAlbump[i].tittle for the loop. I'm i allocating the memory incorrectly? 

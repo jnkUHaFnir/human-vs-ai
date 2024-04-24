@@ -1,0 +1,5 @@
+
+Is it possible to read lines of text with scanf() - excluding \n and break on special(chosen) character, but include that character
+This is my current expression: while(scanf("%49[^:\n]%*c", x)==1)
+but this one excludes :.
+Is it possible to break reading on : but read that character too?

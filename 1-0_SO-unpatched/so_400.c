@@ -1,0 +1,1 @@
+    if (strcmp(answer, "yes") == 0){

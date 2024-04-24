@@ -1,0 +1,25 @@
+
+I wrote a program that scans an unknown amount of integers into an array but when I run it, it print the last value it has gotten an infinite amount of times.
+For example for the input: 1 2 3 4 5
+The output would be 55555555555555555555555...
+Why does this happen and how can I fix that?
+My goal here is to create a array, for an instance {1, 2, 3, 4, 5} and then print what it scanned into the array, ONLY ONCE...
+int *pSet = (int*) malloc(sizeof(int)); int i; int c;
+printf("Please enter a stream of numbers to make a set out of them: ");
+printf("\n");
+
+scanf("%d", &c);
+pSet[0] = c;
+printf("%d ", c);
+for(i = 1; c != EOF; i++) {
+    pSet = (int*) realloc(pSet, sizeof(int)*(i+1));
+    if(pSet == NULL) {
+        return FAIL;        
+    }
+    scanf("%d", &c);
+    pSet[i] = c;
+    printf("%d ", c);
+}
+
+free(pSet);
+

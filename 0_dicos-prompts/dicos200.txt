@@ -1,0 +1,143 @@
+
+So this code searches for one of the strings in a tree (input by array of strings). The search doesn't work properly because the printf("%p", treePtr) shows that treePtr has an address but changes to 0x0 immediately for some reason, thus returning null.
+Output: 
+
+0x7f9c50c02680
+
+0x0
+
+I've tried different combinations such as: &treePtr and *treePtr, but they don't work.
+    /*
+(Binary Tree Search)
+ Write function binaryTreeSearch that attempts to locate a specified
+value in a binary search tree. The function should take as arguments a pointer to the root node of
+the binary tree and a search key to be located. If the node containing the search key is found, the
+function should return a pointer to that node; otherwise, the function should return a NULL pointer.
+*/
+//ANS:
+
+
+/* Exercise Solution */
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+ /* TreeNode structure definition */
+struct TreeNode
+{
+  struct TreeNode *leftPtr; /* pointer to left subtree */
+  char data[9];         /* node data */
+  struct TreeNode *rightPtr;    /* pointer to right subtree */
+};              /* end struct TreeNode */
+
+typedef struct TreeNode TreeNode;
+typedef TreeNode *TreeNodePtr;
+
+ /* function prototypes */
+void insertNode (TreeNodePtr * treePtr, char value[]);
+TreeNodePtr binaryTreeSearch (TreeNodePtr treePtr, char key[]);
+
+int main (void)
+{
+  int i;
+  const char * item[] = {"cea", "riz", "mac", "roz", "bee", "lea", "tee", "pee", "see"};            /* loop counter */
+  char searchKey[3];        /* value to search for */
+  TreeNodePtr rootPtr = NULL;   /* points to the tree root */
+  TreeNodePtr searchResultPtr;  /* pointer to search result */
+
+  printf ("The strings being placed in the tree are:\n");
+
+  for (i = 0; i <= 8; i++)
+    {
+      printf ("%s\t", item[i]);
+      insertNode (&rootPtr, item[i]);
+    }       /* end for */
+
+  /* prompt user and read integer search key */
+  printf ("\n\nEnter a string to search for: ");
+  scanf ("%s", searchKey);
+  printf ("%s", searchKey );
+  searchResultPtr = binaryTreeSearch (rootPtr, searchKey);
+
+  /* if searchKey not found */
+  if (searchResultPtr == NULL)
+    {
+      printf ("\n%s was not found in the tree.\n\n", searchKey);
+    }               /* end if */
+  else
+    {               /* if key found */
+      printf ("\n%s was found in the tree.\n\n", searchResultPtr->data);
+    }               /* end else */
+
+  getchar();
+  getchar();
+  return 0;         /* indicate successful termination */
+}               /* end main */
+
+ /* insert a node into the tree */
+void insertNode (TreeNodePtr * treePtr, char value[])
+{
+  /* if treePtr is NULL */
+  if (*treePtr == NULL)
+    {
+      /* dynamically allocate memory */
+      *treePtr = malloc (sizeof (TreeNode));
+
+      /* if memory was allocated, insert node */
+      if (*treePtr != NULL)
+    {
+      strcpy((*treePtr)->data,  value);
+      (*treePtr)->leftPtr = NULL;
+      (*treePtr)->rightPtr = NULL;
+    }           /* end if */
+      else
+    {
+      printf ("%s not inserted. No memory available.\n", value);
+    }           /* end else */
+    }               /* end if */
+  else
+    {               /* recursively call insertNode */
+      /* insert node in left subtree */
+      if (value < (*treePtr)->data)
+    {
+      insertNode (&((*treePtr)->leftPtr), value);
+    }           /* end if */
+      else
+    {
+      /* insert node in right subtree */
+      if (value > (*treePtr)->data)
+        {
+          insertNode (&((*treePtr)->rightPtr), value);
+        }           /* end if */
+      else
+        {           /* duplicate value */
+          printf ("dup");
+        }           /* end else */
+    }           /* end else */
+    }               /* end else */
+}               /* end function insertNode */
+
+ /* search for key in tree */
+TreeNodePtr binaryTreeSearch (TreeNodePtr treePtr, char key[])
+{
+  /* traverse the tree inOrder */
+  if (treePtr == NULL)
+    {
+      printf("%p\n", treePtr);
+
+      return NULL;      /* key not found */
+    }               /* end if */
+  else if (treePtr->data == key)
+    {
+      return treePtr;       /* key found */
+    }               /* end else if */
+  else if (key < treePtr->data)
+    {
+      return binaryTreeSearch (treePtr->leftPtr, key);  /* search left */
+    }               /* end else if */
+  else // (key > treePtr->data)
+    {
+      return binaryTreeSearch (treePtr->rightPtr, key); /*search right */
+    }               /* end else if */
+}               /* end function binaryTreeSearch */
+

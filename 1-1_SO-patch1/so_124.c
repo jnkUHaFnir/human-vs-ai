@@ -1,0 +1,1 @@
+    scanf(" %s", student_t[i].name);

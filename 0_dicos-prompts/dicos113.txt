@@ -1,0 +1,63 @@
+
+I'm working on removing obfuscating a substring from the main string in C. The substring has a format of xx:xx:xx:xx:xx:xx where x can be a number or a letter. The beginning of the substring always have a space, but the end of the substring doesn't always have a space. 
+e.x. the input can be "Found new device with wlan 33:33:33:33:33:33. Total 4 devices connected" 
+the output should be "Found new device with wlan *. Total 4 devices connected"
+I need to make a helper function to do so, and this is what I come up with: 
+//find the first occurency of ":" record as first_position_ptr and the last occurency of ":" record as last_position_ptr. 
+// Add 2 to first_position_ptr to beginning of the substring and set it to "*"
+// Subtract 2 from the last_position_ptr to get the pointer of the last charactor in substrung. 
+// Iterate from 1 + first_position_ptr to last_position_ptr - 2 and set inStr to 0 to deleted the rest of substring. 
+
+const char *proc(char *inStr) {
+    const char tar[] = ":";
+    char *first_position_ptr = strchr(inStr, tar[0]);
+    char *last_position_ptr = strrchr(inStr, tar[0]);
+
+    int first_position = (first_position_ptr == NULL ? -1 : first_position_ptr - inStr);
+    int last_position = (last_position_ptr == NULL ? -1 : last_position_ptr - inStr);
+
+    if (first_position != -1 && last_position != -1) {
+        inStr[first_position + 2] = "*";
+    }
+
+    for (int i = (first_position + 1); i < (last_position + 2); i++) {
+        inStr[i] = 0;
+    }
+    return inStr;
+}
+
+int main() {
+    const char str[] = "Found new device with wlan 33:33:33:33:33:33. Total 4 devices connected";
+    proc(*str);
+    printf("%s\n", str);
+    return 0;
+}
+
+But when I compile the code, I run into these warnings: 
+Jeff-MacBook-Pro-2:Desktop jBerman$ gcc test.c -o test
+test.c:35:29: warning: incompatible pointer to integer conversion assigning to 'char' from
+      'char [2]' [-Wint-conversion]
+                inStr[first_position + 2] = "*";
+                                          ^ ~~~
+test.c:43:1: warning: control reaches end of non-void function [-Wreturn-type]
+}
+^
+test.c:49:7: warning: incompatible integer to pointer conversion passing 'const char' to
+      parameter of type 'char *' [-Wint-conversion]
+        proc(*str);
+             ^~~~
+test.c:26:24: note: passing argument to parameter 'inStr' here
+const char* proc(char *inStr){
+                       ^
+3 warnings generated.
+
+When I run it, the compile says: 
+Segmentation fault: 11
+
+So I tried to correct this line in main:
+proc(*str) -> proc(&str);
+
+The compiler return:
+Bus error: 10
+
+Can someone let me know what might be wrong please? Or if you help more efficient way of doing this, please let me know

@@ -1,0 +1,20 @@
+
+char * readline(FILE *fp, char *buffer) {
+  char ch;
+  int i = 0, buff_len = 0;
+
+  buffer = malloc(buff_len);
+
+  while ((ch = fgetc(fp)) != '\n' && ch != EOF) {
+    ++buff_len;
+    buffer = realloc(buffer, buff_len);
+
+    buffer[i] = ch;
+
+    ++i;
+  }
+
+  return buffer;
+}
+
+I'm trying to allocate the memory directly after reading a character.

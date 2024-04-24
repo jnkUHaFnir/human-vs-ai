@@ -1,0 +1,2 @@
+
+I'd like to insert the result of the command system("echo %username%"); in a string, but I can't figure out how I could do it in C. Can someone please help me?

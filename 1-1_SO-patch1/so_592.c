@@ -1,0 +1,1 @@
+    if(strcmp(arr[st7[0]], arr[st7[1]]) > 0)

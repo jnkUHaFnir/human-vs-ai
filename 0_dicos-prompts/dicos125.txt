@@ -1,0 +1,17 @@
+
+I'm unfortunate enough to be stuck using VS 2010 for a project, and noticed the following code still doesn't build using the non-standards compliant compiler:
+#include <stdio.h>
+#include <stdlib.h>
+
+int main (void)
+{
+    char buffer[512];
+
+    snprintf(buffer, sizeof(buffer), "SomeString");
+
+    return 0;
+}
+
+(fails compilation with the error: C3861: 'snprintf': identifier not found)
+I remember this being the case way back with VS 2005 and am shocked to see it still hasn't been fixed.
+Does any one know if Microsoft has any plans to move their standard C libraries into the year 2010?

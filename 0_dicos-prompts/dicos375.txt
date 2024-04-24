@@ -1,0 +1,92 @@
+
+Understanding handling direct pointers in C
+Here is a code that works for an array of strings for fixed number of items and fixed line length :
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAXNAMELEN 100
+#define MAXLINELEN 100
+#define MAXITEMS 1000
+
+int main(int argc, char ** argv) {
+
+ FILE * infile, * outfile;
+ char name[MAXNAMELEN];
+ char line[MAXLINELEN];
+ char lines[MAXITEMS][MAXLINELEN];
+ int i, items = 0;
+
+ printf("Enter a source filename: ");
+ fgets(name, sizeof(name), stdin);
+ name[strlen(name)-1] = '\0'; // strip newline
+ infile = fopen(name, "r");
+ while (fgets(line, sizeof(line), infile)) {
+        strcpy(lines[items], line);
+        items++;
+ }
+
+ qsort(lines, items, MAXLINELEN, strcmp);
+
+ printf("Enter a destination filename: ");
+ fgets(name, sizeof(name), stdin);
+ name[strlen(name)-1] = '\0'; // strip newline
+ outfile = fopen(name, "w");
+ for (i=0; i<items; i++) {
+    fputs(lines[i], outfile);
+ }
+
+ fclose(infile);
+ fclose(outfile);
+}
+
+Problem description and code 
+If I try to read an input.txt file that is within MAXLINELEN and MAXITEMS, the program works fine. Now imagine I am reading from a much larger "inputfile" line by line where maximum line length could be anything, then I would have to use a character pointer (char*) to read the input. char* linesptr[MAXITEMS];
+Here is my code where I am trying to accomplish reading from an input file   line by line delimited by a newline character.
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#define MAXNAMELEN 1000
+#define MAXLINELEN 1000
+#define MAXITEMS 100000
+
+char* linesptr[MAXITEMS];
+
+int
+main(int argc, char ** argv) {
+
+ FILE * infile, * outfile;
+ char name[MAXNAMELEN];
+ char line[MAXLINELEN];
+
+ int i, items = 0;
+
+ printf("Enter a source filename: ");
+ fgets(name, MAXNAMELEN, stdin);
+ name[strlen(name)-1] = '\0'; // strip newline
+ printf("%s infile \n",name);
+ infile = fopen(name, "r");
+ while (fgets(line, MAXLINELEN, infile)) {
+    int length = strlen(line);
+    line[length-1] = '\0';
+    linesptr[items] = line; *<- I am writing to the same mem location*
+    printf("the input string %d is : %s \n",items,  linesptr[items]);
+        items++;
+ }
+
+ qsort(linesptr, items, MAXLINELEN, strcmp); 
+ printf("Enter a destination filename: ");
+ fgets(name, sizeof(name), stdin);
+ name[strlen(name)-1] = '\0'; // strip newline
+ outfile = fopen(name, "w");
+ for (i=0; i<items; i++) {
+    fputs(linesptr[i], outfile);
+ }
+
+ fclose(infile);
+ fclose(outfile);
+}
+
+PROBLEM
+I am copying the pointer address into the  nth cell of the array linesptr where nth is the value=items (Here is the reference line from the code: linesptr[items] = line;). so when you print the final answer, I am referencing the same memory address to the buffer named line, the memory location at line will always point to the most recent fgets(). I understand the error but I do not know how to fix the issue. I would appreciate any help to fix the bug in the code. 

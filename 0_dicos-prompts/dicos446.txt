@@ -1,0 +1,38 @@
+
+I have a small program that prints out the capital form of each letter of a word, but I get the error signed/unsigned mismatch when I compile it because I'm passing a cstring as a normal string in this program. How do I pass it correctly so that I can still use text.length()? Here is the error that I get "Tester.cpp(22,23): warning C4018: '<': signed/unsigned mismatch". It's at for (int i = 0; i < text.length(); i++)
+#include <iostream>
+using namespace std;
+
+string capitalizeFirstLetter(string text);
+
+int main() {
+    char sentence[100];
+    for ( ; ; )
+    {
+        cin.getline(sentence, 100);
+        if (sentence != "0")
+            capitalizeFirstLetter(sentence);
+    }
+
+    return 0;
+}
+
+string capitalizeFirstLetter(string text) {
+
+    for (int i = 0; i < text.length(); i++)
+    {
+        if (i == 0)
+        {
+            text[i] = toupper(text[i]);
+        }
+        if (text[i] == ' ')
+        {
+            ++i;
+            text[i] = toupper(text[i]);
+        }
+    }
+    cout << text;
+
+    return text;
+}
+

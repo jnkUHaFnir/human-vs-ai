@@ -1,0 +1,56 @@
+
+
+
+
+I'm trying to create a dynamic array in C to implement a queue, when I compile I get the following error: * glibc detected . / Ex: realloc (): invalid next size: 0x0000000001fbe030 **
+My code is as follows:
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+
+typedef struct _queue_t *queue_t;
+
+struct _queue_t {
+    u32 *array; // Arreglo para guardar elementos de la cola
+    u32 FirstElem; // Primer elemento de la cola
+    u32 LastElem; // Ultimo elemento de la cola
+    u32 memory_allocated; // Para saber si tengo que pedir mas memoria
+    u32 Size; // Devuelve la cantidad actual de elementos que tiene la cola
+};
+
+queue_t queue_empty() {
+    queue_t queue = NULL;
+    queue = calloc (1, sizeof (struct _queue_t));
+
+    assert(queue != NULL);
+
+    queue->array = (u32 *) calloc(100, sizeof(u32));
+    queue->FirstElem = 0;
+    queue->LastElem = 0;
+    queue->memory_allocated = 100;
+    queue->Size = 0;
+
+    return queue;
+}
+
+int main() {
+
+    queue_t queue = NULL;
+    queue = queue_empty();
+
+    for (u32 i = 0; i < 1000; i++) {
+
+        if (queue->memory_allocated == queue->Size) {
+            queue->array = (u32 *) realloc (queue->array, 100*sizeof(u32));
+            queue->memory_allocated += 100;
+        }
+
+        queue->LastElem += 1;
+        queue->array[queue->LastElem] = i;
+        queue->Size += 1;
+    }
+
+    return(0);
+}
+
+Why this error occurs?

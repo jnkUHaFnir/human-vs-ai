@@ -1,0 +1,42 @@
+
+I was having some problem when trying to add element to dynamic char array in C programming. Here is the expected output:
+How many characters do you want to input: 5
+Input the string:datas
+The string is: datas
+Do you want to 1-insert or 2-remove or 3-quit?: 1
+What is the character you want to insert: a
+Resulting string: adata
+
+I already did those user input part in the main function and here is the code in main where I take in the string input, size and pass them to insert():
+printf("How many characters do you want to input: ");
+scanf("%d", &n);
+str = malloc(n + 1);
+printf("Input the string class: ");
+scanf("%s", str);
+
+case '1':
+    printf("What is the character you want to insert: ");
+    scanf(" %c", &input);
+    insert(str, input, n);
+    break;
+
+And the part where my insert():
+void insert(char *str, char input, int n) {
+int i;
+size_t space = 1;
+for (i = 0; i < n; i++) {
+    str[i] = (char)(input + i);
+    space++;                       
+    str = realloc(str, space); 
+    if (i > 2) {
+        break;
+    }
+}
+
+for (i = 0; i < n; i++) {
+    printf("%c", str[i]);
+}
+}
+
+However, when I tried to print out the string from insert(), let's say I entered 'a' to append to the first element of dynamic array with a size of 5, the result that I am getting is abcd=
+I referenced from the stackoverflow thread and I not sure how to fix this. Thanks in advance.

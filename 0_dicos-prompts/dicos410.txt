@@ -1,0 +1,120 @@
+
+I have a constructor, that receives a character pointer.  If it is empty, I need to set its member variable to NULL, however, the program crashes on exit when I try to.
+I have verified that it gets to the line where it sets it to NULL and that is the cause of the crash.
+I've tried the following:
+val = NULL;
+
+val = 0;
+
+val = "";
+
+Those all cause a crash, however if I used:
+val = new Char[1];
+val = "o";
+
+it didn't crash.  
+Is there something that I'm not doing?
+Update:
+Here is a quick update to my problem.
+The destructor I'm using is:
+~LField() { 
+    if (val)
+      delete[] val;
+}
+
+If I take out:
+if (val)
+  delete[] val;
+
+then the program doesn't crash on exit with:
+val = "";
+
+Here is some more code as requested:
+LField(int rowNumVal, int colNumVal, int widthVal, const char *valVal = "", bool canEditVal = true) { 
+    if(strlen(valVal) > 0) {            
+      //doesn't jump in here since valVal is empty
+    }
+    else {
+      val = ""; // this is where I'm trying to set a NULL value
+    }
+}
+
+LField(const LField &clone) { 
+  if (val)
+    delete[] val;
+
+  val = new char[strlen(clone.val)]; 
+  strcpy(val, clone.val);
+  rowNum = clone.rowNum;
+  colNum = clone.colNum;
+  width = clone.width;
+  canEdit = clone.canEdit;
+  index = clone.index;
+}
+
+LField& operator=(const LField &lfieldobj) {
+    if (this != &lfieldobj) {
+    if (val)
+       delete[] val;
+
+    val = new char[strlen(lfieldobj.val)];
+    strcpy(val, lfieldobj.val);
+    rowNum = lfieldobj.rowNum;
+    colNum = lfieldobj.colNum;
+    width = lfieldobj.width;
+    canEdit = lfieldobj.canEdit;
+    index = lfieldobj.index;
+   }
+
+   return *this;
+}
+
+Modified:
+LField(int rowNumVal, int colNumVal, int widthVal, const char *valVal = NULL, bool canEditVal = true) { 
+    if(valVal != NULL) {            
+
+    }
+    else {
+      val = NULL; 
+    }
+}
+
+LField(const LField &clone) { 
+  delete[] val;
+  if (clone.val != NULL) {
+     val = new char[strlen(clone.val) + 1]; 
+     strcpy(val, clone.val);
+  }
+  else
+    val = NULL;
+  rowNum = clone.rowNum;
+  colNum = clone.colNum;
+  width = clone.width;
+  canEdit = clone.canEdit;
+  index = clone.index;
+}
+
+LField& operator=(const LField &lfieldobj) {
+    if (this != &lfieldobj) {
+       delete[] val;
+    if (lfieldobj.val != NULL) {                
+       val = new char[strlen(lfieldobj.val) + 1];
+       strcpy(val, lfieldobj.val);
+    }
+    else
+       val = NULL;
+    rowNum = lfieldobj.rowNum;
+    colNum = lfieldobj.colNum;
+    width = lfieldobj.width;
+    canEdit = lfieldobj.canEdit;
+    index = lfieldobj.index;
+   }
+
+   return *this;
+}
+
+~LField() { 
+      delete[] val;
+}
+
+I've updated the code.  Now val is either allocated memory with new[] or it is NULL, so there shouldn't be a problem with delete[].  However, it still crashes on exit.

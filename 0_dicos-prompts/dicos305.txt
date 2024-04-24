@@ -1,0 +1,2 @@
+
+In the simplest way possible, how can I check if an integer initialized from function scanf is a number?

@@ -1,0 +1,151 @@
+
+For brushing up my C, I'm writing some useful library code. When it came to reading text files, it's always useful to have a convenient tokenization function that does most of the heavy lifting (looping on strtok is inconvenient and dangerous). 
+When I wrote this function, I'm amazed at its intricacy. To tell the truth, I'm almost convinced that it contains bugs (especially with memory leaks in case of an allocation error). Here's the code:
+/* Given an input string and separators, returns an array of 
+** tokens. Each token is a dynamically allocated, NUL-terminated
+** string. The last element of the array is a sentinel NULL 
+** pointer. The returned array (and all the strings in it) must
+** be deallocated by the caller.
+**
+** In case of errors, NULL is returned.
+** 
+** This function is much slower than a naive in-line tokenization,
+** since it copies the input string and does many allocations.
+** However, it's much more convenient to use.
+*/ 
+char** tokenize(const char* input, const char* sep)
+{
+    /* strtok ruins its input string, so we'll work on a copy 
+    */
+    char* dup;
+
+    /* This is the array filled with tokens and returned
+    */
+    char** toks = 0;
+
+    /* Current token
+    */
+    char* cur_tok;
+
+    /* Size of the 'toks' array. Starts low and is doubled when
+    ** exhausted.
+    */
+    size_t size = 2;
+
+    /* 'ntok' points to the next free element of the 'toks' array
+    */
+    size_t ntok = 0;
+    size_t i;
+
+    if (!(dup = strdup(input)))
+        return NULL;
+
+    if (!(toks = malloc(size * sizeof(*toks))))
+        goto cleanup_exit;
+
+    cur_tok = strtok(dup, sep);
+
+    /* While we have more tokens to process...
+    */
+    while (cur_tok)
+    {
+        /* We should still have 2 empty elements in the array, 
+        ** one for this token and one for the sentinel.
+        */
+        if (ntok > size - 2)
+        {
+            char** newtoks;
+            size *= 2;
+
+            newtoks = realloc(toks, size * sizeof(*toks));
+
+            if (!newtoks)
+                goto cleanup_exit;
+
+            toks = newtoks;
+        }
+
+        /* Now the array is definitely large enough, so we just
+        ** copy the new token into it.
+        */
+        toks[ntok] = strdup(cur_tok);
+
+        if (!toks[ntok])
+            goto cleanup_exit;
+
+        ntok++;
+        cur_tok = strtok(0, sep);
+    }    
+
+    free(dup);
+    toks[ntok] = 0;
+    return toks;
+
+cleanup_exit:
+    free(dup);
+    for (i = 0; i < ntok; ++i)
+        free(toks[i]);
+    free(toks);
+    return NULL;
+}
+
+And here's simple usage:
+int main()
+{
+    char line[] = "The quick brown fox jumps over the lazy dog";
+    char** toks = tokenize(line, " \t");
+    int i;
+
+    for (i = 0; toks[i]; ++i)
+        printf("%s\n", toks[i]);
+
+    /* Deallocate
+    */
+    for (i = 0; toks[i]; ++i)
+        free(toks[i]);
+    free(toks);
+
+    return 0;
+}
+
+Oh, and strdup:
+/* strdup isn't ANSI C, so here's one...
+*/
+char* strdup(const char* str)
+{
+    size_t len = strlen(str) + 1;
+    char* dup = malloc(len);
+
+    if (dup)
+        memcpy(dup, str, len);
+
+    return dup;
+}
+
+A few things to note about the code of the tokenize function:
+
+strtok has the impolite habit of writing over its input string. To save the user's data, I only call it on a duplicate of the input. The duplicate is obtained using strdup.
+strdup isn't ANSI-C, however, so I had to write one
+The toks array is grown dynamically with realloc, since we have no idea in advance how many tokens there will be. The initial size is 2 just for testing, in real-life code I would probably set it to a much higher value. It's also returned to the user, and the user has to deallocate it after use.
+In all cases, extreme care is taken not to leak resources. For example, if realloc returns NULL, it won't run over the old pointer. The old pointer will be released and the function returns. No resources leak when tokenize returns (except in the nominal case where the array returned to the user must be deallocated after use).
+A goto is used for more convenient cleanup code, according to the philosophy that goto can be good in some cases (this is a good example, IMHO).
+
+The following function can help with simple deallocation in a single call:
+/* Given a pointer to the tokens array returned by 'tokenize',
+** frees the array and sets it to point to NULL.
+*/
+void tokenize_free(char*** toks)
+{
+    if (toks && *toks)
+    {
+        int i;
+
+        for (i = 0; (*toks)[i]; ++i)
+            free((*toks)[i]);
+        free(*toks);
+        *toks = 0;
+    }
+}
+
+I'd really like to discuss this code with other users of SO. What could've been done better? Would you recommend a difference interface to such a tokenizer? How is the burden of deallocation taken from the user? Are there memory leaks in the code anyway?
+Thanks in advance

@@ -1,0 +1,1 @@
+    strcat(strcpy(malloc(strlen(s1) + strlen(s2) + 1), s1), s2);

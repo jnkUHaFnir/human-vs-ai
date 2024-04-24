@@ -1,0 +1,26 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+    char word[20];
+    struct node * next;
+}node;
+
+int main(){
+    FILE *ifp;
+    char newword[20];
+    node * head;
+
+    ifp = fopen("para.txt","r");
+    head = (node * )malloc(sizeof(node));
+
+    while(fscanf(ifp,"%s",newword) != EOF){
+         head -> next = NULL;
+         head -> word = newword;
+     }
+
+    return 0;
+}
+
+I want to add the words which is read by the text file to a link list. I tried to do with this code but I couldn't. How can I fix this.

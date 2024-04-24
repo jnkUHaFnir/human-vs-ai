@@ -1,0 +1,80 @@
+
+I am supposed to write a program to extract Web addresses starting with www. and ending with .edu. The program displays Web address contained in the input entered by the user. If the input does not contain a web address that starts with www. and ends with .edu, the program should display a message that indicates such a web address cannot be found.
+Input: http://www.usf.edu/admission
+Output: www.usf.edu
+Input: https://www.facebook.com/
+Output: Web address starting with www. and ending with .edu not found
+
+However when my program runs, it is not displaying the correct output. I don't have any compiler errors or warnings so I'm not sure where the issue could be. 
+// This program extracts the text from the website URL
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#define STR_LEN 1000
+
+void read_line(char *str, int n);
+void pass_check(char *str);
+void extract(char *s1, char *s2);
+
+int main(void)
+{
+    char instr[STR_LEN + 1];
+    char outstr[STR_LEN + 1];
+
+    printf("Please enter a URL: ");
+    read_line(instr, STR_LEN);
+    extract(instr, outstr);
+
+    puts(outstr);
+    pass_check(outstr);
+
+    return 0;
+}
+
+void extract(char *s1, char *s2) {
+    char *p, *q;
+    q = s2;
+    for (p = s1 + 7; *p != 0; p++) {
+        if (*p == '/')
+            break;
+        else {
+            *q = *p;
+            q++;
+        }
+    }
+    *q = '\0';
+    *p = '\0';
+}
+
+void read_line(char *str, int n) {
+    int ch;
+    int i = 0;
+    while ((ch = getchar()) != '\n') {
+        if (i < n) {
+            *str++ = ch;
+            i++;
+        }
+    }
+    *str = '\0';
+}
+
+void pass_check(char *str) {
+    const char *fref = "www";
+    const char *lref = "edu";
+
+    int len = strlen(str);
+    printf("%d", len);
+
+    char *l = &str[len - 3];
+    char f[STR_LEN + 1];
+
+    strncpy(f, str, 3);
+
+    if ((strcmp(f, fref) == 0) && strcmp(l, lref) == 0) {
+        printf("Output: ");
+        puts(str);
+        printf("\n");
+    } else
+        printf("Please only insert a .edu URL.");
+}
+

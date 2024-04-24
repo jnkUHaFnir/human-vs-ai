@@ -1,0 +1,86 @@
+
+I am attempting to read saved data from a file. I am trying to convert the information in the buffer from a string to characters and assign their values to the members of the structure. 
+It seems the data is not being accessed correctly,when I print out the node values, it is different from what is sored in the file. I cant see where I am going wrong. 
+The file format: 
+    3 2 43 4 
+    2 4 5 6
+    $Node
+    4
+    1 0 -1 0
+    2 0 1 0 
+    3 10 -1 0
+    4 10 1 0
+    $EndNodes
+    $Elements
+    2
+    1 2 3 4 
+    2 3 5 6
+    $EndElements
+
+The code: 
+    struct Node {
+        int x; // position                                                 
+        int y; //position                                                  
+        int z; //position                                                  
+        int total_node_nums;  // total node numbers                        
+    };
+
+    struct Element{
+        int total_elmt_num; // total element numbers                      
+        struct Node *node; // array of nodes                               
+    };
+
+The call from main: 
+    void arr_creator(char *fname, char *str_start, char *str_end); 
+
+arr_creator: 
+void arr_creator(char *fname, char *str_start, char *str_end){ 
+
+    FILE *fl_read; 
+    char buffer[512], line_buff[20]; 
+    int i,num_node,tag,line = 0; 
+
+    fl_read = fopen(fname, "r"); 
+    if(fl_read == NULL){
+        printf("\n[error reading file] :: in function arr_creator\n");
+        return; 
+    }
+
+    // Scan file for str_start
+    while(fgets(buffer, sizeof(buffer),fl_read) != NULL ) {
+
+        if(strstr(buffer,str_start)){ 
+            printf("\nline: %d   string: %s \n",line+1, str_start); 
+
+            fgets(buffer,sizeof(buffer),fl_read); 
+
+            num_node = atoi(buffer); 
+            printf("num_node = %d\n", num_node); 
+            struct Node *node; 
+            node = malloc((num_node+1)*sizeof(node)); 
+
+            for(i=1; i<num_node+1;i++){
+
+                sscanf(buffer,"%d %d %d %d", &tag, &node[i].x, &node[i].y, &node[i].z);
+
+                printf("--------------\n"); 
+                printf("   Node %d   \n", tag); 
+                printf("--------------\n"); 
+                printf("node[%d].x = %d\n",i, node[i].x); 
+                printf("node[%d].y = %d\n",i, node[i].y); 
+                printf("node[%d].z = %d\n",i, node[i].z); 
+                printf("BUFFER  ::  %s", buffer); 
+            } 
+        }
+        line++;
+        if(strstr(buffer,str_end)){
+            printf("buffer at break :: %s", buffer); 
+            // buffer[0] = '\0'; 
+            break; 
+        }   
+     }
+     if(fl_read){
+         fclose(fl_read); 
+     }
+}
+

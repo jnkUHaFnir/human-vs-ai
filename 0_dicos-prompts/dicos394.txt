@@ -1,0 +1,45 @@
+
+I've no doubt there is an answer to this somewhere, I just can't find it.
+I have just returned to c after a long break and am very rusty, so please excuse dumb errors. I need to generate a large (maybe equivilent of 10mb) string. I don't know how long it's going to be until it's built.
+I tried the following two approaches to test speed:
+int main() {
+#if 1
+  size_t message_len = 1; /* + 1 for terminating NULL */
+  char *buffer = (char*) malloc(message_len);
+  for (int i = 0; i < 200000; i++)
+  {
+    int size = snprintf(NULL, 0, "%d \n", i);
+    char * a = malloc(size + 1);
+    sprintf(a, "%d \n", i);
+
+    message_len += 1 + strlen(a); /* 1 + for separator ';' */
+    buffer = (char*) realloc(buffer, message_len);
+    strncat(buffer, a, message_len);
+  }
+#else
+  FILE *f = fopen("test", "w"); 
+  if (f == NULL) return -1; 
+  for (int i = 0; i < 200000; i++)
+  {
+    fprintf(f, "%d \n", i);
+  }
+  fclose(f);
+  FILE *fp = fopen("test", "r");
+  fseek(fp, 0, SEEK_END);
+  long fsize = ftell(f);
+  fseek(fp, 0, SEEK_SET);
+  char *buffer = malloc(fsize + 1);
+  fread(buffer, fsize, 1, f);
+  fclose(fp);
+  buffer[fsize] = 0;
+#endif
+  char substr[56];
+  memcpy(substr, buffer, 56);
+  printf("%s", substr);
+  return 1;
+}
+
+The first solution of concatenating strings each time took 3.8s, the second of writing to a file then reading took 0.02s.
+Surely there is a fast way to build a big string in c without resorting to reading and writing to a file? Am I just doing something very inefficient? If not can I write to some kind of file object, then read it at the end and never save it?
+In C# you would use a stringbuffer to avoid the slow concatination, what's the equivilent in c?
+Thanks in advance.

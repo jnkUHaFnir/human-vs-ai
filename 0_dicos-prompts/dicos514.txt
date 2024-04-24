@@ -1,0 +1,28 @@
+
+Problem: I need to be able identify when two whitespaces occur consecutively.
+I have read the following questions:
+how to read a string from a \n delimited file
+how to read scanf with spaces
+And I am aware of scanf problems: http://c-faq.com/stdio/scanfprobs.html
+Input will be in the following format:
+1 5 3 2  4 6 2  1 9  0
+
+Two white spaces indicates that the next set of data needs to be handle and compared to itself. The length of the line is unknown and the number or integers in each group is unknown. Two whitespaces is the most that will separate the next data set.
+While I can use fgets and various built in functions to solve this problem, I am at the point where solving the problem with scanf at this point will likely be easier. However, if that's not the case, using fgets, strtok and atoi will do most of the job but I still need to identify two whitespaces in a row.
+The below will take integers until a non-integer is inputed.
+
+while ( scanf ( "%d", &x ) == 1 )
+
+What I need it do is read whitespaces as well and if there is two consecutive whitespaces I'll the program to do something different with the next set of data.
+And once I do get a white space I don't know how to say:
+
+if ((input == "whitespace") && (previousInput == "whitespace"))
+  ya da ya da
+else (input == "whitespace")
+  ya da ya da
+else 
+  ya da ya da
+
+I appreciate your time and thank you for your help. 
+Lesson learned:
+While a solution for scanf is posted below by Jonathan Leffler, the solution was a bit more straightforward with getc (by way of requiring less intimate knowledge of the inner scanf, regular expressions and char). In retrospect better knowledge of regular expressions, scanf and char would of made the problem easier and of course knowing what functions are available and which one would have been the best one to use from the start.

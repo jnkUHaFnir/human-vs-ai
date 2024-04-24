@@ -1,0 +1,37 @@
+
+I have modified an existing code from `
+
+https://www.programiz.com/c-programming/examples/lexicographical-order
+
+The modification is done to read from existing pointer to array. However, I kept getting signs output. https://i.stack.imgur.com/iqWBb.jpg
+    char *s1, *st1;
+    int i, j;
+    char arr[10][10], temp[50];
+
+        s1 = strtok(str1, ";");
+        do
+        {
+            st7 = strstr(s1, "s__");
+            if (st7 != NULL)
+            {
+                for (i = 0;i < 10; ++i)
+                {
+                    for (j = i + 1; st7[j] < 10; ++j)
+                    {                           
+                        if(strcmp(arr[st7[i]], arr[st7[j]]) > 0)
+                        {
+                            strcpy(temp, arr[st7[i]]);
+                            strcpy(arr[st7[i]], arr[st7[j]]);
+                            strcpy(arr[st7[j]], temp);
+                        }                           
+                    }
+                }
+                printf("%s\n", arr[i]);     
+            }           
+        } while (s1 = strtok(NULL, ";"));
+
+s1: To separate the strings
+st7: To select the substring from the string (main result)
+str1: It is initialized via the substring of the main file(which I used fopen) The result contain names starting with eg: k__hi, s__bye
+The modification is done to organise the strings in dictionary order while getting the strings from st7[selected substrings from a string(s1)].
+Please advise as I am new to c programming :)

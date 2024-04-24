@@ -1,0 +1,11 @@
+
+This code is printing extra memory garbage instead. How could I fix it?
+In this code I'm trying to remove 10% of the price (that will be inserted by the user).  
+if (value == 1){
+    int price = 0;
+    int price_final = (price - (price - 0.01);
+    printf ("INSERT A PRICE >> ");
+    scanf ("%d", &price);
+    printf ("Final value %d", price_final);
+}
+

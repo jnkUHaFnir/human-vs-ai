@@ -1,0 +1,8 @@
+
+I want to send a struct that has a vector property.
+typedef struct {
+    int id;
+    vector<int> neighbors;
+} Node;
+
+I know i have to create an MPI derived datatype as in this answer, but i don't know how to do it in my case, where i have a vector in the struct.

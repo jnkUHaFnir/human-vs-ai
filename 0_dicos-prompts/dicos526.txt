@@ -1,0 +1,22 @@
+
+I have the following structure
+typedef struct _person {
+    int age;
+    char sex;
+    char name[];
+}person;
+
+I have done some basic internet search (but unsuccessful) on how to create an instance and initialize a structure with a flexible array member without using malloc().
+For example: for normal structures like 
+struct a {
+    int age; 
+    int sex;
+};
+
+We can create an instance of struct a and initialize it like
+struct a p1 = {10, 'm'};
+
+But for structures with flexible array in it (like _person as mentioned above) how can we create an instance and initialize like how we do it for normal structures?
+Is it even possible? If so, how do we pass the array size during the initialization and the actual value to be initialized?
+(or) 
+Is it true that the only way to create a structure with flexible array is using malloc() as mentioned in C99 specification - 6.7.2.1 Structure and union specifiers - point #17?!

@@ -1,0 +1,41 @@
+
+I'm making a program in which i ask for the username name, and i'd like to only accept strings with valid characters only (alphabetic).
+I found that i can either use
+    do{
+       //since scanf returns the number of currectly input
+       if(scanf("%s", &name) == 1)
+           break;
+       else printf("Please enter a valid name.\n);
+    }while(1);
+
+or
+    do{
+       check = 0;
+       scanf("%s", &name);
+       for(i=0; i<strlen(name; i++){
+          //since isalpha() returns != 0 if it's a letter
+          if(isalpha(name[i]) == 0){
+             printf("Invalid character. Please enter a valid name.\n");
+             check = 1;
+             break;
+          }
+       }
+    }while(check == 1);
+
+But i'm not sure if any of those work, and what would be better to check if there isn't anything except alphabetic letters.
+Also though about making all input letters (after this verification) on lower case and make the first letter upper case with
+    //all to lower except the first letter
+    for(i=1; i<strlen(name); i++){
+       name[i] = tolower(name[i]);
+    }
+    //first letter to upper
+    name[0] = toupper(name[i]);
+    x=1;
+    while(name[x] != '\0'){
+       //if the letter before is a white space, even the first letter, it should place the first letter of a name upper
+       if(name[x-1] == ' ')
+          name[x] = toupper(name[x]);
+       x++;
+    }
+
+Would this work?

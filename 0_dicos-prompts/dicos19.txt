@@ -1,0 +1,9 @@
+
+I have a struct
+ typedef struct
+ {
+  int size; //size of array
+  int array*
+ } 
+
+How do I allocate memory for the int array using the size variable and malloc?

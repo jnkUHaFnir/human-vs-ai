@@ -1,0 +1,7 @@
+
+I'm learning C and I was reading around what is the best way to take in input line by line. 
+Basically I want to create strings that hold a whole line of input. The question below doesn't answer how I should handle the memory allocation for the string.
+How can I scan strings with spaces in them using scanf()?
+Should I first detect how much space is needed? How? Should I just realloc every time I need more space?
+Please show an example
+Input is from a file or from stdin(both will be possible but not at the same time)

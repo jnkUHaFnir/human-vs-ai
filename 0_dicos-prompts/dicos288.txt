@@ -1,0 +1,8 @@
+
+I'm trying to get input from stdinusing fgets utilizing a character array with a size of 128 that is supposed to stop when it reads "exit" but it doesn't   
+char cmd[128];
+
+if(fgets(cmd,128,stdin)=="exit"){
+    //stuff
+   }
+

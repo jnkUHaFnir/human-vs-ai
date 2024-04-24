@@ -1,0 +1,43 @@
+
+#include <stdio.h>
+
+char* getString()
+{
+    char buffer;
+    int size = 0;
+    int capacity = 1;
+
+    char* inputString = (char*)malloc(capacity*sizeof(char));
+    char* newString;
+
+    while(1)
+    {
+        buffer = getchar();
+        if(buffer == '\n')
+            break;
+        if((capacity-1) <= size)
+        {
+            capacity *= 2;
+            newString = (char*)malloc(capacity*sizeof(char));
+            int i;
+            for(i = 0; i < size; i++)
+                newString[i] = inputString[i];
+            inputString = newString;
+            free(newString);
+        }
+        inputString[size] = buffer;
+        size++;
+    }
+    inputString[size] = '\0';
+    return inputString;
+}
+
+int main()
+{
+    char* str;
+    str = getString();
+    printf("%s", str);
+}
+
+I wrote this C program to get a String as a user input in C and store it in a dynamically resizable array. However, every time I run this program, it crashes.
+I went through similar implementations of this program, but couldn't exactly figure out whats wrong with my code

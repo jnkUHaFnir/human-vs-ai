@@ -1,0 +1,33 @@
+
+Assume the inputs are
+a = [2,3,4,1]
+b = [1,2,4,3]
+The function DoThis takes the first input and gives the following output.
+3,2,4,1,
+2,4,3,1,
+2,3,1,4,
+1,3,4,2
+
+The DoThis function is as follows:
+int **DoThis(int n, int arr[n]){
+    int l = n;
+    int **b = malloc(l * sizeof(*b));//sizeof(*b) : sizeof(int *)
+    int i, j, k;
+    for (i = 0; i < l; i++) {
+        j = (i + 1) % l;
+        int *copy = malloc(l * sizeof(*copy));//sizeof(int)
+        for (k = 0; k < l; k++)
+            copy[k] = arr[k];
+        int t = copy[i];
+        copy[i] = copy[j];
+        copy[j] = t;
+        //printf("{%d, %d, %d, %d}\n", copy[0], copy[1], copy[2], copy[3]);
+        b[i] = copy;
+    }
+    return b;
+}
+
+This function will be then performed on all the output produced at first level and so on, until the input . So it will look like this.
+
+Since we found [1,2,4,3], we stop the function and output as 2, as it is in level 2.
+How can I do this??

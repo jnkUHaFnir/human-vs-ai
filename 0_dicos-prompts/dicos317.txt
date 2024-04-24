@@ -1,0 +1,12 @@
+
+I have an array of unsigned chars in c I am trying to print in base 10, and I am stuck. I think this will be better explained in code, so, given:
+unsigned char n[3];
+char[0] = 1;
+char[1] = 2;
+char[2] = 3;
+
+I would like to print 197121.
+This is trivial with small base 256 arrays. One can simply 1 * 256 ^ 0 + 2 * 256 ^ 1 + 3 * 256 ^ 2.
+However, if my array was 100 bytes large, then this quickly becomes a problem. There is no integral type in C that is 100 bytes large, which is why I'm storing numbers in unsigned char arrays to begin with.
+How am I supposed to efficiently print this number out in base 10?
+I am a bit lost.

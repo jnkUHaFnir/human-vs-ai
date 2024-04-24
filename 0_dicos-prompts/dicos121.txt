@@ -1,0 +1,31 @@
+
+I am new to this, please forgive me if my question has issues.
+I would like to read in an integer, a character array (say size 30), and a floating point number in C. How do I read all of it in one line in C, say 200 Merck 58.9? I have tried using scanf consecutively in the following, but the second scanf is not working - the space between input (e.g. 200 Merck 58.9) is causing mayhem.
+printf("Please enter an integer, one word string, and a float in one line");
+
+scanf("%i", &any_integer);
+
+scanf("%29s", &any_string); // no spaces - just a one word string
+
+scanf("%f", &any_float);
+
+I would then like to test what the user enters, ensure that the integer and float is positive and not above 50, and in the string ignore anything that is not a character. Here is a start for the integer.
+/* Test the input */
+
+while(any_integer < 0 || any_integer > 50)
+{
+   printf("\n*** Invalid integer.\n Please enter a value between 1 and 50: 
+   ");
+   scanf("%i", &any_integer);
+
+}/* end while */
+
+while(any_float < 0)
+
+{
+   printf("\n*** Invalid float.\n Please enter a positive value: ");
+   scanf("%f", &any_float);
+
+}/* end while */
+
+I would like to put this setup in an infinite while loop that terminates with 999, but i am struggling with the details laid out above.

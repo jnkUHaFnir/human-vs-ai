@@ -1,0 +1,38 @@
+
+I have a task. I must copy all values form one char array (sentence[]) to another empty char array sentence2[]), but I don't know why I get segmentation fault. They told us also that we must create own strlen function to check how long is string.
+This is my code
+#include <stdio.h>
+#include <stdlib.h>
+
+int new_strlen (char *tab)
+{
+    int i;
+    for (i = 0; tab[i] != '\0'; ++i);    
+    return i;
+}
+
+int copyText(char from[],char to[],int max)
+{
+    int i, j;
+    if (new_strlen(from) <= max)
+    {
+        for(int i = 0; i != '\0'; i++) {
+            to[i] = from[i];
+        }
+        to[i+1] = '\0'; 
+    }
+    return 0;
+}
+
+
+int main (int argc, char *argv[])
+{
+    char sentence[] = "C is \n a \n programming \t language";
+    char sentence2[1000];
+
+    copyText(sentence, sentence2, 1000);
+    printf("Show my array: %s \n", sentence2);
+
+    return 0;
+}
+

@@ -1,0 +1,440 @@
+
+I wrote a simple protocol in which Im able to exchange files / text messages between client and server. If the client send a text to server, server should simply echo it back. On the other hand, when client send a special command (for example, SEND_TXT_FILE) server should receive a file uploaded by client to the server.
+I almost got it work. However, there's still problem with sending files. Sever does not save the whole file, it only creates it and disconnects.
+Here's the protocol:
+CLIENT ---------- text1 ----------> SERVER
+CLIENT <---------- text1 ---------- SERVER
+CLIENT ---------- text2 ----------> SERVER
+CLIENT <---------- text3 ---------- SERVER
+CLIENT ---------- SENDTXTFILE ----------> SERVER
+CLIENT <---------- OK ---------- SERVER
+CLIENT ---------- FILENAME ----------> SERVER
+CLIENT <---------- OK ---------- SERVER
+CLIENT ---------- file content ----------> SERVER
+CLIENT <--------- FILE_UPLOADED --------- SERVER
+CLIENT ---------- text3 ----------> SERVER
+CLIENT <---------- text3 ---------- SERVER
+
+How can I solve this?
+server.c
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <string.h>
+
+#define BUFFER_SIZE 1024
+
+int send_all(int sockfd, const char *buf, int len)
+{
+    ssize_t n;
+
+    while (len > 0)
+    {
+        n = send(sockfd, buf, len, 0);
+        if (n < 0)
+            return -1;
+        buf += n;
+        len -= n;
+    }
+
+    return 0;
+}
+
+int recv_all(int sockfd, char *buf, int len)
+{
+    ssize_t n;
+
+    while (len > 0)
+    {
+        n = recv(sockfd, buf, len, 0);
+        if (n <= 0)
+            return n;
+        buf += n;
+        len -= n;
+    }
+
+    return 1;
+}
+
+int recv_txt_file(int sockfd, int len, const char *filename)
+{
+    FILE *fp = fopen(filename, "wb");
+    int total = 0, b = 0;
+    char buffer[BUFFER_SIZE];
+    memset(buffer, '\0', BUFFER_SIZE);
+
+    if (fp != NULL)
+    {
+        while (recv_all(sockfd, buffer, len) != 1)
+        {
+            total += b;
+            fwrite(buffer, 1, b, fp);
+        }
+
+        printf("Received byte: %d\n",total);
+        if (b < 0)
+            perror("Receiving");
+
+        fclose(fp);
+    }
+    else
+    {
+        perror("File");
+    }
+    close(sockfd);
+}
+
+int main()
+{
+    int port = 6666;
+    int server_fd, client_fd, read;
+    struct sockaddr_in server, client;
+    char buffer[BUFFER_SIZE], filename[BUFFER_SIZE];
+    char remote_ip[16];
+    int remote_port, res = 0;
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0)
+    {
+        perror("Could not create socket");
+        return 1;
+    }
+
+    int optval = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval, sizeof(int));
+
+    memset(&server, '\0', sizeof(server));
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
+    server.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(server_fd, (struct sockaddr *)&server, sizeof(server)) < 0)
+    {
+        perror("Could not bind socket");
+        close(server_fd);
+        return 1;
+    }
+
+    if (listen(server_fd, 1) < 0)
+    {
+        perror("Could not listen on socket");
+        close(server_fd);
+        return 1;
+    }
+
+    printf("Server TCP is listening on port %d ... \n", port);
+
+    socklen_t client_len = sizeof(client);
+    client_fd = accept(server_fd, (struct sockaddr *)&client, &client_len);
+
+    if (client_fd < 0)
+    {
+        perror("Could not establish new connection");
+        close(server_fd);
+        return 1;
+    }
+
+    remote_port = ntohs(client.sin_port);
+    inet_ntop(AF_INET, &client.sin_addr, remote_ip, sizeof(remote_ip));
+
+    printf("Client IP address: %s, port %d\n", remote_ip, remote_port);
+
+    while (1)
+    {
+        read = recv_all(client_fd, buffer, BUFFER_SIZE);
+        if (read <= 0)
+        {
+            if (read < 0)
+                perror("Client read failed");
+            else
+                printf("Client disconnected\n");
+            break;
+        }
+
+        if ((res = strcmp(buffer, "SENDFILE_TXT\n") == 0))
+        {
+
+            printf("-------FROM CLIENT: %s-------\n", buffer);
+            memset(buffer, BUFFER_SIZE, '\0');
+            strcpy(buffer, "OK");
+            if (send_all(client_fd, buffer, BUFFER_SIZE) < 0)
+            {
+                perror("Client write failed");
+                break;
+            }
+            read = recv_all(client_fd, buffer, BUFFER_SIZE);
+            if (read <= 0)
+            {
+                if (read < 0)
+                    perror("Client read failed");
+                else
+                    printf("Client disconnected\n");
+                break;
+            }
+            printf("-------FROM CLIENT: %s-------\n", buffer);
+            memset(filename, '\0', BUFFER_SIZE);
+            strcpy(filename, buffer);
+            memset(buffer, BUFFER_SIZE, '\0');
+            strcpy(buffer, "OK");
+            if (send_all(client_fd, buffer, BUFFER_SIZE) < 0)
+            {
+                perror("Client write failed");
+                break;
+            }
+            recv_txt_file(client_fd, BUFFER_SIZE, filename);
+        }
+        else
+        {
+            printf("FROM CLIENT: %.*s\n", BUFFER_SIZE, buffer);
+
+            if (send_all(client_fd, buffer, BUFFER_SIZE) < 0)
+            {
+                perror("Client write failed");
+                break;
+            }
+        }
+    }
+
+    close(client_fd);
+    close(server_fd);
+
+    return 0;
+}
+
+client.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#define BUFFER_SIZE 1024
+
+socklen_t hostname_to_ip_port(char *hostname, int port, struct sockaddr_storage *addr)
+{
+    int sockfd;
+    struct addrinfo hints, *servinfo;
+    int rv;
+
+    char service[20];
+    sprintf(service, "%d", port);
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    if ((rv = getaddrinfo(hostname, service, &hints, &servinfo)) != 0)
+    {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return 0;
+    }
+
+    socklen_t addrlen = servinfo->ai_addrlen;
+    memcpy(addr, servinfo->ai_addr, addrlen);
+
+    freeaddrinfo(servinfo);
+
+    return addrlen;
+}
+
+int send_all(int sockfd, const char *buf, size_t len)
+{
+    ssize_t n;
+
+    while (len > 0)
+    {
+        n = send(sockfd, buf, len, 0);
+        if (n < 0)
+            return -1;
+        buf += n;
+        len -= n;
+    }
+
+    return 0;
+}
+
+int recv_all(int sockfd, char *buf, int len)
+{
+    ssize_t n;
+
+    while (len > 0)
+    {
+        n = recv(sockfd, buf, len, 0);
+        if (n <= 0)
+            return n;
+        buf += n;
+        len -= n;
+    }
+
+    return 1;
+}
+
+long int get_file_size(char filename[])
+{
+    // opening the file in read mode
+    FILE *fp = fopen(filename, "r");
+
+    // checking if the file exist or not
+    if (fp == NULL) {
+        printf("File Not Found!\n");
+        return -1;
+    }
+
+    fseek(fp, 0L, SEEK_END);
+
+    // calculating the size of the file
+    long int res = ftell(fp);
+
+    // closing the file
+    fclose(fp);
+
+    return res;
+}
+
+int send_txt_file(int sockfd, int len, const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    int b;
+    char buffer[BUFFER_SIZE];
+    memset(buffer, '\0', BUFFER_SIZE);
+
+    if (fp == NULL)
+    {
+        perror("Error while openning file");
+        return 0;
+    }
+
+    while ((b = fread(buffer, 1, BUFFER_SIZE, fp)) > 0){
+        send_all(sockfd, buffer, BUFFER_SIZE);
+        memset(buffer, '\0', BUFFER_SIZE);
+    }
+
+    fclose(fp);
+    return 1;
+}
+
+int main(int argc, char **argv)
+{
+    char *hostname = "127.0.0.1";
+    int port = 6666;
+    char buffer[BUFFER_SIZE], fname[BUFFER_SIZE];
+
+    int sockfd, err, res;
+    struct sockaddr_storage server_addr;
+    socklen_t server_addr_len;
+
+    server_addr_len = hostname_to_ip_port(hostname, port, &server_addr);
+    if (server_addr_len == 0)
+        return 1;
+
+    sockfd = socket(server_addr.ss_family, SOCK_STREAM, IPPROTO_TCP);
+    if (sockfd < 0)
+    {
+        perror("Could not create socket");
+        return 1;
+    }
+
+    if (connect(sockfd, (struct sockaddr *)&server_addr, server_addr_len) < 0)
+    {
+        perror("Could not connect socket");
+        return 1;
+    }
+
+    while (1)
+    {
+        memset(buffer, BUFFER_SIZE, '\0');
+        memset(fname, BUFFER_SIZE, '\0');
+
+        printf("> ");
+        if (!fgets(buffer, BUFFER_SIZE, stdin))
+            break;
+
+        if (strstr(buffer, "SENDFILE_TXT") != NULL)
+        {
+            if (send_all(sockfd, buffer, BUFFER_SIZE) < 0)
+            {
+                perror("Could not send message");
+                close(sockfd);
+                return 1;
+            }
+
+            memset(buffer, BUFFER_SIZE, '\0');
+            err = recv_all(sockfd, buffer, BUFFER_SIZE);
+            if (err <= 0)
+            {
+                if (err < 0)
+                    perror("Could not read message");
+                else
+                    printf("Server disconnected\n");
+                break;
+            }
+            if ((res = strcmp(buffer, "OK") == 0))
+            {
+                printf("-------FROM SERVER: %s-------\n", buffer);
+
+                printf("Give filename> ");
+                memset(fname, BUFFER_SIZE, '\0');
+                if (!fgets(fname, BUFFER_SIZE, stdin))
+                    break;
+                if (send_all(sockfd, fname, BUFFER_SIZE) < 0)
+                {
+                    perror("Could not send message");
+                    close(sockfd);
+                    return 1;
+                }
+            }
+
+            err = recv_all(sockfd, buffer, BUFFER_SIZE);
+            if (err <= 0)
+            {
+                if (err < 0)
+                    perror("Could not read message");
+                else
+                    printf("Server disconnected\n");
+                break;
+            }
+
+            fname[strlen(fname)-1] = 0;
+            printf("----%s----\n", fname);
+            send_txt_file(sockfd, BUFFER_SIZE, fname);
+
+            printf("FROM SERVER: %.*s\n", BUFFER_SIZE, buffer);
+        }
+        else
+        {
+            if (send_all(sockfd, buffer, BUFFER_SIZE) < 0)
+            {
+                perror("Could not send message");
+                close(sockfd);
+                return 1;
+            }
+
+            err = recv_all(sockfd, buffer, BUFFER_SIZE);
+            if (err <= 0)
+            {
+                if (err < 0)
+                    perror("Could not read message");
+                else
+                    printf("Server disconnected\n");
+                break;
+            }
+            printf("FROM SERVER: %.*s\n", BUFFER_SIZE, buffer);
+        }
+    }
+
+    close(sockfd);
+
+    return 0;
+}
+

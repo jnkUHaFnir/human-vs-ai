@@ -1,0 +1,60 @@
+
+I've been trying different solutions but am not sure where to look for the solution.
+I prompt the user for "plaintext" and whatever their input is, the chars in their input need to be rotated alphabetically by a number (aka the key) which they provide.
+For example: plaintext: HELLO would spit out ciphertext: IFMMP if the key were 1.
+Assuming the key will always be a number, here is what my code looks like which attempts to rotate each char by Key: 1. I'm a real noob so please break it down is possible.
+
+
+{
+     string s = get_string("plaintext: ");                                    
+     printf("ciphertext: %s\n", s + 1);
+}   
+
+
+
+The remaining code (which includes identifying and filtering out the key is:
+
+
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+int main(int argc, string argv[])
+{                
+    int counter = 0;    
+    if (argc == 2)
+    {
+        for(int k = 0; k <strlen(argv[1]); k++)
+        {
+            if (isdigit(argv[1][k]))
+            {
+                counter++;         
+            }
+        }   
+        if (strlen(argv[1]) == counter)
+        {
+            string s = get_string("plaintext: ");
+            if(s)
+            {
+                
+                printf("ciphertext: %s\n", s + 1);
+                free(s);
+            }
+        }   
+        else
+        {
+            printf("Usage: ./caesar key\n");
+        }
+    }
+    else
+    {
+        printf("Usage: ./caesar key\n");
+    }                     
+
+}
+
+
+
+Any assistance would be appreciated.

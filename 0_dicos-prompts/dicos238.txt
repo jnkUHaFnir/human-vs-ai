@@ -1,0 +1,27 @@
+
+I am writing a program that takes a file given by the user and proceeds to read it. However, I would also like to use as little memory as possible and therefore do not want to allocate 100000 chars to the array unless it is completely necessary. Here is the code I currently have to read the file.
+char    *read_input(const char *file)
+{
+    int         fd;
+    int         read_stat;
+    int         i;
+    char        tmp[1000000];
+    char        buffer[1];
+
+    i = 0;
+    if ((fd = open(file, O_RDONLY)) == -1)
+        printf("Error");
+
+    while ((read_stat = read(fd, buffer, 1)))
+    {
+        tmp[i++] = buffer[0];
+        if (i > 1000000)
+            printf("Error");
+    }
+    tmp[i] = '\0';
+    if (close(fd) == -1)
+        printf("Error");
+    return (ft_strdup(tmp));
+}
+
+Any advice?

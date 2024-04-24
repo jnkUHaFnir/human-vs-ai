@@ -1,0 +1,12 @@
+
+There is supposedly something wrong (in terms of software security) with this code snippet and i cant seem to figure it out ...The function die terminates the the program after displaying the string argument.
+void get_user(char* user)
+{
+  char buf[1024];
+  if (strlen(user) > sizeof(buf))
+    die("error: user string too long\n");
+  strcpy(buf, user);
+  …
+} 
+
+-thx!   

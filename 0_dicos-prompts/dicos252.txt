@@ -1,0 +1,13 @@
+
+I need to construct a path to a file from two strings. I could use this (not tested, though):
+/* DON'T USE THIS CODE! */
+/* cmp means component */
+char *path_cmp1 = "/Users/john/";
+char *path_cmp2 = "foo/bar.txt";
+unsigned len = strlen(path_cmp1);
+char *path = path_cmp1;
+for (int i = 0; i < strlen(path_cmp2); i++) {
+  path[len + i] = path_cmp2[i];
+}
+
+but this could lead to memory corruption I guess. Is there a better way to do this, or is there a function for this in the standard library?

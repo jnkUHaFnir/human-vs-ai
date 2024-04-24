@@ -1,0 +1,2 @@
+
+If I need to assign zeros to a chunk of memory. If the architecture is 32bits can assignment of long long (which is 8 bytes on particular architecture) be more efficient then assignment of int (which is 4 bytes), or will it be equal to two int assignments? And will the assignment of int be more efficient then assignment using char for the same chunk of memory since I would need to loop 4 times as many times if I use char versus int

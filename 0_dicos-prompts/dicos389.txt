@@ -1,0 +1,27 @@
+
+I am trying to write a function, uppercase, that converts all lowercase characters in a string into their uppercase equivalents.
+However, I am getting a Bus 10 error in my code. I know that string literals cannot be modified in C; so, I am not sure if this is the right approach.
+My code is below:
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
+int uppercase(char source[])
+{
+ int i;
+
+ for(i=0; i<=strlen(source); ++i)
+    if (source[i]>= 'a' && source[i]<= 'z')
+        source[i]= source[i]-'a' +'A';
+    else 
+        source[i]=source[i];
+}
+
+int main(){
+    uppercase("cold");
+
+    return 0;
+}
+
+Ideally this function should return COLD.I suppose the error lies in my whole if statement.

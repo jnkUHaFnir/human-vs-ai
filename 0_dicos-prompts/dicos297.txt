@@ -1,0 +1,21 @@
+
+I have this c program where I am inputing a number N followed by N more numbers. For example, I'll enter 100 followed by 100 more numbers. For some reason, after so many inputs the scanf function will stop working properly. It's as if it has stopped taking input and will just continue one with whatever value is in size. 
+The use case I came up with is 100 1 2 3 4 5 6 7 8 9 10... (repeated ten times). then after three or four times of that I'll type in 100 10 9 8 7 6 5 4 3 2 1... (repeated ten times) and then there will be an infinite loop of print statements.
+int main(int argc, const char * argv[]) {
+  int histogram[10000];
+  int i;
+  while (1) {
+    int *rectPtr = histogram;
+    int size;
+    scanf("%d", &size);
+    if (!size) return 0;
+    for (i = 0; i < size; ++i) {
+        scanf("%d", rectPtr);
+        rectPtr++;
+    }
+    printf("%d", 1);
+    printf("\n");
+  }
+  return 0;
+}
+

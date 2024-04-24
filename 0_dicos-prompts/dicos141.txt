@@ -1,0 +1,5 @@
+
+
+
+
+I have an array of bytes, in memory. What's the fastest way to see if all the bytes in the array are zero?

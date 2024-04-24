@@ -1,0 +1,36 @@
+
+I am trying to write a code in C (gcc) to accept only floating numbers with decimals and reject integers, special characters, alphanumeric entry. 
+Valid entries are: 
+1.23, 3.45, 6.77
+
+Invalid entries:
+abc, e34, 834ww, 6, 9,
+
+and some blah things that is not a float. 
+This is what I have tried: 
+#include <stdio.h>
+
+int main()
+{    
+    double floatnum;
+    double decpart=0.000000;
+    printf("Enter a floating number num: ");
+
+    while (decpart == 0.0000000)
+    {
+         scanf("%lf", &floatnum);
+         int intpart = (int)floatnum;
+         double decpart = floatnum - intpart;
+         if (decpart == 0.000000){
+             printf("Invalid floating point number, enter again: ");
+         }
+         else
+         {
+             printf("Number entered = %.2f\n", floatnum);
+             break;
+         } 
+    }
+    return 0;
+}
+
+I don't want exact code, but I need some pointers/clues on what would be the best way to achieve that. 

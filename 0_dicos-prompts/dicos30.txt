@@ -1,0 +1,3 @@
+
+What is the simplest way to read a full line in a C console program
+The text entered might have a variable length and we can't make any assumption about its content.

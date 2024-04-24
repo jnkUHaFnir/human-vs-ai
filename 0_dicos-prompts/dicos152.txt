@@ -1,0 +1,19 @@
+
+Big picture: I have a module with functions and a module with procedures and functions over those functions.
+When I combine two functions (from function's module interface):
+double f1(double alpha, double x);
+double f2(double beta, double x);
+
+In several ways, (one of them is adding):
+double OP_Addition(double (*f)(double,double) , double (*g)(double,double), double param1, double param2, double x);
+
+Gives no problem with the following (piece of) implementation:
+z1 = (*f)(param1, x);
+z2 = (*g)(param2, x);
+y = z1 + z2;
+return y;
+
+But when I want to return a pointer to a "new" function, something like:
+void *OP_PAdd( double (*f)(double,double), double param3 );
+
+I can not get it to work properly, neither make the right "call". I want to have use the output "function" as input in other functions.

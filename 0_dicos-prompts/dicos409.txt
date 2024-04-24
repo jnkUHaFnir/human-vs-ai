@@ -1,0 +1,20 @@
+
+// Processes the array, starting from the second element
+    int j, k;
+    char *doubled;
+    for (j = 1; j < 500; j++) {
+        strcpy(doubled, output[j]);
+        strcat(doubled, doubled);
+        for (k = 0; k < j; k++) {
+            if (strcmp(output[k], output[j]) == 0) {
+                output[j] = doubled;
+            }
+            if (strcmp(output[k], doubled) == 0) {
+                output[j] = '\0';
+            }
+        }
+    }
+
+Trying to process an array of strings, where whenever a particular string occurs twice, the second occurrence print the duplication of the string (e.g. dog dog ---> dog dogdog), and if there are more than 2 occurrences of a string, delete the string (e.g. dog dog dog ---> dog dogdog).
+I have tried to debug and I found that the problem is in this block of code, where I kept getting segmentation fault reports.
+What do I have to do to fix this? I have looked at several solutions to strcat() creating segmentation faults, but it seemed none of them really worked.

@@ -1,0 +1,80 @@
+
+I created a linked-list in C. I'm trying to create a function that looks at the lowest value in the linked list (which is the head) and the removes the "right-most" instance of that value in the list.
+Suppose the linked-list looks like this:
+2 -> 2 -> 2 -> 4 -> 5 -> 6
+
+The head in this list is 2. But it's not the head I want to remove. I want to remove the 2 that comes before the 4 (it is the right-most instance of the head).
+Here's the function I created to implement this:
+double removeLowestValue() {
+  struct node *temp;
+  struct node *ptr = head;
+  double val = ptr->value;
+  if(head == tail)
+  {
+      free(head);
+      head = NULL;
+      tail = NULL;
+  }
+  else
+  {
+      while(ptr->value == ptr->next->value)
+      {
+          temp = ptr;
+          ptr = ptr->next;
+          val = ptr->value
+      }
+      temp->next = NULL;
+      temp->next = ptr->next;
+      free(ptr);
+
+      return val;
+  }
+}
+
+Then I tried to test if the function works:
+int main() {
+  insertNode(18.0);
+  insertNode(13.0);
+  insertNode(11.0);
+  insertNode(11.0);
+  insertNode(22.0);
+
+  printf("%d", removeLowestValue());
+
+  return 0;
+}
+
+Unfortunately, the program doesn't print out "11" as expected. Matter of fact, it doesn't print anything at all. What's going on here?
+EDIT:
+Here's how I implemented the insertNode function:
+void insertNode(double value) {
+  struct node *new_node = create_new_node(value);
+  struct node *temp = head;
+  struct node *prev;
+
+  if (head == NULL) {
+    head = new_node;
+    tail = new_node;
+  } else {
+    while (value > temp->value && temp->next != NULL) {
+      prev = temp;
+      temp = temp->next;
+    }
+
+    if(value < temp->value || value == temp->value)
+    {
+        /*If the value of the new node equals to the value of temp
+         OR if the value of the new node is less than the value of temp,
+         then insert the new node right before temp*/
+
+        new_node->next = temp;
+        prev->next = new_node;
+    }
+    else if(value > temp->value)
+    {
+        temp->next = new_node;
+        tail = new_node;
+    }
+  }
+}
+

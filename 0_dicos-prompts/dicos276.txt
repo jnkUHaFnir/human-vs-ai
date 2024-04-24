@@ -1,0 +1,20 @@
+
+I am new to programming in C and I am currently just working on a problem set for a rental business. I am trying to ask for what type of car, choice between only 3, and calculating total rental cost for one vehicle. I think, I need a while loop followed by several if statements but, I am currently able to compile the code but, it only runs until the first input is entered. Any guidance is helpful, I am not looking for the solution just where I need to focus my attention. While loops throw me for a loop ;)
+int type, daysRented, numberOfMiles, rentalTotal, totalRevenue = 0;
+
+do{
+    printf("Enter 0 for End, 1 for sports car, 2 for midsize, 3 for economy: ");
+    scanf("%d\n", &type);
+    
+} while (type != 0);
+
+printf("Enter days rented: ");
+scanf("%d\n", &daysRented);
+printf("Enter the number of miles: ");
+scanf("%d\n", &numberOfMiles);
+
+if (type == 1){
+    rentalTotal = (daysRented * 75) + (numberOfMiles * 2);
+    printf("%i\n", totalRevenue);
+}
+

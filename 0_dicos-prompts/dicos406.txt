@@ -1,0 +1,3 @@
+
+My code uses gets_s() to get a string input from the user.If the user enters a string whose length is greater than the specified in gets_s, the application aborts.So how to handle that gracefully?
+Thanks.

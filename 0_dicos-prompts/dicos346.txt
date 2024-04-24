@@ -1,0 +1,75 @@
+
+
+Libraries used
+
+ #include<stdio.h>
+ #include<stdlib.h>
+ #include<conio.h>
+ #include<time.h>
+
+
+Creating a dataset with random floating-points and printing on a newly created file
+
+void createdataset(int Datasetsize,char * filename)
+{
+  FILE *f;
+  int su;
+  float v[Datasetsize];    
+
+  srand((unsigned int)time(NULL));
+
+  for(int i = 1; i<=Datasetsize;i++) 
+    *(v+i)=((float)rand()/(float)(RAND_MAX)) * 100;
+
+  f=fopen(filename,"wb");
+  su=fwrite(v ,sizeof(float) , Datasetsize , f);
+  printf("%d\n",su);
+  fclose(f);
+}
+
+
+Reading the newly created file using fread() and displaying the number of successful attempts. It always gives unsuccessful attempts like it reads 120 records from 1000 and the rest are corrupted. I need to resolve this issue.
+
+void loadDataset (int DataSetSize, char *filename, float *v) 
+{
+  FILE *fp;
+  int s;
+
+  fp = fopen( filename , "r" );
+  if( fp==NULL) 
+    printf("File cant be opened");
+
+  s=fread(v , sizeof(float), DataSetSize, fp );
+  printf("%d\n",s);
+  for( int i=0; i<DataSetSize; i++)
+  {
+    printf("\t%f",*(v+i));
+  }
+
+  fclose(fp);
+}
+
+
+Main function
+
+void main()  
+{ 
+    char ch;
+    FILE *fp;
+    int datasetsize;
+    char filein[50];
+    char *fi=filein, ds; 
+
+    printf("Enter the size of the datasetsize: ");
+    scanf("%d",&datasetsize);
+
+    float v[datasetsize];
+
+    printf("%d\n",datasetsize);
+    printf("Enter input file name: ");
+    scanf("%s",filein);
+    printf("%s\n",filein);
+    createdataset(datasetsize,fi);
+    loadDataset(datasetsize, fi, v);
+}
+

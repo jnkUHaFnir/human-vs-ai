@@ -1,0 +1,132 @@
+
+This program is supposed to print a webpage to terminal
+usage: ./prog www.page.com 80 /folder/index.html
+program always does as it should but always seg-faults at the end
+#define _XOPEN_SOURCE 600
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <string.h>
+#include <strings.h>
+#include <unistd.h>
+#include <termios.h>
+
+#define HOST "localhost"
+#define PAGE "/"
+#define PORT "80"
+#define USERAGENT "HTML 1.1"
+
+char *build_get_query(char *host,char *page){
+    char *query;
+    char *getpage = page;
+    char *tpl = "GET /%s HTTP/1.1\r\nHost: %s\r\nUser-Agent: %s\r\nConnection: close\r\n\r\n";
+
+if(getpage[0]=='/'){
+        getpage=getpage + 1; /*Removing leading / */
+    }
+    /* -5 is to consider the %s %s %s in tpl and the ending \0 */
+    query=malloc(strlen(host)+strlen(getpage)+strlen(USERAGENT)+strlen(tpl)-5);
+    sprintf(query, tpl, getpage, host, USERAGENT);
+
+    return query;
+}
+
+int main(int argc, char **argv){
+    int sockfd;
+
+    struct addrinfo hints, *servinfo, *p;
+    int s;  
+
+    char *page;
+    char *stringA;
+    int tmpres;
+    char *sstr;
+
+    if(argc<3){
+        fprintf(stderr,"\n\tUSAGE:\n\t%s hostname/ip PORTnr /PAGE/index.shtml \n\n",argv[0]);
+        fprintf(stderr,"\texample:\n\t%s www.anypage.com 80 /folder/index.shtml \n\n",argv[0]);
+        exit(1);
+    }
+
+    memset(&hints,0,sizeof(struct addrinfo));
+    hints.ai_family=AF_INET;    /* Allow IPv4 or IPv6 */
+    hints.ai_socktype=SOCK_STREAM; /* stream socket */
+    hints.ai_flags=0;
+    hints.ai_protocol=0;          /* Any protocol */
+    if((s=getaddrinfo(argv[1],PORT,&hints,&servinfo))!=0){
+        fprintf(stderr,"\n\tgetaddrinfo: %s\n",gai_strerror(s));
+        exit(EXIT_FAILURE);
+    }
+    for(p=servinfo; p!=NULL; p=p->ai_next){
+        if((sockfd=socket(p->ai_family,p->ai_socktype,p->ai_protocol))==-1){
+            fprintf(stderr,"\n\tSOCKET FAIL\n\n");
+            continue;
+        }
+
+        if((connect(sockfd,p->ai_addr,p->ai_addrlen))<0){
+            close(sockfd);
+            fprintf(stderr,"\n\tCONECTION FAIL\n\n");
+            continue;
+        }
+        break;
+    }
+    if(p==NULL){
+        fprintf(stderr,"\n\tCONECTION FAIL\n\n");
+        exit(2);
+    }
+    freeaddrinfo(servinfo);
+
+
+    if(argc > 3){
+        page=argv[3];
+    }else{
+        page=PAGE;
+    }
+
+    if((stringA=malloc(BUFSIZ))==NULL){
+        printf("\n\tMEMORY ERROR\n\n");
+        exit(1);
+    }
+    stringA=build_get_query(argv[1],page);
+    if((write(sockfd,stringA,strlen(stringA)))<0){
+        printf("\n\tERROR ON SEND\n\n");
+    }
+    memset(stringA, 0, sizeof(stringA));
+
+    while((tmpres=read(sockfd,stringA,BUFSIZ))>0){
+
+        if((sstr=strstr(stringA,"<!DOCTYPE "))!=NULL){
+            stringA=sstr;
+        }
+        if((sstr=strstr(stringA,"</html>"))!=NULL){
+            strncpy(sstr+7,"\n",(BUFSIZ-strlen(stringA))+5);
+        }
+        fprintf(stdout,"%s",stringA);
+
+    }
+    if(tmpres<0){
+        perror("READ ERROR");
+    }
+
+    close(sockfd);
+    return 0;
+}
+
+gdb info
+Program received signal SIGSEGV, Segmentation fault.
+_dl_fini () at dl-fini.c:183
+183 dl-fini.c: No such file or directory.
+    in dl-fini.c
+(gdb) bt
+#0  _dl_fini () at dl-fini.c:183
+#1  0x0015d1ef in __run_exit_handlers (status=0, listp=0x289324, run_list_atexit=true) at exit.c:78
+#2  0x0015d25f in *__GI_exit (status=0) at exit.c:100
+#3  0x00144bde in __libc_start_main (main=0x804892d <main>, argc=4, ubp_av=0xbffff454, init=0x8048d00 <__libc_csu_init>, 
+    fini=0x8048cf0 <__libc_csu_fini>, rtld_fini=0x11e080 <_dl_fini>, stack_end=0xbffff44c) at libc-start.c:258
+#4  0x08048811 in _start ()
+(gdb) 
+
+I am intrigued with gdb information because I have installed sudo apt-get install build-essential  about a year ago and never had problems until today.

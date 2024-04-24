@@ -1,0 +1,50 @@
+
+
+
+
+I am working on a simple C program which is to create a loop of a structure.
+So I have a structure of a Students with name, age, and grade.
+So the output will be something like this:
+Enter name of student 1:
+Enter age of student 1:
+Enter Grade of student 1:
+
+Enter name of student 2:
+Enter age of student 2:
+Enter Grade of student 2:
+
+But after I input the grade of Student 1, it skipped The name of student 2 so I got this instead:
+Enter name of student 1:
+Enter age of student 1:
+Enter Grade of student 1:
+
+Enter name of student 2: Enter age of student 2:
+
+
+And I am using DevC++, here is my code:
+#include <stdio.h>
+
+struct student {
+    char name[50];   // declare name using array
+    int age;
+    int grade;
+};
+
+int main ()
+{
+    struct student info[3];   //declare 3 students [3]
+    int i;
+
+    for(i=1;i<=3;i++) {    // this is for the looping, student 1, student 2, student 3
+        printf("Enter name for student %d : ",i);
+        scanf("%s",info[i].name);   // called struct using "." (dot)
+        printf("Enter age for sudent %d : ",i);
+        scanf("%d",&info[i].age);
+        printf("Enter grade for student %d : ",i);
+        scanf("%d",&info[i].grade);
+    }
+    return 0;
+
+}
+
+Can someone find what is wrong with my code? or please help a suggestion to solve this problem to get the expected result.

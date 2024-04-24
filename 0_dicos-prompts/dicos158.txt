@@ -1,0 +1,17 @@
+
+I am posting the file to server and its working fine, But the my code fails when i try to post the .zip file. May be my code is wrong in the reading the zip file contents data.
+ifstream::pos_type size;
+char * memblock;
+ifstream file ("example.zip", ios::in|ios::binary|ios::ate);
+if (file.is_open())
+{
+ size = file.tellg();
+ memblock = new char [size];
+ file.seekg (0, ios::beg);
+ file.read (memblock, size);
+ file.close();
+
+ postBody.AppendFormat("Content-Disposition: form-data; name=\"datafile\"; filename=\"%s\"; \r\n\n%s", zipFilePath, memblock); 
+ postBody.AppendFormat("\r\n--%s--\r\n", boundary);
+}
+

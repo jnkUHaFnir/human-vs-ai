@@ -1,0 +1,18 @@
+
+I'm creating a loop that basically has a (y/n) yes, no answer and I wanted to use an if else inside of a do while loop. When using the input == Y it seems to not accept it, so I'm wondering that's even possible in C? Or if I'm approaching in the wrong way.
+I tried just a simple if input == Y but that didn't work, then I tried a strcmp and that didn't seem to work either. I'm at the strcmp part because I think I might be close to the answer with that but I'm not entirely sure if I'm understanding what's going on with the char values.
+printf("Would you like to print another invoice? Y=yes, N=No\n");
+do {
+    scanf("%s", &newInvoice);
+    if(strcmp(newInvoice, Y)!= 0) {
+        main();
+    }
+    else if(strcmp(newInvoice, N)!= 0) {
+        printf("Goodbye!\n");
+    }
+    else {
+        printf("Invalid Entry (it has to be y or n):\n");
+    }
+} while(strcmp(newInvoice, N)!= 0); 
+
+When I had just input == Y it wanted me to initialize Ym and N so that didn't seem to be the answer. I would like the loop to repeat the question and input until they say yes or no; if they enter something like G or whatever other character it needs to loop again.

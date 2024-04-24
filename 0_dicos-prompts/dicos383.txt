@@ -1,0 +1,86 @@
+
+I'm new to C and I'm having a bit of a problem resetting or clearing a global array of pointers to structs.
+I need to receive a file (or more) and read it's lines in two cycles.
+while reading it I need to create a table of symbols(labels basically), and then use it to create more data (exporting the location of the labels to files writing it in hexadecimal values).
+The problem I am having is when I'm reading two files. The first file is read fine and all the values are correct, but when it tries to read the second file the values in the table(array) I created are still there even though I free'd them.
+I have this declared in a header file: (SIZE being 30)
+typedef struct symbol{
+unsigned action :1;
+unsigned external :1;
+int address;    
+char label[SIZE];
+unsigned data_flag :1;
+} symbol ; 
+
+symbol *symbol_Table[SIZE] ;
+
+An example of adding a new symbol: (this sits in the reading function)
+new_symbol =  malloc(sizeof(symbol));
+strcpy(new_symbol->label, temp);
+new_symbol->external = 0;
+new_symbol->address = DC - tok_count; 
+new_symbol->action = 0;
+new_symbol->data_flag = 1;
+add_symbol(new_symbol);
+free(new_symbol);
+
+The adding function, in a different file: (UPDATE)
+if(count == SIZE){
+    **/*realloc the array size, increase it*/**
+}
+
+if(count < SIZE){
+    symbol_Table[count] = malloc(sizeof(symbol));
+    symbol_Table[count]->action = new_symbol->action;
+    symbol_Table[count]->external = new_symbol->external;
+    symbol_Table[count]->address = new_symbol->address;
+    strcpy(symbol_Table[count]->label, new_symbol->label);
+    symbol_Table[count]->data_flag = new_symbol->data_flag;
+
+    /*printf("count: %d\n", count);*/
+    return ++count;
+}
+
+return count;
+
+And the freeing of the symbols at the end of the reading loop: (UPDATE)
+int i;
+for(i = 0; i < count ; i++){
+    free(symbol_Table[i]);
+    symbol_Table[i] = NULL;
+}
+
+this is the correct output after the first loop on the first file:
+action: no | extern: yes | address: 0 | label L3 | data: no
+action: no | extern: yes | address: 0 | label W | data: no
+action: yes | extern: no | address: 100 | label MAIN | data: no
+action: yes | extern: no | address: 106 | label LOOP | data: no
+action: yes | extern: no | address: 119 | label END | data: no
+action: no | extern: no | address: 0 | label STR | data: yes
+action: no | extern: no | address: 7 | label LENGTH | data: yes
+action: no | extern: no | address: 10 | label K | data: yes
+
+and the faulty output after the first loop of the second file: (UPDATE)
+action: yes | extern: no | address: 100 | label MAIN | data: yes
+action: no | extern: yes | address: 0 | label W | data: yes
+action: yes | extern: no | address: 108 | label LOOP | data: yes
+action: no | extern: no | address: 0 | label STR | data: yes
+action: no | extern: no | address: 3 | label K | data: yes
+
+should be:
+action: yes | extern: no | address: 100 | label MAIN | data: no
+action: no | extern: yes | address: 0 | label W | data: no
+action: yes | extern: no | address: 108 | label LOOP | data: no
+action: no | extern: no | address: 0 | label STR | data: yes
+action: no | extern: no | address: 3 | label K | data: yes
+
+A few questions:
+
+Is there a way to clean the list after I used it? and then reusing the same list for new values? and avoiding the memory leak. 
+Is this idea with arrays just a waste of space, should I try using linked lists instead? I fear that I will have to write my whole project again, and time is not on my side..
+
+(AFTER UPDATE)
+
+How can I Reallocate more memory to increase the size of the array when I reach its end? 
+
+Apologies if I misused a term, I'm studying C in a different language.

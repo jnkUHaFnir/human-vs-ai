@@ -1,0 +1,47 @@
+
+The concept if very simple. The computer must repeat the question till it recieves a valid response. Here is my current code:
+#include <stdio.h>
+
+
+int main(int argc, const char * argv[]) {
+int age;
+
+do{
+printf("How old are you?\n");
+scanf("%d", &age);
+
+
+if (age == 32767)
+
+{
+    printf("Error, retry: \n");
+}
+
+else
+{
+    printf("Cool.");
+    break;
+
+}
+}
+while(age!=3267);
+
+return (0);
+}
+
+The if else statement is to catch the exception incase the user types something that is not an integer.
+I tried using a do-while loop but it ended up as an infinite loop
+I used the do-while loop because I needed to go through that procedure until I get a valid age value.
+My output with the current code is:
+How old are you?
+g
+Error, retry: 
+How old are you?
+Error, retry: 
+How old are you?
+Error, retry: 
+How old are you?
+Error, retry: 
+
+It goes like this indefinitely.
+It would be great if you could help me out.

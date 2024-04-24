@@ -1,0 +1,89 @@
+
+I have a message class which was previously a bit of a pain to work with, you had to construct the message class, tell it to allocate space for your object and then populate the space either by construction or memberwise.
+I want to make it possible to construct the message object with an immediate, inline new of the resulting object, but to do so with a simple syntax at the call site while ensuring copy elision.
+#include <cstdint>
+
+typedef uint8_t id_t;
+enum class MessageID { WorldPeace };
+
+class Message
+{
+    uint8_t* m_data;         // current memory
+    uint8_t m_localData[64]; // upto 64 bytes.
+    id_t m_messageId;
+    size_t m_size; // amount of data used
+    size_t m_capacity; // amount of space available
+    // ...
+
+public:
+    Message(size_t requestSize, id_t messageId)
+        : m_data(m_localData)
+        , m_messageId(messageId)
+        , m_size(0), m_capacity(sizeof(m_localData))
+    {
+        grow(requestSize);
+    }
+
+    void grow(size_t newSize)
+    {
+        if (newSize > m_capacity)
+        {
+            m_data = realloc((m_data == m_localData) ? nullptr : m_data, newSize);
+            assert(m_data != nullptr); // my system uses less brutal mem mgmt
+            m_size = newSize;
+        }
+    }
+
+    template<typename T>
+    T* allocatePtr()
+    {
+        size_t offset = size;
+        grow(offset + sizeof(T));
+        return (T*)(m_data + offset);
+    }
+
+#ifdef USE_CPP11
+    template<typename T, typename Args...>
+    Message(id_t messageId, Args&&... args)
+        : Message(sizeof(T), messageID)
+    {
+        // we know m_data points to a large enough buffer
+        new ((T*)m_data) T (std::forward<Args>(args)...);
+    }
+#endif
+};
+
+Pre-C++11 I had a nasty macro, CONSTRUCT_IN_PLACE, which did:
+#define CONSTRUCT_IN_PLACE(Message, Typename, ...) \
+    new ((Message).allocatePtr<Typename>()) Typename (__VA_ARGS__)
+
+And you would say:
+Message outgoing(sizeof(MyStruct), MessageID::WorldPeace);
+CONSTRUCT_IN_PLACE(outgoing, MyStruct, wpArg1, wpArg2, wpArg3);
+
+With C++11, you would use
+Message outgoing<MyStruct>(MessageID::WorldPeace, wpArg1, wpArg2, wpArg3);
+
+But I find this to be messy. What I want to implement is:
+    template<typename T>
+    Message(id_t messageId, T&& src)
+        : Message(sizeof(T), messageID)
+    {
+        // we know m_data points to a large enough buffer
+        new ((T*)m_data) T (src);
+    }
+
+So that the user uses
+Message outgoing(MessageID::WorldPeace, MyStruct(wpArg1, wpArg2, wpArg3));
+
+But it seems that this first constructs a temporary MyStruct on the stack turning the in-place new into a call to the move constructor of T.
+Many of these messages are simple, often POD, and they are often in marshalling functions like this:
+void dispatchWorldPeace(int wpArg1, int wpArg2, int wpArg3)
+{
+    Message outgoing(MessageID::WorldPeace, MyStruct(wpArg1, wpArg2, wpArg3));
+    outgoing.send(g_listener);
+}
+
+So I want to avoid creating an intermediate temporary that is going to require a subsequent move/copy.
+It seems like the compiler should be able to eliminate the temporary and the move and forward the construction all the way down to the in-place new.
+What am I doing that is causing it not to? (GCC 4.8.1, Clang 3.5, MSVC 2013)

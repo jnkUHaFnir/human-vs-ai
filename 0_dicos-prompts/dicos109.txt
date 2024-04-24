@@ -1,0 +1,15 @@
+
+
+
+
+
+Possible Duplicate:
+Is there a printf converter to print in binary format? 
+
+Still learning C and I was wondering: 
+Given a number, is it possible to do something like the following?
+char a = 5;
+printf("binary representation of a = %b",a);
+> 101
+
+Or would i have to write my own method to do the transformation to binary?

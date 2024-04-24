@@ -1,0 +1,64 @@
+
+I am writing an operating system in C. I have a basic file system using structs. I am writing a command line, and I want a function to create a new file. I have one set up, but it does not work. The struct initializes fine, but it is not added into the folder.
+Each file is a struct of the file type below:
+typedef struct {
+    char** content; // Address of the text in the file
+    char* name;     // Filename
+    size_t size;    // Included from stddef.h - set by the function
+} file;
+
+Each directory is a struct of the dir type below:
+typedef struct {
+    file* files[256]; // The files in the directory
+    char* name;       // The directory name
+    size_t index;     // The index of the next file - basically the length of the files array - starts at 0
+} dir;
+
+My new_file function is as follows:
+void new(dir* folder, char* name, char* content) { 
+    // Folder is a dir* so we can modify the actual struct, not a copy
+    file f;
+    f.name = name;
+    f.content = &content;
+    folder -> files[folder -> index] = &f;
+    folder -> index++;
+}
+
+I am a beginner at C, but I cannot tell what the problem is. Please help!
+More Info
+The new function (basically):
+void new(char* name, char* content, dir* folder) {
+    file new = new_file(name, content);
+    add_file(folder, new);
+}
+
+The add_file function:
+void add_file(dir* folder, file f) {
+    folder -> files[folder -> dirnum] = f;
+    folder -> dirnum++;
+}
+
+The function I call to try and read the file:
+char* read(dir* folder, char* name) {
+    file f = find_file(*folder, name);
+    return f.content;
+}
+
+With find_file being:
+file find_file(folder, name) {
+    for (size_t i = 0; i < folder.filenum; i++) {
+        file f = *folder.files[i];
+        if (strcmp(f.name, name, '\0')) {
+            return f;
+        }
+    }
+}
+
+And strcmp being a string comparison function I wrote.
+After some modifications of the source code, the following bug occurs.
+When you run (in the command line):
+new hi file // Same as new("hi", "file", &root)
+open hi // Same as read(&root, "hi")
+
+The output is open hi.
+When I run the new function, folder.files[0] exists. However, folder.files[0] -> name equals g→. Any idea why?

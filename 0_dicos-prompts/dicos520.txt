@@ -1,0 +1,5 @@
+
+i'm absolute beginner to this, i've been trying to collect handle on my system using ntquerysysteminformation and now i get the handle that i want(i know this by using processhacker) but the problem coming when i try to collect the pid from that handle in order to determine which handle that is correct to inject my dll(my function returns array of handle), i know it can be simply use getprocessid() from msdn but it returns 0x6 errorcode.
+is there another graceful way to do this without using openprocess?
+*duplicatehandle() doesn't seems to work as well
+or is there a way to simply add process_query_information access right to this handle?

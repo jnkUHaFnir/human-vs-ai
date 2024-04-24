@@ -1,0 +1,17 @@
+
+#include <cstring>
+
+char* str0;
+const char* str1 = "abc";
+
+
+// assign str1 to str0
+strcpy(str0, str1);    // syntax correct, but run time error
+str0 = str1;           // syntax error, cannot convert const char* to char*
+string n_str = str1;
+str0 = n_str;          // syntax error, cannot convert ...
+
+
+cout << str0 << endl;  // expected output: abc
+
+I'd like to make str0 same as str1 while runtime(after compilation), I don't know how to do it. And for the case str0 = str1; I don't understand why it won't work, because str0 points to nothing, while str1 points to a const string literal, so if I now make str0 point to what str1 is pointing to, it should be fine, but it is not. So it there any way to solve it?

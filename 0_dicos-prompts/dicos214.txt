@@ -1,0 +1,24 @@
+
+I am using the following code it is counting the spaces in the string but i don't want to count spaces.
+#include<stdio.h>
+#include<conio.h>
+
+void main()
+{
+   char*ptr,str[30];
+   int size=0;
+   int word=0;
+
+   puts("enter the string");
+   gets(str);
+   fflush(stdin);
+
+   for(ptr=str;*ptr!='\0',ptr++)
+   {
+       size++;
+   }
+
+   printf("size of string is = %d",size);
+   getchar();
+}
+

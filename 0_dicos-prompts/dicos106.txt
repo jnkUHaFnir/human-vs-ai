@@ -1,0 +1,15 @@
+
+I'm porting some code from Java to C, and so far things have gone well.
+However, I have a particular function in Java that makes liberal use of StringBuilder, like this:
+StringBuilder result = new StringBuilder();
+// .. build string out of variable-length data
+for (SolObject object : this) {
+    result.append(object.toString());
+}
+// .. some parts are conditional
+if (freezeCount < 0) result.append("]");
+else result.append(")");
+
+I realize SO is not a code translation service, but I'm not asking for anyone to translate the above code.
+I'm wondering how to efficiently perform this type of mass string concatenation in C. It's mostly small strings, but each is determined by a condition, so I can't combine them into a simple sprintf call.
+How can I reliably do this type of string concatenation?

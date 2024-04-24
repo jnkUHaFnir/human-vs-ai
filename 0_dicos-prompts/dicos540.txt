@@ -1,0 +1,5 @@
+
+
+
+
+Suppose I want to generate ------, with only -, is there a C macro to generate repeated string ?

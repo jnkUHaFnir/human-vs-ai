@@ -1,0 +1,5 @@
+
+I am looking for a way to get the output of a command when it is run from within a C++ program.  I have looked at using the system() function, but that will just execute a command. Here's an example of what I'm looking for:
+std::string result = system("./some_command");
+
+I need to run an arbitrary command and get its output. I've looked at boost.org, but I have not found anything that will give me what I need.

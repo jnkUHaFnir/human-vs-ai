@@ -1,0 +1,39 @@
+
+
+Qn) Given only a pointer to a node to be deleted in a singly linked list, how do 
+  you delete it? 
+
+I am trying to delete the last element i.e., 1 but the else part goes into an infinite 
+loop printing garbage values.
+Original link.
+int main()
+{
+    struct Node* head = NULL;
+    push(&head, 1);
+    push(&head, 4);
+    push(&head, 6);
+    push(&head, 8);
+    print(head);
+    del_p(head->next->next->next);
+    cout << endl;
+    print(head);
+    return 0;
+}
+
+void del_p(struct Node* current)
+{
+    struct Node* temp;
+    if (current->next != NULL)
+    {
+        temp = current->next;
+        current->data = temp->data;
+        current->next = temp->next;
+        free(temp);
+    }
+    else
+    {
+        free(current);
+        current = NULL;
+    }
+}
+

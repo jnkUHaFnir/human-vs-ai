@@ -1,0 +1,50 @@
+
+I'm creating a program that tests the runtime of sorting algorithms with various sizes of randomized float numbers. Everything works out fine; the sorting algorithm works, and the execution time is outputted, up to size 520,010, which seems to crash the program.
+The program crashes once the float array of size 520,000 is initalized. Is this just too big?
+From researching, it doesn't seem like C has a problem with getting rid of memory after an iteration of a loop. So what seems to be the problem here?
+void readFromFile() {
+     FILE *myfile; //File to access randomized floats
+     int currentSz = 10; //Size iterator
+     int maxSz = 1000010; // Maximum size to reference in the loop
+
+     while (currentSz <= maxSz) {
+         // Creates a new array with the current size.
+         float fileArr[currentSz]; // PROGRAM CRASHES HERE (at size of 520,010)
+
+         //Initializes file path
+         char fileName[200];
+         fileName[0] = '\0';
+         strcat(fileName, "C:\\Users\\MatthewC\\Documents\\HonorsProject341\\RandomFloats\\");
+
+         // Creates a size string to represent the current array size, and adds sizeStr
+         // to the file path.
+         char sizeStr[50];
+         sprintf(sizeStr, "%d", currentSz);
+         strcat(sizeStr, "Floats.txt");
+         strcat(fileName, sizeStr);                 
+
+         // Opens the file 
+         myfile = fopen(fileName, "r");
+
+         int iterator;
+
+         // Feeds the elements from the file into the created array
+         for (iterator = 0; iterator < currentSz; iterator++) 
+             fscanf(myfile, "%f", &fileArr[iterator]);
+
+         // Sorts the randomized elements, and times the sorting algorithm.
+         clock_t start = clock(), diff;
+         heapSort(fileArr, currentSz);
+         diff = clock() - start;
+
+         // Converts to milliseconds.
+         int millisec = diff * 1000000 / CLOCKS_PER_SEC;
+
+         printf("size: %d runtime: %d\n", currentSz, millisec);
+         fclose(myfile);
+
+         // Updates the size.
+         currentSz += 20000;
+     }
+}
+

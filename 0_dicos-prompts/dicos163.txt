@@ -1,0 +1,5 @@
+
+The question should be fairly simple, but I'm not a C++ programmer. 
+So imagine I have a std::vector filled with something as a local variable in a function. What I want to do is to return pointer to that data and count from that function, but not the vector itself (because it goes to another language, not C++). So what is the best way to do it? 
+I bet I can declare vector with new keyword, but when I later call free() on its pointer data, will there be a leak? 
+I can also malloc() new buffer, copy vector's buffer into that and return fresh one, but I wish I can avoid that.

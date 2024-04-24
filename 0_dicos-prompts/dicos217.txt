@@ -1,0 +1,38 @@
+
+I am trying to fix a memory leak in a Python wrapper for a C++ dll.
+The problem is when assigning a byte buffer to a helper object that has been created in Python:
+struct ByteBuffer
+{
+    int length;
+    uint8_t * dataBuf;       
+};
+
+I want to supply the dataBuf as a Python array, so the typemap that I came up with (and works) is that:
+%module(directors="1") mymodule
+
+%typemap(in) uint8_t * (uint8_t *temp){
+    int length = PySequence_Length($input);
+    temp = new uint8_t[length];    // memory allocated here. How to free?
+    for(int i=0; i<length; i++) {
+        PyObject *o = PySequence_GetItem($input,i);
+        if (PyNumber_Check(o)) {
+            temp[i] = (uint8_t) PyLong_AsLong(o);
+            //cout << (int)temp[i] << endl;
+        } else {
+            PyErr_SetString(PyExc_ValueError,"Sequence elements must be uint8_t");      
+            return NULL;
+        }
+    }
+    $1 = temp;
+}
+
+The problem is that the typemap allocates memory for a new C array each time and this memory is not freed within the dll. In other words, the dll expects the user to manage the memory of the dataBuf of the ByteBuffer. For example, when creating 10000 such objects sequentially in Python and then deleting them, it the memory usage rises steadily (leak):
+for i in range(10000):
+    byteBuffer = mymodule.ByteBuffer()
+    byteBuffer.length = 10000
+    byteBuffer.dataBuf = [0]*10000
+    # ... use byteBuffer
+    del byteBuffer
+
+Is there a way to delete the allocated dataBuf from python? Thank you for your patience!
+Edit: I don't post the whole working code to keep it short. If required, I'll do it. Additionally, I am using Python 3.5 x64 and SWIG ver 3.0.7

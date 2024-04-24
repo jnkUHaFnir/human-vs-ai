@@ -1,0 +1,280 @@
+
+I'm trying to search through a hash table, and I'm having some problems. My code compiles, but there's something wrong with it. I'm not quite sure what. When I ran it at the command prompt, and passed the file to the program. I'm having some problems with the searching
+0 insincere
+struct htablerec {
+   char **key;
+   int *frequencies;
+   int num_keys;
+   int capacity;
+};
+
+static unsigned int htable_word_to_int(char *word) {
+   unsigned int result = 0;
+   while (*word != '\0') {
+      result = (*word++ + 31 * result);
+   }
+   return result;
+}
+
+int htable_insert(htable h, char *str) {
+   int i;
+   /*convert string to integer*/
+   unsigned int index = htable_word_to_int(str);
+   /*calculate index to insert into hash table*/
+   int remainder = index%h->capacity;
+   /*once calculated position in the hash table, 3 possibilities occur*/
+   /*no string in this positon, copy string to that position,
+     increment number of keys, return 1*/
+   if (h->key[remainder] == NULL) {
+      char *key = emalloc(strlen(str) + 1);
+      strcpy(key, str);
+      h->key[remainder] = key;
+      h->frequencies[remainder] = 1;
+      h->num_keys++;
+      return 1;
+}
+
+   /*the exact same string is at the position,
+     increment frequency at that position,
+     return frequency*/
+   if (strcmp(str, h->key[remainder]) == 0) {
+      h->frequencies[remainder]++;
+      return h->frequencies[remainder];
+   }/*a string is at that position, but it isnt the rightone,
+      keep moving along the array until you find either an open
+      space or the string you are looking for*/
+   if (h->key[remainder] != NULL && strcmp(str, h->key[remainder]) != 0) {
+
+      /*you may need to wrap back around to the beginning of the table,
+        so each time you add,to the position you should also mod
+        by the table capacity.*/
+      for (i = 0; i < h->capacity; i++) {
+         /*no string in this positon, copy string to that position,
+           increment number of keys*/
+         if (h->key[remainder] == NULL) {
+            char *key = emalloc(strlen(str) + 1);
+            strcpy(key, str);
+            h->key[remainder] = key;
+            h->frequencies[remainder] = 1;
+            h->num_keys++;
+         }
+         /*if you find the string you were looking for,
+           increment the frequency at the position
+           and return the frequency*/
+         if (strcmp(str, h->key[remainder]) == 0) {
+            h->frequencies[remainder]++;
+            return h->frequencies[remainder];
+         }
+         if (h->key[remainder] != NULL && h->capacity ==  i) {
+            i = 0;
+         }
+      }   
+   }
+   /*if you have kept looking for an open space but there isnt one,
+     the hash table must fu*/
+   return 0;
+   }
+
+int htable_search(htable h, char *str) {
+/*create an initialise, a value to hold the number of collisions we have when looking for our key*/
+   int collisions = 0;
+   unsigned int index = htable_word_to_int(str);
+   /*calculate the position at which we should start looking for our key*/
+   int remainder = index%h->capacity;
+
+   /*while there is an item at that position, but it isn't the key, and we haven't yet checked the entire hash table*/
+   while (h->key[remainder] != NULL && strcmp(str, h->key[remainder]) != 0 && h->key[remainder] != h->key[h->capacity]) {
+   /*increment our position to look for the next cell*/
+      h->key[remainder]++;
+      /*increment the number of collisions we've had so far*/
+      collisions++;
+   }
+   /*if our number of collisions == the hashtable capacity*/
+   if(collisions == h->capacity) {
+   /*then out hashtable was full, did not contain our key, so we should return 0*/
+      return 0;
+   }
+   else {
+   /*else return the frequency at our final position*/
+      return h->frequencies[h->capacity];
+   } 
+}
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "mylib.h"
+#include "htable.h"
+
+int main(void) {
+   htable h = htable_new(113);
+   char word[256];
+   char op;
+
+   /*We must have a space before the %c*/
+   while(2 == scanf(" %c %255s", &op, word)) {
+   if ('+' ==  op) {
+   htable_insert(h, word);
+   }
+   else if ('?' == op) {
+   printf("%d %s\n", htable_search(h, word), word);
+   }
+   }
+
+   htable_free(h);
+
+   return EXIT_SUCCESS;
+   }
+
+I have included the mylib.c above.
++ sociable
++ galleries
++ Russia
++ screamer
++ thickness
++ combed
++ escorted
++ revocable
++ digressed
++ Malawi
++ infringing
++ onslaught
++ files
++ kidded
++ unsound
++ tied
++ Ottawa
++ puzzles
++ build
++ necrosis
++ admire
++ cupful
++ brokers
++ segregation
++ Capet
++ Georges
++ bran
++ binders
++ zebras
++ contented
++ keypad
++ snowily
++ replaced
++ dominating
++ outright
++ Latinizers
++ invalidity
++ wakes
++ diversification
++ Riemannian
++ leadings
++ rhythmically
++ gentler
++ swarthy
++ disconnects
++ factoring
++ sequences
++ tiring
++ attendances
++ unloaded
+? insincere
+? constants
+? unordered
+? Toland
+? butterfly
+? suburban
+? overtone
+? Hauser
+? numbers
+? disadvantageous
+? saintly
+? Dutton
+? homomorphic
+? corporation
+? climaxes
+? dietitian
+? manifestly
+? greyest
+? challenge
+? tentacle
+? Bernice
+? bottle
+? involve
+? resisted
+? wholesale
+? trustworthiness
+? Poole
+? fourfold
+? relentlessly
+? fittingly
+? doctorates
+? cowlick
+? Missoula
+? curtsy
+? calmness
+? reallocate
+? bossed
+? scarce
+? catheters
+? regained
+? autographing
+? unobservable
+? apprise
+? lancer
+? chicken
+? crunches
+? scrambled
+? reared
+? pealing
+? violate
+? sociable
+? galleries
+? Russia
+? screamer
+? thickness
+? combed
+? escorted
+? revocable
+? digressed
+? Malawi
+? infringing
+? onslaught
+? files
+? kidded
+? unsound
+? tied
+? Ottawa
+? puzzles
+? build
+? necrosis
+? admire
+? cupful
+? brokers
+? segregation
+? Capet
+? Georges
+? bran
+? binders
+? zebras
+? contented
+? keypad
+? snowily
+? replaced
+? dominating
+? outright
+? Latinizers
+? invalidity
+? wakes
+? diversification
+? Riemannian
+? leadings
+? rhythmically
+? gentler
+? swarthy
+? disconnects
+? factoring
+? sequences
+? tiring
+? attendances
+? unloaded
+
+This is the contents of the file i'm passing in. My insert method works, but if that is needed, i can include that too.

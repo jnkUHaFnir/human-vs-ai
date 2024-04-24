@@ -1,0 +1,17 @@
+
+I wrote a function for inserting a node at the end of a linked list. When I run the program, and when I call this function, the program just stops working. 
+Here is the function:
+void insert(node **head, int x) {
+    node *new = malloc(sizeof(node));
+    new->data = x;
+    new->next = NULL;
+
+    node *temp = *head;
+
+    while (temp != NULL) {
+        temp = temp->next;
+    }
+    temp->next = new;
+}
+
+Can anyone tell where did it go wrong? 

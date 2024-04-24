@@ -1,0 +1,131 @@
+
+I have the following program for books record and I want to sort the records on name of book. the code isn't showing any error but it's not sorting all the records.    
+#include "stdio.h"
+#include "string.h"
+#define SIZE 5
+
+struct books{                                      //define struct
+        char name[100],author[100];
+        int year,copies;
+    };
+
+struct books book1[SIZE],book2[SIZE],*pointer;          //define struct vars
+
+void sort(struct books *,int);                      //define sort func
+
+main()
+{
+    int i;
+    char c;
+
+for(i=0;i<SIZE;i++)             //scanning values
+{
+    gets(book1[i].name);
+    gets(book1[i].author);
+    scanf("%d%d",&book1[i].year,&book1[i].copies);
+    while((c = getchar()) != '\n' && c != EOF);
+}
+pointer=book1;
+sort(pointer,SIZE);                 //sort call
+
+i=0;                        //printing values
+while(i<SIZE)
+{
+    printf("##########################################################################\n");
+    printf("Book: %s\nAuthor: %s\nYear of Publication: %d\nNo of Copies: %d\n",book1[i].name,book1[i].author,book1[i].year,book1[i].copies);
+    printf("##########################################################################\n");
+    i++;
+}
+}
+
+void sort(struct books *pointer,int n)
+{
+    int i,j,sorted=0;
+    struct books temp;
+for(i=0;(i<n-1)&&(sorted==0);i++)       //bubble sort on the book name
+{
+    sorted=1;
+    for(j=0;j<n-i-1;j++)
+    {
+        if(strcmp((*pointer).name,(*(pointer+1)).name)>0)
+        {
+            //copy to temp val
+            strcpy(temp.name,(*pointer).name);
+            strcpy(temp.author,(*pointer).author);
+            temp.year=(*pointer).year;
+            temp.copies=(*pointer).copies;
+
+            //copy next val
+            strcpy((*pointer).name,(*(pointer+1)).name);
+            strcpy((*pointer).author,(*(pointer+1)).author);
+            (*pointer).year=(*(pointer+1)).year;
+            (*pointer).copies=(*(pointer+1)).copies;
+
+            //copy back temp val
+            strcpy((*(pointer+1)).name,temp.name);
+            strcpy((*(pointer+1)).author,temp.author);
+            (*(pointer+1)).year=temp.year;
+            (*(pointer+1)).copies=temp.copies;
+
+            sorted=0;
+        }
+                *pointer++;
+    }
+}
+}
+
+My Imput 
+The C Programming Language
+X Y Z
+1934
+56
+Inferno
+Dan Brown
+1993
+453
+harry Potter and the soccers stone
+J K Rowling
+2012
+150
+Ruby On Rails
+jim aurther nil
+2004
+130
+Learn Python Easy Way
+gmaps4rails
+1967
+100  
+
+And the output 
+##########################################################################
+Book: Inferno
+Author: Dan Brown
+Year of Publication: 1993
+No of Copies: 453
+##########################################################################
+##########################################################################
+Book: The C Programming Language
+Author: X Y Z
+Year of Publication: 1934
+No of Copies: 56
+##########################################################################
+##########################################################################
+Book: Ruby On Rails
+Author: jim aurther nil
+Year of Publication: 2004
+No of Copies: 130
+##########################################################################
+##########################################################################
+Book: Learn Python Easy Way
+Author: gmaps4rails
+Year of Publication: 1967
+No of Copies: 100
+##########################################################################
+##########################################################################
+Book: 
+Author: 
+Year of Publication: 0
+No of Copies: 0
+##########################################################################
+
+We can see the above sorting is wrong? What I'm I doing wrong?

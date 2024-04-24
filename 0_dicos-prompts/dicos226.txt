@@ -1,0 +1,55 @@
+
+I need to read a line from a file, find the biggest word in the line, read the next word. Seems simple enough. I'm new to C so I know I'm probably missing something easy. If I don't include '\n' as a delimiter it will print the blank lines in the file (lines between paragraphs), and will print a new line if the biggest word is at the end of the line. If I do include it the token will repeat if there is a blank line after it, and the last line in the file is skipped. 
+Here is the code:
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define BUFFSIZE 81
+
+int main(int numParms, char *parms[])
+{
+    FILE *file;
+    char buffer[BUFFSIZE];
+    char *token;
+    int lineNum = 0;
+    int currSize = 0;
+
+
+   file = fopen("in.txt" , "r");
+   if(file == NULL) 
+   {
+        perror("Error opening file");
+        return(-1);
+   }
+   fgets(buffer, BUFFSIZE, stdin);
+   while(!feof(stdin)) 
+   {    
+        char bigWord[30];
+        char currWord[30];
+        int bigSize = 0;
+
+        lineNum++;
+        token = strtok(buffer, " \n\t");
+        while(token != NULL)
+        {               
+            strcpy(currWord, token);
+            currSize = strlen(currWord);
+            if(currSize > bigSize && currSize != bigSize)
+            {
+                strcpy(bigWord, currWord);
+                bigSize = strlen(bigWord);
+            }
+            token = strtok(NULL, " \n\t");  
+        }
+    printf("Line %d's word: %s\n", lineNum, bigWord);
+
+    fgets(buffer, BUFFSIZE, stdin);
+    }
+
+   fclose(file);
+
+   return(0);
+}
+

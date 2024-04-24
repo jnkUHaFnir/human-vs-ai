@@ -1,0 +1,1 @@
+    ptr = realloc(ptr, new_size);

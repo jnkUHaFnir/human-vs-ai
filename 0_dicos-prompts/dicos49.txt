@@ -1,0 +1,23 @@
+
+I'm a bit new to malloc and C in general. I wanted to know how I can, if needed, extend the size of an otherwise fixed-size array with malloc.
+Example:
+#define SIZE 1000
+struct mystruct
+{
+  int a;
+  int b;
+  char c;
+};
+mystruct myarray[ SIZE ];
+int myarrayMaxSize = SIZE;
+....
+if ( i > myarrayMaxSize )
+{
+   // malloc another SIZE (1000) elements
+   myarrayMaxSize += SIZE;
+}
+
+
+The above example should make clear what I want to accomplish.
+
+(By the way: I need this for an interpreter I write: Work with a fixed amount of variables and in case more are needed, just allocate them dynamically)

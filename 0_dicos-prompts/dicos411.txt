@@ -1,0 +1,42 @@
+
+I'm trying to create a function that will identify whether the first letter input is upper or lower case then output the rest of the string in that same case(upper/lower). 
+For example, "Hi there" would become "HI THERE".
+I'm not familiar with fgets. Once I run it I can input and press enter and the program doesn't run. I'm not getting any compiler errors. I believe I went wrong in the void shift function. 
+Also, I know gets is not recommended, is fgets similar? Or is it better to use scanf? 
+#include <stdio.h>
+#include <ctype.h>
+void shift (char *my_string); // Function declaration
+
+int main()
+{
+  char inputstring[50];
+
+  printf("Enter a string\n");
+  char *my_string = inputstring;
+  shift(my_string); // Function
+}
+
+void shift (char *my_string) // Function definition
+{
+  int i =0;
+  char ch;
+
+  for(i=0; i<50; i++)
+    fgets(my_string, 50, stdin);
+
+  while(my_string[i])
+  {
+    if(ch>='A' && ch<= 'Z') // When first char is uppercase
+    {
+      putchar (toupper(my_string[i]));
+      i++;
+    }
+    else if (ch>='a' && ch <= 'z') // When first char is lowercase
+    {
+      putchar(tolower(my_string[i]));
+      i++
+    }
+  }
+  return;
+}
+

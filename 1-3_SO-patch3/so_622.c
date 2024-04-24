@@ -1,0 +1,1 @@
+    snprintf(filename_buffer, length_of_buffer, "%s%d", filename, pid);

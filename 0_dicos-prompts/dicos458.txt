@@ -1,0 +1,46 @@
+
+I want to replace the string by index. The string between x and y. If the string that will be replaced the length is lees than y, the pointer must be incremented by the difference. e.g, 
+given the string ([10 20]...[10 20]..[30 80]); x = 1(index of [) and y = 7(index of ]), and the string-replace is 50, it must be replaced to (50...[10 20]..[30 80]). 
+I've tried it:
+void replaceindex(char *s, char *replace, unsigned int start, unsigned int end)
+{
+  assert(start < end);
+
+  char *p = s, *q = s, *r = replace;
+  register unsigned int i =  0;
+  int found = 0;
+
+  while(*q) {
+
+    if(found == 0 && i == start) {
+
+      found = 1;
+
+      for(; *r; ++r, ++start, ++q)
+    *p ++ = *r;
+
+      while(++start < end)
+    q++;
+    }
+
+    *p ++ = *q ++;   
+    i ++;
+  }
+
+}
+
+using:
+  char str[] = "([10 20]...[10 20]..[30 80])";
+  printf("Before: %s\n", str);
+  replaceindex(str, "50", 1, 7);
+  printf("After: %s\n", str);
+
+The output is: 
+Before: ([10 20]...[10 20]..[30 80])
+After: (500]...[10 20]..[30 80])0])
+
+But I'm expecting this:
+Before: ([10 20]...[10 20]..[30 80])
+After: (50...[10 20]..[30 80])
+
+How to fix this?

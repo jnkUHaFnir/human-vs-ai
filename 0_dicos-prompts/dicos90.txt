@@ -1,0 +1,2 @@
+
+What's the C++ way of parsing a string (given as char *) into an int? Robust and clear error handling is a plus (instead of returning zero).

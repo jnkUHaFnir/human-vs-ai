@@ -1,0 +1,23 @@
+
+I have the following code to read from a file:
+fin = fopen("file1.txt", "r");
+
+char* url;
+if ( fin ) 
+{
+    while ( line = read_line(fin) ) 
+    {
+        if ( (url=strstr(line, "url="))!=NULL )
+        {
+            fprintf(stdout, "%s \n", url);
+            url=line;
+        }
+        free(line);
+    }
+}
+
+printf("line is:%s ",url); //this one is NULL. How to solve this? 
+                           // I need A COPY OF THE DATA
+fclose(fin);
+
+For some reason url is null when printf is called - how do I solve that? I need a copy of the data.

@@ -1,0 +1,48 @@
+
+I would like to have the menu print again after the user selects "VIEW" or "BID"..how would I do that without having an infinite loop?? I set up my menu as its own function then called it in my "main" function.
+    int menu() {
+    char sel[6];
+
+    printf("Welcome to the Silent Auction!\n");
+    printf("Please make a selection from the following:\n");
+    printf("View Auction [VIEW]\n");
+    printf("Bid on Auction [BID]\n");
+    printf("Close Auction [CLOSE]\n");
+
+return;
+    }
+
+
+    menu();
+    char sel[6];
+    scanf("%s", &sel);
+
+    do {
+
+            if (strcmp("VIEW", sel) == 0) {
+            ...
+            }
+        if (strcmp("BID", sel) == 0) {
+            printf("Which auction would you like to bid on?\n");
+            scanf("%d", &choice);
+            if ...
+    }       else {
+                ...
+        }    printf("How much would you like to bid?\n");
+            scanf("%f", &user_bid);
+            if ...
+            else
+                cur_bid[choice] += user_bid;
+            }
+        if (strcmp("CLOSE", sel) == 0) {
+            for...
+        }
+
+        } while (sel != "CLOSE");
+
+
+
+
+    return 0;
+    }
+

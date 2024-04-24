@@ -1,0 +1,35 @@
+
+I am trying to read integers from a file one by one, and read it into the program as a row & column number.
+My file contents are:
+3
+2 1
+2 2
+2 3
+
+And my code:
+fgets(line, 2, fp);
+livecells = atoi(line);
+fprintf(stderr, "\n%i live cells\n", livecells);    
+
+while ( !feof(fp) ) 
+{
+  fgets(line, 5, fp);
+
+  alive_row = atoi(&line[0]);
+  alive_column = atoi(&line[2]);
+
+  fprintf(stderr, "\n Cell: (%i)(%i)", alive_row, alive_column);       
+}
+
+where line is the character array (string) where the fgets contents are stored, and alive_row, & alive_column are integers.
+But for some reason the output is:
+3 live cells
+
+ Cell: (0)(0)
+ Cell: (2)(1)
+ Cell: (2)(2)
+ Cell: (2)(3)
+ Cell: (2)(3)
+
+The problem is, why is the first cell printed out (0)(0)? I don't know why this is being printed out... Apologies if it is blindingly obvious... 
+EDIT: And obviously the repeated cell (2)(3) at the end, oops.

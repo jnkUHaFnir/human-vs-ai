@@ -1,0 +1,42 @@
+
+I am building a small program that takes name and age as input (stored in a struct) and spits out the output. One of the problems that I am facing is I have to enter the number of people I am going to store, something that I am sure I can solve with realloc() it's just not working. Here is what I got so far.
+#include <stdio.h>
+#include<stdlib.h>
+
+struct info
+{
+    int age;
+    char name[30];
+};
+
+int main()
+{
+    struct info *Ptr;
+    int i, num;
+
+    printf("Enter number of people");
+    scanf("%d", &num);
+
+    // Allocates the memory for num structures with pointer Ptr pointing to the base address.
+    Ptr = (struct info*)malloc(num * sizeof(struct info));
+
+    for(i = 0; i < num; ++i)
+    {
+        printf("Enter name and age:\n");
+        scanf("%s %d", &(Ptr+i)->name, &(Ptr+i)->age);
+    }
+
+
+    for(i = 0; i < num ; ++i)
+        printf("Name = %s, Age = %d\n", (Ptr+i)->name, (Ptr+i)->age);
+
+    return 0;
+}
+
+I have tried to realloc inside the first for loop, but it wasn't working even if it makes sense to have it there. Have also tried to convert the loop to a while loop like this:
+     while(input != "stop)
+    {
+      allocate more memory
+}
+
+How can I use realloc to in order to skip having to enter the persons number before entering them?

@@ -1,0 +1,98 @@
+
+Using BJ's talker.c code as a template:
+http://beej.us/guide/bgnet/examples/talker.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
+#define SERVERPORT "4950"    // the port users will be connecting to
+
+int main(int argc, char *argv[])
+{
+    int sockfd;
+    struct addrinfo hints, *servinfo, *p;
+    int rv;
+    int numbytes;
+    struct sockaddr_storage their_addr;
+    socklen_t addr_len;
+    addr_len = sizeof their_addr;
+
+    if (argc != 3) {
+        fprintf(stderr,"usage: talker hostname message\n");
+        exit(1);
+    }
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_DGRAM;
+
+    if ((rv = getaddrinfo(argv[1], SERVERPORT, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        return 1;
+    }
+
+    // loop through all the results and make a socket
+    for(p = servinfo; p != NULL; p = p->ai_next) {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype,
+                p->ai_protocol)) == -1) {
+            perror("talker: socket");
+            continue;
+        }
+
+        break;
+    }
+
+    if (p == NULL) {
+        fprintf(stderr, "talker: failed to create socket\n");
+        return 2;
+    }
+
+    if ((numbytes = sendto(sockfd, argv[2], strlen(argv[2]), 0,
+             p->ai_addr, p->ai_addrlen)) == -1) {
+        perror("talker: sendto");
+        exit(1);
+    }
+
+    freeaddrinfo(servinfo);
+
+    printf("talker: sent %d bytes to %s\n", numbytes, argv[1]);
+
+
+//============== Added Code for recvfrom() (pseudocode-ish) =============
+
+
+    if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) 
+    {
+        close(sockfd);
+        perror("talker: recvfrom");    
+        exit(1);
+    }
+
+    close(sockfd);
+
+    printf("Got packet\n");
+
+//============== End Added Code for recvfrom() =============
+
+
+    close(sockfd);
+
+    return 0;
+}
+
+I have a requirement whereby the client UDP process that talks to the server must use a fixed, known source port number. In this case, assume it's SERVERPORT (4950). The server then responds to that port number. Yes, this is unusual as most servers respond to the ephemeral port number that the system assigns to the sender.
+After sending a packet using sendto(), I listen for a response using recvfrom(). That's the (pseudo)code I added in the above example.
+All my searches online point to using bind() but that code is usually on the server side. I haven't found a way to bind on the client side using the modern getaddrinfo() method. I tried to add a bind() right after the socket() setup but that wouldn't work because p is a server-side structure (derived from the hints structure that uses the server IP address) and I get a bind Error: 
+Error 99 (Cannot assign requested address)
+code added:
+bind(sockfd, p->ai_addr, p->ai_addrlen)
+I want to do this in a way that will work for both IPv4 and IPv6.
+I've seen other examples whereby a local/source sockaddr_in structure is filled out with the client's information and that is used in the bind, but those are IPv4 or IPv6 specific. 
+Can someone please show me how to properly update the talker.c code to sendto() and recvfrom() a UDP server using a fixed source port number? Assume that the server is immutable.

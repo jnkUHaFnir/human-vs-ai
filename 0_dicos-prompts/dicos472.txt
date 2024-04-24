@@ -1,0 +1,29 @@
+
+I want to make an output stream print something later on. I want to make it work like this:
+cout << printThisLater("Hello, World") << x << y << printItNow();
+
+I want the stream to remember the string that I pass to it. How can I do this?
+This is what I tried but it didn't work:
+#include <iostream>
+#include <string>
+
+std::string msg;
+
+std::ostream& printThisLater(std::string str)
+{
+    msg = str;
+    return // ??
+}
+
+std::string printItNow()
+{
+    return msg;
+}
+
+int main()
+{
+    int x = 10, y = 59;
+
+    std::cout << printThisLater("Hello World") << x << y << printItNow();
+}
+

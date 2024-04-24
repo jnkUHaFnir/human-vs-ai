@@ -1,0 +1,1 @@
+    fgets(cAFirst,25,stdin);

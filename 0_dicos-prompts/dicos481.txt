@@ -1,0 +1,28 @@
+
+I'm a Python veteran, but haven't dabbled much in C. After half a day of not finding anything on the internet that works for me, I thought I would ask here and get the help I need.
+What I want to do is write a simple C function that accepts a string and returns a different string. I plan to bind this function in several languages (Java, Obj-C, Python, etc.) so I think it has to be pure C?
+Here's what I have so far. Notice I get a segfault when trying to retrieve the value in Python.
+hello.c
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+const char* hello(char* name) {
+    static char greeting[100] = "Hello, ";
+    strcat(greeting, name);
+    strcat(greeting, "!\n");
+    printf("%s\n", greeting);
+    return greeting;
+}
+
+main.py
+import ctypes
+hello = ctypes.cdll.LoadLibrary('./hello.so')
+name = "Frank"
+c_name = ctypes.c_char_p(name)
+foo = hello.hello(c_name)
+print c_name.value # this comes back fine
+print ctypes.c_char_p(foo).value # segfault
+
+I've read that the segfault is caused by C releasing the memory that was initially allocated for the returned string. Maybe I'm just barking up the wrong tree?
+What's the proper way to accomplish what I want?

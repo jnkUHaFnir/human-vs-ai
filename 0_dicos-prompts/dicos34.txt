@@ -1,0 +1,53 @@
+
+I'm trying to have the program check, that, if a user inputs nothing the print statement will say it cant find the file name, but the issue I'm having is that the command line will just go to a new line after hitting enter instead of saying the print statement.
+This is the code here. I was told that Null is the place holder for if nothing is put in so I thought it would work.
+int main()
+{
+FILE *fin;
+FILE *fout;
+char fInName[50];
+char fOutName[50];
+printf("pleas type input file, and output file please type legibly\n ");
+
+scanf("%s %s", &fInName, &fOutName);
+fin = fopen(fInName, "r");
+fout = fopen(fOutName, "r");
+
+if (fInName == NULL && fOutName == NULL)
+{
+    printf("Error: Cannot open input file %s.", fInName);
+}
+else if (fInName != NULL && fOutName == NULL)
+ {
+    printf("file found");
+ }
+}
+
+What im trying to test is if a first file name is entered and the second isnt then print the statement. If both arent entered then print file does not exist.
+there is more to the code to see if the file exists or not, but thst would be a bit much, now Im just trying to understand why it wont read unentered data.
+Ive tried looking at examples such as: How to detect empty string from fgets
+and tried to alter the code to fit that type of style but it didnt work for me so Im giving you the code it was originally  so that anything helpful wouldnt confuse me more.
+Edit:
+okay so I tried to do a simple code in order to see what may be the cause of this issue:
+   int main()
+{
+    char firstname[50];
+    char lastname[50];
+    char nothing [0];
+
+
+    printf("pleas type input file, and output file please type legibly pwease\n ");
+    scanf("%s" "%s", firstname, lastname);
+
+
+ if (firstname == lastname )
+{
+    printf("Error: Cannot open input file %s.", firstname);
+}
+else
+{
+    printf("file found");
+}
+
+}
+I ran the code using adam and either if I typed adam (space) adam or adam(enter) adam the program thinks that the input is not the same, I feel like that would help identify why it doesnt know why nothing is typed in. 

@@ -1,0 +1,47 @@
+
+I am learning C and trying to import a .so into my python file for higher performance by using a python package ctypes. So everything going well until I had a hard time when trying to get a string returned from .so file.
+C code:
+char *convert_to_16(char *characters, int n){
+
+    char sub_buffer[3];
+    char code[3];
+    char *buffer = (char*)malloc(sizeof(characters) * 2);
+    for(int i=0; i < n; i++){
+        strncpy(code, characters+i, 1);
+        sprintf(sub_buffer, "%x", *code);
+        strncat(buffer, sub_buffer, 2);
+    } 
+    return buffer;
+}
+
+// main() only for test
+int main(){
+    char param[] = "ABCDEFGHTUIKLL";
+    printf("%s\n", param);
+    int length = strlen(param);
+    printf("%s\n", convert_to_16(param, length));
+}
+
+It runs well with output:
+
+
+41424344454647485455494b4c4c
+
+
+Python code :
+c_convert_to_16 = ctypes.CDLL('./convert_to_16.so').convert_to_16
+c_convert_to_16.restype = ctypes.c_char_p
+
+a_string = "ABCDEFGHTUIKLL"
+new_16base_string = c_convert_to_16(a_string, len(a_string))
+print new_16base_string
+
+It runs but only returns two characters:
+
+
+41
+
+
+I read the official doc and set restype as ctypes.c_char_p, and try to set it to other values. But it seems it's the only option, just oddly only two characters were returned.
+Is it the problem of my ctypes configuration or my C wasn't written correctly?
+Many thanks.

@@ -1,0 +1,30 @@
+
+So im new to c99 so this error is probably incredibly simple but, I'm trying to ping someone through a c script but I cant figure out how to fix this error! I tried everything and this is just about the closest I've gotten.
+This is the code:
+#include <cs50.h>
+#include <stdio.h>
+#include <stdio.h> 
+#include <stdlib.h> 
+  
+int main() 
+{ 
+    char name = get_char("target: ");
+    char test = get_char("target: ");
+    char er = get_char("target: ");
+    char tr = get_char("target: ");
+    printf("%c.%c.%c.%c\n", name, test, er, tr);
+    system("ping %c.%c.%c.%c\n", name, test, er, tr);
+    
+   return 0; 
+}
+
+This is the error I get when compiling:
+**ping.c:13:34: error: too many arguments to function call, expected single argument '__command', have 5 arguments
+    system("ping %c.%c.%c.%c\n", name, test, er, tr);
+    ~~~~~~                       ^~~~~~~~~~~~~~~~~~
+/usr/include/stdlib.h:781:1: note: 'system' declared here
+extern int system (const char *__command) __wur;
+1 error generated.
+<builtin>: recipe for target 'ping' failed
+make: *** [ping] Error 1**
+

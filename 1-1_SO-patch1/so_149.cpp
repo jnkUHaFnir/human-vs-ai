@@ -1,0 +1,1 @@
+        meanings = new char * [meanings_ctr];

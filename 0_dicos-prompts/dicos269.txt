@@ -1,0 +1,13 @@
+
+The execv function takes an array of pointers as a second parameter. I have a pointer to a pointer, a dynamically created string list.
+How do I create an array of pointers from this?
+char **list = malloc((argc)*sizeof(char*));
+int i=0;
+for(i=0;i<argc;++i){ // using argv for example...
+ list[i] = malloc(strlen(argv[i])+1);
+ strcpy(list[i], argv[i]);
+}
+// create from list an array of pointers
+execv(list_pointers[0], list_pointers);
+
+Otherwise I get a Bad address error if passing in simply list to execv.

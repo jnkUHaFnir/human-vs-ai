@@ -1,0 +1,2 @@
+
+Given a (char *) string, I want to find all occurrences of a substring and replace them with an alternate string. I do not see any simple function that achieves this in <string.h>.

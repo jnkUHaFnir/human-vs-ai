@@ -1,0 +1,9 @@
+
+If I open a file handle, but the function encounters other error which is not file error,  before closing the handle, would the file handle be leaked?
+FILE* fp = fopen("test.txt", "r");
+if (other_condition) {
+    perror("other error occurred!");
+    return EXIT_FAILURE;
+}
+
+How to use C to implement RAII template?

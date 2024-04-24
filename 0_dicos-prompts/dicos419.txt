@@ -1,0 +1,82 @@
+
+As the title says I'm trying to remove a node from a tree having 2 cases:
+
+the node is a leaf that not connected to anything
+the node is connected to another node
+
+I was able to make a working function for the second case (the most difficult for me), but the first one (that seemed easy) causes a segmentation fault no matter what I try.
+Here is the definition of struct:
+struct node {
+    int value;
+    struct node *sx;
+    struct node *dx;
+};
+
+typedef struct node *tree;
+
+Here is the module that perform the operation of elimination:
+void destroy_node(tree Y, int elem) {
+    if (Y->value < elem)
+        destroy_node(Y->dx, elem);
+    if (Y->value > elem)
+        destroy_node(Y->sx, elem);
+    else { //
+        if (Y->sx == NULL && Y->dx == NULL) {
+            free(Y); <-- seg fault
+            Y = NULL; <-- seg fault
+        }
+        if (Y->sx != NULL && Y->dx == NULL) {
+            Y->value = (Y->sx)->value;
+            free(Y->sx);
+            Y->sx = NULL;
+        }
+        if (Y->sx == NULL && Y->dx != NULL) {
+            Y->value = (Y->dx)->value;
+            free(Y->dx);
+            Y->dx = NULL;
+        }
+        if (Y->sx != NULL && Y->dx != NULL)
+            printf("Can't eliminate that!\n");
+    }
+    print_everything(Y);
+}
+
+Here is the main call:
+tree Y = T;
+printf("Which one you want to destroy?  ");
+scanf("%d", &elem);
+destroy_node(Y, elem);
+
+To compile the function I use the command
+gcc -std=gnu99 -Wall -Wextra c.c 
+
+My environment is a virtual machine ubuntu 17.04 with stock gcc 
+EDIT 1
+Module that build a tree
+tree insert_node(tree T, int val) {
+    if (T == NULL) {    
+        T = (tree)malloc(sizeof(struct node));
+        T->value = val;
+        T->sx = NULL;
+        T->dx = NULL;
+    } else {
+        if ((T->value) < (val)) {
+            T->dx = insert_node(T->dx, val);
+        }
+        if ((T->value) > (val)) {
+            T->sx = insert_node(T->sx, val);
+        }
+    }
+    return T;
+}
+
+Here there is the call in the main of this module
+printf("How many nodes your tree will have?  ");
+scanf("%d", &tot);
+for (int i = 0; i < tot; i++) {
+    printf("What is the %d° node?  ", (i + 1));
+    scanf("%d", &val);
+    T = insert_node(T, val);
+}
+
+P.S. If there are problem regarding the comprehensibility of the program I will copy paste the whole file

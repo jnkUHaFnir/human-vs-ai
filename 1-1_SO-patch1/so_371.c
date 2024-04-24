@@ -1,0 +1,1 @@
+    fgets (plural, SIZE, stdin);

@@ -1,0 +1,70 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
+int main(int argc, char** argv) {
+
+    struct stat *buf;
+    buf = malloc(sizeof(struct stat)); 
+
+    DIR * current_directory_ptr; /* DIR is a type from dirent.h */
+    struct dirent * next_entry_ptr; /* struct dirent is a type from dirent.h */
+
+    char* dirToView [200];
+
+    printf("Enter path of desired directory\n");
+    scanf("%s)", &dirToView);
+
+    current_directory_ptr = opendir(dirToView);
+
+    next_entry_ptr = readdir (current_directory_ptr);
+
+    while(next_entry_ptr != NULL){
+        printf("File has inode number %d and is called %s \n", 
+             (int) next_entry_ptr ->d_ino, next_entry_ptr->d_name);
+        next_entry_ptr=readdir(current_directory_ptr);
+
+    }
+
+    char* fileToView [200];
+    printf("Enter name of desired file\n");
+    scanf("%s)", &fileToView);
+
+
+
+    stat(fileToView, buf);
+    off_t size = buf -> st_size;
+    printf("Size = %ld \n", size);
+
+    uid_t owner = buf ->st_uid;
+    printf("owner = %d \n", owner);
+
+
+    closedir(current_directory_ptr);
+
+
+    return (EXIT_SUCCESS);
+}
+
+The intent of this code is to use scan to obtain and output details of the chosen file. Opening a directory works, but when it comes to opening a file the result for both size and owner are 0 regardless of the actual values for that file. I believe the reason for this is that I am printf'ing them as the wrong type, but I am not certain of this. What is the correct system to output the result of stat()?
+Edit for clarity
+The issue lies with the lines highlighted below
+
+   char* fileToView [200];
+   printf("Enter name of desired file\n");
+   scanf("%s)", &fileToView);
+
+   stat(fileToView, buf);
+   off_t size = buf -> st_size;
+   printf("Size = %ld \n", size);
+
+   uid_t owner = buf ->st_uid;
+  printf("owner = %d \n", owner);
+
+
+Code earlier in the program functions as intended, at least one response has been referring to earlier lines. My apologies for any lack of clarity.

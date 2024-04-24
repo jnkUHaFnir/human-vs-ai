@@ -1,0 +1,17 @@
+
+Extremely new to socket programming and C in general. I am trying to write a basic program to send and receive data between two machines. I understand that recv will not get all your data at once -- you essentially have to loop it until it has read the whole message.
+In lieu of just setting a limit on both machines, I have created a simple Message struct on the client side: 
+struct Message {
+    size_t length;
+    char contents[1024 - sizeof(size_t)];
+} message; 
+message.length = sizeof(struct Message);
+message.contents = information_i_want_to_send;
+
+When it arrives at the server, I have recv read into a buffer: received = recv(ioSock, &buffer, 1024, 0) (Which coincidentally is the same size as my Message struct -- but assuming it wasn't...).
+I then extract Message.length from the buffer like this:
+size_t messagelength;
+messagelength = *((size_t *) &buffer);
+
+Then I loop recv into the buffer while received < messagelength.
+This works, but I can't help feeling it's really ugly and it feels hacky. (Especially if the first recv call reads less than sizeof(size_t) or the machines are different bit architectures, in which case the size_t cast won't work..). Is there a better way to do this?

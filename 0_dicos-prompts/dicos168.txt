@@ -1,0 +1,25 @@
+
+I understand more about pointers and stuff but I have no idea what I am doing wrong here. 
+if i Have 
+    char *(*data)[]
+That would just be interpreted as "a pointer to an array of char pointers", right?
+Then I have a struct like this, typedef'd to be myStruct, redundant as it may be, but that's aside the point:
+    typedef struct myStruct myStruct;
+    struct myStruct{
+      int size;
+      char *name;
+      myStruct *(*array)[];
+}
+
+Having looked around the site for similar posts, I got something like this:
+    //let's say allocating 5 spaces for this case
+    myStruct *a = malloc(sizeof(myStruct)+ sizeof(struct myStruct *)*5);
+
+I am sure that the number I allocated the struct with is the size of the array. 
+I can't quite get my head wrapped around this, how does it work if it's a struct? 
+The plan here is to have this struct, and it contains an array of 5 myStruct's. Do I have to allocate them separately as well? like this?
+    a->array[0] = malloc( .... ) 
+
+I tried and it keeps giving me an error saying Invalid use of array with unspecified bounds. 
+What am I doing wrong or how Can i fix this?
+Thank you

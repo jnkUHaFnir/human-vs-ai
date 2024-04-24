@@ -1,0 +1,43 @@
+
+So, I have a program that takes initial arguments from the command line and attempts to see how many times they occur for a given input.
+For example in terminal you would write something like this:
+./main cat nap dog
+
+Then it would say looking for 3 words and you would input the words, followed by a period when you would like it to end:
+Looking for words:
+cat
+cat
+nap
+.
+
+The program would then return:
+Result:
+cat: 2
+nap: 1
+dog: 0
+
+I want to implement a way so you can input multiple words on one line and it would still count them.
+I have the following function:
+int process_stream(WordCountEntry entries[], int entry_count)
+{
+  short line_count = 0;
+  char buffer[30];
+
+  while (fgets(buffer, 30, stdin)) {
+    buffer[strlen(buffer)-1]='\0';
+    char* token = strtok(buffer, " \n");
+    while (token != NULL){
+      token = strtok(NULL, " \n"); 
+      int i = 0;
+      while (i < entry_count+1) {
+        if (!strcmp(entries[i].word, token))
+          entries[i].counter++;
+        i++;
+      }
+      line_count++;
+    }
+  }
+  return line_count;
+}
+
+I attempt to tokenize each given string using the delimiter of " " and then try to move on to the next line. However, it only separates the first word and then gives a segmentation fault.

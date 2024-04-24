@@ -1,0 +1,470 @@
+
+I’ve recently started learning IOCP on Windows and been reading the following article:
+http://www.codeproject.com/Tips/95363/Another-TCP-echo-server-using-IOCP
+You can download the sample for the article from:
+http://dl.dropbox.com/u/281215/documentation/iocp-1.00.html
+The sample contains two simple applications – iocp_echo_server and TcpEchoClient.
+I understand that IOCP is usually used on the server side of the client/server model but I’d like to create a client using IOCP.
+I’ve so far tried modifying the client sample above so that whenever the server sends a response to the client, it gets picked up automatically, however it doesn’t work.
+I’ve left iocp_echo_server.c as is.  My modified version of TcpEchoClient.c looks like:
+//TcpEchoClient.c - a minimalistic echo client
+// -----------------------------------------------------------------------------
+
+// C language includes
+#include <stdio.h>
+#include <winsock2.h>
+#include "mswsock.h"  // for AcceptEx
+#include <stdlib.h> // exit
+#include <string.h>
+
+// Windows includes
+#include <windows.h>
+
+#pragma warning(disable: 4996) // sprintf
+
+// -----------------------------------------------------------------------------
+
+// configuration
+enum
+{
+    BUFLEN = 1000,
+    SERVICE_PORT = 4000,
+    SERVER_ADDRESS = INADDR_LOOPBACK
+};
+
+enum // socket operations
+{
+    OP_NONE,
+    OP_ACCEPT,
+    OP_READ,
+    OP_WRITE
+};
+
+typedef struct _SocketState // socket state & control
+{
+    char operation;
+    SOCKET socket;
+    DWORD length;
+    char buf[1024];
+} SocketState;
+
+// variables
+static HANDLE cpl_port;
+
+static SOCKET sock;
+static SocketState sock_state;
+static WSAOVERLAPPED sock_ovl;
+
+static LPFN_ACCEPTEX pfAcceptEx;
+static GUID GuidAcceptEx = WSAID_ACCEPTEX;
+
+static int msgNumber;
+static char msgBuf[BUFLEN];
+static struct sockaddr_in sin;
+
+// prototypes
+static void createConnection(void);
+static void createSocket(void);
+static void init(void);
+static void initWinsock(void);
+static void prepareEndpoint(void);
+static void recvBuffer(void);
+static void run(void);
+static void sendBuffer(void);
+
+static SOCKET create_accepting_socket(void);
+static void create_io_completion_port(void);
+static BOOL get_completion_status(DWORD*, SocketState**,WSAOVERLAPPED**);
+
+// -----------------------------------------------------------------------------
+
+void main(void)
+{
+    init();
+    run();
+}
+
+// -----------------------------------------------------------------------------
+
+static void createConnection(void)
+{
+    printf("* connecting\n");
+    if (WSAConnect(sock, (LPSOCKADDR)&sin, sizeof(sin), NULL, NULL, NULL, NULL) == SOCKET_ERROR)
+    {
+        int err = WSAGetLastError();
+        printf("* error %d in connect\n", err);
+        exit(1);
+    }
+    printf("* connected\n");
+}
+
+// -----------------------------------------------------------------------------
+
+static void createSocket(void)
+{
+    sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
+    if (sock == INVALID_SOCKET)
+    {
+        int err = WSAGetLastError();
+        printf("* error %d creating socket\n", err);
+        exit(1);
+    }
+
+    // for use by AcceptEx
+    sock_state.socket = 0; // to be updated later
+    sock_state.operation = OP_ACCEPT;
+
+    if (CreateIoCompletionPort((HANDLE)sock, cpl_port, (ULONG_PTR)&sock_state, 0) != cpl_port)
+    {
+        int err = WSAGetLastError();
+        printf("* error %d in listener\n", err);
+        exit(1);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void init(void)
+{
+    initWinsock();
+    create_io_completion_port();
+    createSocket();
+    prepareEndpoint();
+    createConnection();
+}
+
+// -----------------------------------------------------------------------------
+
+static void initWinsock(void)
+{
+    WSADATA wsaData;
+
+    if (WSAStartup(0x202, &wsaData) == SOCKET_ERROR)
+    {
+        int err = WSAGetLastError();
+        printf("* error %d in WSAStartup\n", err);
+        exit(1);
+    }
+}
+// -----------------------------------------------------------------------------
+
+static void prepareEndpoint(void)
+{
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = htonl(SERVER_ADDRESS);
+    sin.sin_port = htons(SERVICE_PORT);
+
+    // bind_listening_socket()
+    {
+        //if (bind(sock, (SOCKADDR*)&sin, sizeof(sin)) == SOCKET_ERROR)
+        //{
+        //    printf("* error in bind!\n");
+        //    exit(1);
+        //}
+    }
+
+    // start_listening()
+    {
+        //if (listen(sock, 100) == SOCKET_ERROR)
+        //{
+        //    printf("* error in listen!\n");
+        //    exit(1);
+        //}
+        //printf("* started listening for connection requests...\n");
+    }
+
+    // load_accept_ex()
+    {
+        //DWORD dwBytes;
+
+        // black magic for me!!!
+        // You do not need to call in your code WSAIoctl. You can directly use AcceptEx and adds Mswsock.lib.
+        //WSAIoctl(sock, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidAcceptEx, sizeof(GuidAcceptEx), &pfAcceptEx, sizeof(pfAcceptEx), &dwBytes, NULL, NULL);
+    }
+
+    // start_accepting()
+    {
+        //SOCKET acceptor = create_accepting_socket();
+        //DWORD expected = sizeof(struct sockaddr_in) + 16;
+
+        //printf("* started accepting connections...\n");
+
+        // uses listener's completion key and overlapped structure
+        //sock_state.socket = acceptor;
+        //memset(&sock_ovl, 0, sizeof(WSAOVERLAPPED));
+
+        // starts asynchronous accept
+        //if (!pfAcceptEx(sock, acceptor, sock_state.buf, 0 /* no recv */, expected, expected, NULL, &sock_ovl))
+        //{
+        //    int err = WSAGetLastError();
+        //    if (err != ERROR_IO_PENDING)
+        //    {
+        //        printf("* error %d in AcceptEx\n", err);
+        //        exit(1);
+        //    }
+        //}
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void recvBuffer(void)
+{
+    char* buf = msgBuf;
+    int pendingLen = BUFLEN;
+
+    printf("* receiving reply\n");
+
+    while (pendingLen > 0)
+    {
+        int partialLen = recv(sock, buf, pendingLen, 0);
+
+        if (partialLen > 0)
+        {
+            pendingLen -= partialLen;
+            buf += partialLen;
+            continue;
+        }
+
+        // ------
+
+        if (partialLen == 0)
+        {
+            printf("* connection closed by the server\n");
+        }
+        else // partialLen < 0
+        {
+            int err = WSAGetLastError();
+            printf("* error %d in recv\n", err);
+        }
+
+        exit(1);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void run(void)
+{
+    DWORD length;
+    BOOL resultOk;
+    WSAOVERLAPPED* ovl_res;
+    SocketState* socketState;
+
+    for (;;)
+    {
+        sendBuffer();
+
+        resultOk = get_completion_status(&length, &socketState, &ovl_res);
+
+        recvBuffer();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void sendBuffer(void)
+{
+    char* buf = msgBuf;
+    int pendingLen = BUFLEN;
+
+    printf("* sending message\n");
+    sprintf(msgBuf, "%05 *****", msgNumber++);
+
+    while (pendingLen > 0)
+    {
+        int partialLen = send(sock, buf, pendingLen, 0);
+
+        if (partialLen > 0)
+        {
+            pendingLen -= partialLen;
+            buf += partialLen;
+            continue;
+        }
+
+        // -----------
+
+        if (partialLen == 0)
+        {
+            printf("* connection closed by the server\n");
+        }
+        else // partialLen < 0
+        {
+            int err = WSAGetLastError();
+            printf("* error %d in send\n", err);
+        }
+
+        exit(1);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static SOCKET create_accepting_socket(void)
+{
+    SOCKET acceptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (acceptor == INVALID_SOCKET)
+    {
+        printf("* error creating accept socket!\n");
+        exit(1);
+    }
+    return acceptor;
+}
+
+// -----------------------------------------------------------------------------
+
+static void create_io_completion_port(void)
+{
+    cpl_port = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+    if (!cpl_port)
+    {
+        int err = WSAGetLastError();
+        printf("* error %d in line %d CreateIoCompletionPort\n", err, __LINE__);
+        exit(1);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static BOOL get_completion_status(DWORD* length, SocketState** socketState, WSAOVERLAPPED** ovl_res)
+{
+    BOOL resultOk;
+    *ovl_res = NULL;
+    *socketState = NULL;
+
+    resultOk = GetQueuedCompletionStatus(cpl_port, length, (PULONG_PTR)socketState, ovl_res, INFINITE);
+
+    if (!resultOk)
+    {
+        DWORD err = GetLastError();
+        printf("* error %d getting completion port status!!!\n", err);
+    }
+
+    if (!*socketState || !*ovl_res)
+    {
+        printf("* don't know what to do, aborting!!!\n");
+        exit(1);
+    }
+
+    return resultOk;
+}
+
+// -----------------------------------------------------------------------------
+// the end
+
+When the server send a response by calling:
+WSASend(socketState->socket, &wsabuf, 1, NULL, 0, ovl, NULL)
+
+I’d expect it to be picked up by the client on this line: 
+resultOk = get_completion_status(&length, &socketState, &ovl_res);
+
+But it doesn’t…
+Would anybody be able to tell me what I’m doing wrong?
+Edit:
+I’ve taken the following points:
+
+On the client side, you use WSAConnect() to create an outbound connection.
+Call WSARecv() and WSASend() to start reading/writing operations when needed
+you have to use WSASend/WSARecv if you want to use I/O completion ports.
+
+and attempted to create a simple IOCP based client:
+#include <iostream>
+#include <winsock2.h>
+#pragma comment(lib,"ws2_32.lib")
+
+static DWORD WINAPI ClientWorkerThread(LPVOID lpParameter);
+
+int main(void)
+{
+    WSADATA WsaDat;
+    if (WSAStartup(MAKEWORD(2, 2), &WsaDat) != NO_ERROR)
+        return 0;
+
+    // Step 1 - Create an I/O completion port.
+    HANDLE hCompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+    if (!hCompletionPort)
+        return 0;
+
+    // Step 2 - Find how many processors.
+    SYSTEM_INFO systemInfo;
+    GetSystemInfo(&systemInfo);
+    const int nNumberOfProcessors = systemInfo.dwNumberOfProcessors;
+
+    // Step 3 - Create worker threads.
+    for (int i = 0; i < nNumberOfProcessors; i++)
+    {
+        HANDLE hThread = CreateThread(NULL, 0, ClientWorkerThread, hCompletionPort, 0, NULL);
+        CloseHandle(hThread);
+    }
+
+    // Step 4 - Create a socket.
+    SOCKET Socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
+    if (Socket == INVALID_SOCKET)
+        return 0;
+
+    struct hostent *host;
+    if ((host = gethostbyname("localhost")) == NULL)
+        return 0;
+
+    SOCKADDR_IN SockAddr;
+    SockAddr.sin_family = AF_INET;
+    SockAddr.sin_addr.s_addr = *((unsigned long*)host->h_addr);
+    SockAddr.sin_port = htons(8888);
+
+    // Step 5 - Associate the socket with the I/O completion port.
+    CreateIoCompletionPort((HANDLE)Socket, hCompletionPort, (ULONG_PTR)0, 0);
+
+    if (WSAConnect(Socket, (SOCKADDR*)(&SockAddr), sizeof(SockAddr), NULL, NULL, NULL, NULL) == SOCKET_ERROR)
+        return 0;
+
+    char buffer[1000];
+    memset(buffer, 0, 999);
+    WSABUF wsaBuf = {strlen(buffer), buffer};
+    DWORD dwSendBytes = 0;
+    DWORD dwReceivedBytes = 0;
+    DWORD dwFlags = 0;
+    WSAOVERLAPPED wsaOverlapped;
+    SecureZeroMemory((PVOID)&wsaOverlapped, sizeof(wsaOverlapped));
+    wsaOverlapped.hEvent = WSACreateEvent();
+
+    for(;;)
+    {
+        WSARecv(Socket, &wsaBuf, 1, &dwReceivedBytes, &dwFlags, &wsaOverlapped, NULL);
+        std::cout << wsaBuf.buf;
+
+        //WSASend(Socket, &wsaBuf, 1, &dwSendBytes, 0, &wsaOverlapped, NULL);
+
+        int nError = WSAGetLastError();
+        if(nError != WSAEWOULDBLOCK&&nError != 0)
+        {
+            std::cout << "Winsock error code: " << nError << "\r\n";
+            std::cout << "Server disconnected!\r\n";
+            shutdown(Socket, SD_SEND);
+            closesocket(Socket);
+
+            break;
+        }
+        Sleep(1000);
+    }
+
+    WSACleanup();
+    system("PAUSE");
+    return 0;
+}
+
+static DWORD WINAPI ClientWorkerThread(LPVOID lpParameter)
+{
+    HANDLE hCompletionPort = (HANDLE)lpParameter;
+    DWORD dwBytesTransferred = 0;
+
+    while (TRUE)
+    {
+        BOOL bRet = GetQueuedCompletionStatus(hCompletionPort, &dwBytesTransferred, (LPDWORD)0, (LPOVERLAPPED*)0, INFINITE);
+    }
+
+    return 0;
+}
+
+I know there are several things I’m doing wrong but I don’t know what they are.
+Could somebody take a look at my code and give me some hints please?
+Many thanks

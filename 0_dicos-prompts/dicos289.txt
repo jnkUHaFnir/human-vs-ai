@@ -1,0 +1,15 @@
+
+I need to go through this vector and delete the duplicates. A segmentation fault is occurring somewhere within this code. My guess is that it has something to do with deleting elements while the iterator is going through, but I don't really have a concrete understanding of how these iterators are actually working yet, so I can't figure it out.
+vector<char *>::iterator iter;
+for (iter = v->begin(); iter != v->end()-1; iter++ ){
+    char *aString = *iter;
+    int n = 1;
+    while(iter+n != v->end()){
+        int comparison = strcmp(aString, *(iter+n));
+        if(comparison == 0){
+            v->erase(iter + n);
+        }
+        n++;
+    }
+}
+

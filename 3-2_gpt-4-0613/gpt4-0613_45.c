@@ -1,0 +1,2 @@
+
+In the code above, maximum length of the title is limited to 99 characters. You can choose to allocate it dynamically for each title if titles can have variable lengths and can be very long. If you are planning to use longer titles or if the input string titles can contain spaces, you should use fgets instead of scanf. Note also that scanf does not protect against buffer overflow, so it's always safer to mention a maximum width specifier.

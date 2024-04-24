@@ -1,0 +1,25 @@
+
+
+
+
+I am trying to dynamically allocate memory for this C program I have constructed which takes a single string input and reverses it then prints the reversed output. I am very new to C and am unsure on how to use malloc to allocate memory for specified user input. This is the current code I have, we are running these programs in linux, using gcc code.c -o code to compile. Where the file is named code.c
+int main(void)
+{
+    char input[256];
+    char temp;
+    int i = 0, j = 0;
+    scanf("%s", input);
+    j = strlen(input) - 1;
+
+    while (i < j)
+    {
+        temp = input[j];
+        input[j] = input[i];
+        input[i] = temp;
+        i++;
+        j--;
+    }
+    printf("Reverse = %s", input);
+    return 0;
+}
+

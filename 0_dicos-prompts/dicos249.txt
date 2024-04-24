@@ -1,0 +1,88 @@
+
+I had a program to check user input and make sure it's only integer and not character. In my main function,  do while loop only executes once when the input is incorrect. But I want it to keep it executing until the user enter a valid input. My doAgain() function is to ask if the user want to Try again or not. The problem is with doAgain() function. It only executes once if leave it in the if statement. Everything works fine except this glitch. However, when i remove it, the loop keep executing until the user enter valid input like i wanted it to, but then doAgain() function would be useless
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+/* get boundary */
+ char* getBoundary(char str[]){
+    int i;
+    char c;
+
+     str = (char*) malloc(sizeof(char));
+
+    for (i = 0; (c = getchar()) != '\n'; i++) // The loop stop running after the second time
+    {
+        str = (char *) realloc(str, sizeof(char) + i);
+        str[i] = c;
+    }
+
+    str[i] = '\0';
+    return str;
+}
+
+/* check for valid string */
+ int checkStr(const char *check)
+
+{
+    unsigned i;
+    size_t len = strlen(check);
+
+    for (i = 0; i < len; i++)
+        if(isalpha(check[i]))
+        {
+            printf("Invalid integer formatt!!!");
+            return 0;
+        }
+    return 1;
+}
+
+/* Ask if do again */
+int doAgain(void)
+{
+    char ans, c;
+
+    do {
+        printf("Do you want to try again?: ");
+        scanf(" %c", &ans);
+
+        switch (ans) 
+        {   
+            case 'y':
+            case 'Y':
+            case 'n':
+            case 'N':
+                return (ans == 'y') || (ans == 'Y') ? 1 : 0;
+                break;
+            default:
+                printf("Invalid answer!!! answer 'y' and 'Y' or 'n' and 'N' only\n");
+                do { /* flush input stream */
+                    c = getchar();
+                }while (c != '\n'); 
+        }   
+    }while (1);
+}
+
+/* Main */
+int main(void)
+{
+
+    char *l_boundRow;
+    l_boundRow = NULL;
+
+
+    do {
+        printf("Enter lower bound row: ");
+        l_boundRow  = getBoundary(l_boundRow);
+
+        if (!checkStr(l_boundRow) && doAgain())  // problem start here, it works if I remove doAgain() function
+            continue; // if the string is invalid, the program asks user if they want to try again
+        else
+            break;
+    }while (1);
+
+    free(l_boundRow);
+    return 0;
+}
+

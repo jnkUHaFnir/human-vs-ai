@@ -1,0 +1,1 @@
+    if (new_strlen(from) <= max)  //  should be < instead of <=

@@ -1,0 +1,7 @@
+
+I want to split a char array into tokens using the NUL char as the separator.
+I have a char array that I've received over the network from a recv command, so I know the length of the char array.  In that char array there are bunch of strings that are separated by the NUL char (\0).  
+Because the separator is the NUL char, that means I can't use strtok, because it uses NULL for its own purposes.
+So I want to iterate through all the strings starting from byte 8 (the strings are preceded by 2 32 bit integers).
+I was thinking I could iterate though all the characters looking for the \0 character and then doing a memcpy of the length I have found so far, but I figured there must be a nicer method than this.
+What other approach can I take?

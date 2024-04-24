@@ -1,0 +1,119 @@
+
+I am currently tackling this assignment for my computer science class:
+Make your own dynamic array template. It should allow creating contiguous arrays (filled with things of the same type) which you can extend without worrying about running out of space.
+Do one version using malloc and free.
+Do one version using new and delete.
+My version using new and delete works flawlessly; however, in trying to convert my new/delete code to using malloc/free, I keep getting a seg fault. I have narrowed down the segfault (I think), to being in a single function: addData. Take a look at the code in my main I used to test this:
+Array2<int> *testArray3 = new Array2<int>(5);
+Array2<int> *testArray4;
+testArray3->initArray();
+testArray3->printArray();
+testArray4 = testArray3->addData(7);
+testArray4->printArray();
+
+return 0;
+
+This gives a seg fault; however, when I change it to this: 
+Array2<int> *testArray3 = new Array2<int>(5);
+Array2<int> *testArray4;
+testArray3->initArray();
+testArray3->printArray();
+testArray4 = testArray3; //->addData(7);
+testArray4->printArray();
+return 0;
+
+There is no seg fault. This makes me believe the issue is in my addData function. Here is the code for that: 
+Array2<T> *addData(T dataToAdd){
+    Array2 <T> *tmp;
+    tmp->data = this->getData();
+    Array2 <T> *newData;
+    newData->data = (T *) malloc(sizeof(T)*(this->size + 1));
+
+    for (int i = 0; i < tmp->getSize() + 1; ++i){
+        if (i < tmp->getSize()){
+            //newData->data[i] = tmp->data[i];
+            newData->setData(tmp->getData()[i], i);
+        }
+        else{
+            //newData->data[i] = dataToAdd;
+            newData->setData(dataToAdd, i);
+        }
+    }
+
+    free(tmp->data);
+    free(this->data);
+    return newData;
+};
+
+I am new to programming as a whole and have not completely wrapped my head around pointers and memory allocation, etc. Any advice you could give me would be greatly appreciated! In case you need to see the rest of the code, here is the entire file I coded my template in. Thank you so much for your time!
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <sstream>
+using namespace std;
+
+template<typename T>
+class Array2{
+public:
+    Array2(int size){
+        this->size = size;
+        data = (T *) malloc(sizeof(T)*size);
+
+    };
+    Array2<T> *addData(T dataToAdd){
+        Array2 <T> *tmp;
+        tmp->data = this->getData();
+        Array2 <T> *newData;
+        newData->data = (T *) malloc(sizeof(T)*(this->size + 1));
+
+        for (int i = 0; i < tmp->getSize() + 1; ++i){
+            if (i < tmp->getSize()){
+                //newData->data[i] = tmp->data[i];
+                newData->setData(tmp->getData()[i], i);
+            }
+            else{
+                //newData->data[i] = dataToAdd;
+                newData->setData(dataToAdd, i);
+            }
+        }
+
+        free(tmp->data);
+        free(this->data);
+        return newData;
+   };
+    ~Array2(){
+        free(this->data);  
+    };
+    void initArray(){
+        for (int i = 0; i < this->size; ++i){
+            //this->data[i] = i;
+            this->setData(i, i);
+        }
+    };
+    void printArray(){
+        //ostringstream oss;
+        string answer = "";
+
+        for (int i = 0; i < this->size; ++i){
+            //oss << this->data[i] + " ";
+            cout << this->data[i] << " ";
+        }
+
+        //answer = oss.str();
+
+        cout << answer << endl;
+    };
+    T* getData(){
+        return this->data;
+    }
+    int getSize(){
+        return this->size;
+    }
+    void setData(T data, int index){
+        this->getData()[index] = data;
+    }
+private:
+    int size;
+    T* data;
+};
+

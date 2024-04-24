@@ -1,0 +1,7 @@
+
+
+
+
+How can I track the memory allocations in C++, especially those done by new/delete. For an object, I can easily override the operator new, but I'm not sure how to globally override all allocations so they go through my custom new/delete. This should be not a big problem, but I'm not sure how this is supposed to be done (#define new MY_NEW?).
+As soon as this works, I would assume it's enough to have a map somewhere of pointer/location of the allocation, so I can keep track of all allocations which are currently 'active' and - at the end of the application - check for allocations which have not been freed.
+Well, this seems again like something that surely has been done several times at least, so any good library out there (preferably a portable one)?

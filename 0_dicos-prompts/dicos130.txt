@@ -1,0 +1,12 @@
+
+For my program I have to make sure the user only inputs a positive INTEGER.   for example if the user inputted 12hi it should not run the program and print to std error.  I am not quite sure how to implement this.
+int main(int argc, char *argv[])   
+{ 
+    if(atoi(argv[1]) < 1)
+    {
+        cerr << "ERROR!"<< endl;
+        return 1;
+    }
+    return 0;
+}
+

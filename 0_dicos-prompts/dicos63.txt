@@ -1,0 +1,58 @@
+
+I have this code:
+char temp;
+scanf("%c",&temp);
+fgets(variable1,50,stdin);
+strtok(variable1, "\n");
+
+printf("%s ", variable1);
+
+This gets a string with the possibility of having spaces and assigns it to the variable variable1. Later, I can print the string with no problem.
+The problem comes when I add to code other fgetsfor gets other string in other variable.
+if (1) {
+    scanf("%c",&temp);
+    fgets(variable2,50,stdin);
+    strtok(variable2, "\n");
+
+    printf("%s ", variable2);
+}
+
+The result complete is:
+char temp;
+scanf("%c",&temp);
+fgets(variable1,50,stdin);
+strtok(variable1, "\n");
+
+printf("%s ", variable1);
+
+if (1) {
+    scanf("%c",&temp);
+    fgets(variable2,50,stdin);
+    strtok(variable2, "\n");
+
+    printf("%s ", variable2);
+}
+
+variable1 always works correctly. But I try print in some phrases with %s variable2 but the result does not get the first character, only in second scanf. If I put HELLO, variable2 is ELLO.
+I have tested using another temp variable, another data, etc. But always get the same error.
+Why is this happening?
+UPDATE
+For more information. I use scanf because, if I do not use it, the program does not pause while waiting for the string. I use strtok(variable1, "\n"); to remove the line break.
+This program is inside a while and in switch case. I put the complete code:
+case 4: printf( "Put equipo: "); 
+    scanf("%c",&temp);
+    fgets(equipo,50,stdin);
+    strtok(equipo, "\n");
+
+    if (Exists(equipo)) {
+        printf("Put Piloto ");
+        scanf("%c",&temp);
+        fgets(piloto,50,stdin);
+        strtok(piloto, "\n");
+        printf("You said %s and %s", equipo, piloto);
+    }
+
+    break;
+
+If I introduce like Equipo HELLO and like Piloto FRIEND, the output is:
+You said HELLO and RIEND

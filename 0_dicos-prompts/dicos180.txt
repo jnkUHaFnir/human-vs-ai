@@ -1,0 +1,41 @@
+
+I've downloaded a softphone called Express Talk, the one thing this program lacks is the ability to easily click to dial using the sip protocol. So I figured I would try my best to create a simple c++ program that will accept the number clicked on and then pass that information to Express Talk to auto dial the number, i've tried a number of things which typically lead me to a dead end. I'm not too familiar with c++ so hopefully someone here can help me figure out what is wrong, the file is located in C:/Program Files/NCHSoftware/Talk/talk.exe. In order to use the command line to dial a number I can type /talk.exe -dial "5555555555" which will open up the program and dial the number.
+This program works and is called dial.exe (located in the same folder as talk.exe):
+    #include <stdlib.h>
+    #include <windows.h>
+
+    int main ()
+    {
+        system("start talk.exe -dial 5555555555");
+    }
+
+Now the problem: If I direct firefox (12.0) to handle sip links to dial.exe and then try to click a sip link I get the error: "Windows cannot find 'talk.exe'. Make sure you typed the name correctly, and then try again" 
+At this point i'm not even concerned about passing the phone number variable to talk.exe as I just want to make sure that it will open when I click a sip link. I figured that perhaps the reason that it is having difficulties finding talk.exe is because for some reason mozilla may change the directory of the program? I'm not quite sure, so now I'm trying to put the full path of talk.exe in the program so i tried
+    #include <stdlib.h>
+    #include <windows.h>
+
+    int main ()
+    {
+        system("start \"C:\\Program Files\\NCHSoftware\\Talk\\talk.exe -dial 5555555555\"");
+    }
+
+All this does is open a command prompt window without actually executing the program. Of course this could all be solved if I can somehow just pass the arguments in the applications window on firefox, but that isn't allowed. Can anyone assist me in debugging? I just don't know what to do anymore.
+Here is the current code:
+    #include <stdlib.h>
+    #include <windows.h>
+    #include <direct.h>
+    #include <string.h>
+    #include <string>
+
+
+    //Written to implement click-to-dial functionality for soft phones (assuming softphones allow arguments to be passed to dial the phone.)
+    int main ()
+    {
+        _chdir("C:\\Program Files\\NCHSoftware\\Talk\\");
+    if (argc > 1 && _strnicmp(argv[1], "sip:", 4))
+        { // match "sip:" prefix, case insensitive
+     std::string cmd = "start talk.exe -dial " + std::string(argv[1]+4);
+     system(cmd.c_str());
+    }
+    }
+

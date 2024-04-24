@@ -1,0 +1,26 @@
+
+I want to use Precise Event-Based Sampling (PEBS) to record all the addresses of specific events (say cache misses for example), on a XeonE5 Sandy Bridge.
+However, the Performance Analysis Guide for CoreTM i7 Processor and Intel® XeonTM 5500 processors, p.24, contains the following warning:
+
+As the PEBS mechanism captures the values of the register at
+completion of the instruction, the dereferenced address for the
+following type of load instruction (Intel asm convention) cannot be
+reconstructed. MOV RAX, [RAX+const] This kind of
+instruction is mostly associated with pointer chasing
+mystruc = mystruc->next;
+This is a significant shortcoming of this
+approach to capturing memory instruction addresses.
+
+I have a number of load instructions of that form in my program according to objdump. Is there any way I can avoid those?
+As this is a intel specific problem, the solution does not have to be portable in any way, it just has to work. My code is written in C, and I'm ideally looking for a compiler-level solution (gcc or icc) but any suggestions are welcome.
+
+Some examples:
+mov    0x18(%rdi),%rdi
+
+mov    (%rcx,%rax,8),%rax
+
+In both cases, after the instruction retired (thus when I look at the register values to figure out where I loaded to/from) the values of the addresses (respectively %rdi + 18 and %rcx + 8 * %rax in these examples) are overwritten by the result of the mov.
+
+The only way I can think of right now is to use the & (ampersand) assembler constraint. That would mean I would have to go through my code wherever such an instruction appears, and replace every pointer dereferencing mystruc = mystruc->next; with something like:
+asm volatile("mov (%1),%0" : "=&r" (mystruc) : "r" (&(mystruc->next)))
+However it is a very pedestrian approach and there are probably cases that are more complicated than a pointer inside a struct. I understand this is basically increasing register pressure so something compilers are actively trying to avoid. Is there any other way to do this?

@@ -1,0 +1,30 @@
+
+I am trying to allocate enough space for an array of pointers to structure(City) with 
+City **ptrArray = (City **)calloc(numberOfLines, sizeof(City*));
+
+char tempArray[100];
+char* temp = tempArray;
+int slength;
+
+for (int i = 0; i < numberOfLines; i++)
+    { //Allocates enough memory for array of length of string
+        fscanf(fPtr, "%99[^:] %*c", tempArray);
+        slength = strlen(temp);
+        ptrArray[i] = (City*)malloc(sizeof(int)+(sizeof(char)*slength));
+        strcpy(ptrArray[i]->cityName, temp);
+        //fscanf(fPtr, "%d", ptrArray[i]->temperature);
+    }
+
+This is where I read the data from a file into the array.  The debugger(visual studio) only shows one cell in ptrArray and it seems that the data gets lost.
+numberOfLines is an assigned int value.
+tempArray is a temporary holding place for the strings read from the file.
+temp is a pointer to tempArray.
+Bonus issue: The commented out line at the bottom of the for loop breaks the code every time and I have no clue why.
+edit: I added the code where I initialized temp and tempArray.
+Also it is a weird call to malloc because the assignment specifies allocating exactly enough memory for the string and an int instead of having a maximum value for the string.  And here is my struct
+typedef struct{
+    int temperature;
+    char cityName[100];
+}City;
+
+Thank you very much for you help!

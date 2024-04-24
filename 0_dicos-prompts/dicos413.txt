@@ -1,0 +1,27 @@
+
+I'm trying to have a process fork and run execve in the child process so that it will open a new terminal window and execute a custom command there. 
+The program I want to execute is gestore
+These are the arguments I pass to execve:
+char * argv_exec[5];
+argv_exec[0]="/usr/bin/xfce4-terminal";   
+argv_exec[1]="--geometry";
+argv_exec[2]="480x320";
+argv_exec[3]="-x";
+argv_exec[4]="./gestore";    // the program I want to execute in new window
+argv_exec[5]=NULL;
+
+char sess_m[80];
+strcat(sess_m,"SESSION_MANAGER=");
+strcat(sess_m,getenv("SESSION_MANAGER"));
+
+char * envp[3];
+envp[0]="DISPLAY=:0.0";
+envp[1]=sess_m;
+envp[2]=NULL;
+
+and here I call execve:
+if(pid_tv==0)
+    if(execve(argv_exec[0],argv_exec,&envp)==-1) {...}
+
+but I keep getting Session manager variable not defined.
+Anyone has a suggestion on why this does not work or how could I do it better? 

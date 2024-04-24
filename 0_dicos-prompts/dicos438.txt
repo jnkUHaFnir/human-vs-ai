@@ -1,0 +1,8 @@
+
+I'd like to find a way to find out if a program is installed using C gnu11 standard, for example, will the command 'Rscript' work if it is executed using the system function in C.
+I'm not a programmer by training, so I'm not sure if I'm using the correct search terms.
+I would like the C equivalent of
+con@con-Inspiron-3521:~/Scripts$ which Rscript 
+/usr/bin/Rscript
+
+how can I do that in C?

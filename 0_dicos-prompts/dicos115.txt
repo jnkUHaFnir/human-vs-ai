@@ -1,0 +1,6 @@
+
+I am experimenting a little bit with gamestudio.
+I am now making a shooter game.
+I have an array with the pointers to the enemies. When an enemy is killed, I want to remove him from the list. And I also want to be able to create new enemies.
+Gamestudio uses a scripting language named lite-C. It has the same syntax as C and on the website they say, that it can be compiled with any C compiler. It is pure C, no C++ or anything else.
+I am new to C. I normally program in .NET languages and some scripting languages.

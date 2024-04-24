@@ -1,0 +1,9 @@
+
+I am trying to create a global 2D array of integers in C, but I'm not really sure how to go about that.  For a 1D array, you can simply put
+int numbers[];
+
+but obviously you cannot leave two brackets empty like
+int numbers[][];
+
+So how can i do this?  I am not sure of an easy way.
+Thanks!

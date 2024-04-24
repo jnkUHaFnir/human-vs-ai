@@ -1,0 +1,4 @@
+
+I am a little bit confused about reading and writing to a serial port. I have a USB device in Linux that uses the FTDI USB serial device converter driver. When I plug it in, it creates: /dev/ttyUSB1. 
+I thought itd be simple to open and read/write from it in C. I know the baud rate and parity information, but it seems like there is no standard for this?
+Am I missing something, or can someone point me in the right direction?

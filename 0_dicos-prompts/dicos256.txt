@@ -1,0 +1,60 @@
+
+The server returns the HTTP headers and binary file; something like this:
+HTTP/1.1 200 OK
+Date: Thu, 28 Jun 2012 22:11:14 GMT
+Server: Apache/2.2.3 (Red Hat)
+Set-Cookie: JSESSIONID=blabla; Path=/
+Pragma: no-cache
+Cache-Control: must-revalidate, no-store
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Content-disposition: inline; filename="foo.pdf"
+Content-Length: 6231119
+Connection: close
+Content-Type: application/pdf
+
+%PDF-1.6
+%âãÏÓ
+5989 0 obj
+<</Linearized 1/L 6231119/O 5992/E 371504/N 1498/T 6111290/H [ 55176 6052]>>
+endobj
+
+xref
+5989 2744
+0000000016 00000 n
+0000061228 00000 n
+0000061378 00000 n
+
+I want to copy only the binary file. But how to know when the headers part is ended? I tried check check if the line contains a \r\n\r\n but looks like this standard does not applies to server response, only to client. This given:
+Content-disposition: inline; filename="foo.pdf"
+Content-Length: 6231119
+Connection: close
+Content-Type: application/pdf
+
+%PDF-1.6
+%âãÏÓ
+5989 0 obj
+<</Linearized 1/L 6231119/O 5992/E 371504/N 1498/T 6111290/H [ 55176 6052]>>
+endobj
+
+xref
+5989 2744
+0000000016 00000 n
+
+Here is the C Code:
+while((readed = recv(sock, buffer, 128, 0)) > 0) {
+
+    if(isnheader == 0 && strstr(buffer, "\r\n\r\n") != NULL)
+        isnheader = 1;
+
+        if(isnheader) 
+          fwrite(buffer, 1, readed, fp);
+}
+
+UPDATE:
+I put a continue control into my if-statement:
+if(isnheader == 0 && strstr(buffer, "\r\n\r\n") != NULL) {
+    isnheader = 1;
+    continue;
+}
+
+Well, it works as expected. But as @Alnitak have mentioned, it's not safe.

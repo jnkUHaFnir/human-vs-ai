@@ -1,0 +1,26 @@
+
+What I am trying to accomplish is prompting the user with the question of do they want to run the program again. They either type y or n. If y, it reruns the program. If no, it stops the program. Anything other than those two will prompt an error and ask the question again. I'm used to C# where strings are not complicated, but in C, I guess there technically isn't strings, so we have to use either char arrays or char pointers. I've tried both, none that work that way I want, but I'm probably the problem. This is what I have. 
+char answer[1] = "a";
+
+while (strcmp(answer, "y") != 0 || strcmp(answer, "n") != 0)
+{
+    printf ("\n\nWould you like to run the program again? Type y or n. Then, hit Enter.");
+    scanf ("%c", answer);
+
+    if (strcmp(answer, "y") == 0)
+    {
+        main();
+    }
+    else if (strcmp(answer, "n") == 0)
+    {
+        continue;
+    }
+    else 
+    {
+        printf ("\nERROR: Invalid input was provided. Your answer must be either y or n. Hit Enter to continue.");
+        F = getchar();
+        while ((getchar()) != F && EOF != '\n');
+    }
+}
+
+I have other while loops similar to this that work as expected, but use a float. So I'm assuming the problem is me using char here. What happens right now is that it doesn't even prompt the user for the question. It just asks the question and shows the error right afterwards. I'm sure there are other things wrong with this code, but since I can't get the prompt to work, I cannot test the rest of it yet. 

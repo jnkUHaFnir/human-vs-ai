@@ -1,0 +1,3 @@
+for (size_t i = 0; i < strlen(cAFirst) && cAFirst[i] != '\0'; i++) {
+    // Rest of your code...
+}

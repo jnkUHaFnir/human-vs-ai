@@ -1,0 +1,9 @@
+
+I intend to store strings into an array of pointers to strings and then display them as follows :
+
+char *directions[3];
+for(i=0;i<3;i++)
+scanf("%s",directions[i]);
+for(i=0;i<3;i++)
+printf("%s",directions[i]);
+but when i run this code ,it gives me segmetation fault ,could someone please correct me?

@@ -1,0 +1,66 @@
+
+I am new to pointers in C, please bear with me. I am trying to write a function which returns the index of the array if the string is found else stores the string and then returns the index. I want to create a structure like this {"1234", "3241", "2234", "2222"} for which I have dynamically allocated a char array like this (I need to take the size from command line)  
+char** userToRdrMap = {NULL};
+userToRdrMap = malloc(numOfReducers * sizeof(char*));
+
+Now, I have an array of userId's    
+char *userId[numOfReducers];
+    userId[0] = "2234";
+    userId[1] = "2222";
+    userId[2] = "3223";
+    userId[3] = "2222";
+
+For each userId, I will call a function findRdrNum(userId[i]) which will check the earlier dynamically allocated char array userToRdrMap, if userId is present it should return the index, else store it and then return the index. 
+I am not able to proceed with this problems since I am getting confused and lost with pointers. Can anyone please help ?
+This is my program, which tried returning the index and then storing it.
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+int numOfReducers;
+char** userToRdrMap = {NULL};
+char* temp1;
+
+int findRdrNum(char *userId){
+    if(!userToRdrMap[0]){
+        return 0;
+    } else{
+        int i;
+        printf("%s", userToRdrMap[1]);
+        for(i=0; i<numOfReducers; i++){
+            if(strcmp(userToRdrMap[i], userId))
+                return i;
+        }
+    }
+    return NULL;
+}
+
+int main (int argc, char *argv[])
+{
+    numOfReducers = atoi(argv[1]);
+    int i;
+    char *userId[numOfReducers];
+    userId[0] = "2234";
+    userId[1] = "2222";
+    userId[2] = "3223";
+    userId[3] = "2222";
+    int rdrNum;
+
+    userToRdrMap = malloc(numOfReducers * sizeof(char*));
+/*  temp1 = malloc(numOfReducers * 4 * sizeof(char));
+    for (i = 0; i < numOfReducers; i++) {
+      userToRdrMap[i] = temp1 + (i * 4);
+    }
+*/
+    printf("%s\n", userId[0]);
+    for(i=0; i<numOfReducers; i++){
+        rdrNum = findRdrNum(userId[i]);
+        strcpy(userToRdrMap[rdrNum], userId[i]);
+        printf("%d", rdrNum);
+    }
+    return 0;
+}
+
+Thanks,
+Harrish

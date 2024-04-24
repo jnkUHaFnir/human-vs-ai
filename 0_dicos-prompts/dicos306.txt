@@ -1,0 +1,18 @@
+
+struct number {char digits[11];};
+
+The following method removes leading zeroes from (*a).digits
+void remove_zero(struct number *a); 
+
+Example: (*a).digits 000013204 ---> 13204
+My approach is to define a variable b equals to (*a).digits, start seaching for the first non-zero number in b, then replace (*a).digits with the rest of b. However, I am having trouble implementing the code
+void remove_zero(struct number *a) {
+char b = (*a).digits;
+while (b){   // <--- (b) indicates that it hasnt reached the terminator,right?
+  if (b != '0')
+    { //<-- here is where to replace (*a).digits with the rest of b, but how to?
+break;
+    }
+  }
+}
+

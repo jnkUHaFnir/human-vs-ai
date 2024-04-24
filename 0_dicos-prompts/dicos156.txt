@@ -1,0 +1,10 @@
+
+I use this code:
+while ( scanf("%s", buf) == 1 ){
+
+What would be the best way to prevent possible buffer overflow so that it can be passed strings of random lengths?
+I know I can limit the input string by calling for example:
+while ( scanf("%20s", buf) == 1 ){
+
+But I'd prefer to be able to process whatever the user inputs.
+Or can't this be done safely using scanf and I should use fgets?

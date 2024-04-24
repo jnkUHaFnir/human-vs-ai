@@ -1,0 +1,77 @@
+
+I currently have following code to lookup/replace (via a lookup list which is actually a char array of char arrays) extended ASCII characters. The replacing itself seems to work fine (although any tips for improvement, always welcome) but when using it on the cli (Ubuntu 15.04) , I get weird symbols back. Now, I'm a bit confused if this because my C code is not good enough or my terminal does not "know" how to print certain characters?
+-------------- C code --------------
+/* Include system header files.
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <wchar.h>
+
+
+
+
+unsigned char* sanitizeString(unsigned char *pCharArg1)
+{
+    unsigned char *pCharWorker = pCharArg1;
+
+    /* The look-up map
+     */
+    unsigned char* charLookup[] = { "ab","àa", "ss", "åa", "ÅA", "ÿy", "XX","" };
+
+    /* For every character in the input string we're going to verify
+     * if the character needs to be replaced with one from the look-up
+     * map.
+     */
+    while ( *pCharWorker != '\0' ) { 
+        printf( "STARTING NEXT CHAR \n");   
+        int finishedFlag = 0;
+        //if ( (((int) *pCharWorker >= 65) && ((int) *pCharWorker <= 122)) ) {
+            int j = 0;  
+            /*
+             * Loop the look-up map
+             */
+            while ((*(charLookup[j]) !='\0') && (finishedFlag == 0)) {
+                printf( "Analazying *pCharWorker CHAR : %c \n", *pCharWorker    );
+                printf( "Analazying *pCharWorker INT : %d \n", *pCharWorker    );
+                printf( "Analazying *(charLookup[j]) CHAR  : %c \n", *(charLookup[j])    );         
+                printf( "Analazying *(charLookup[j]) INT : %d \n", *(charLookup[j])    );       
+                /* Inspected character matches one from the lookup map,
+                 * so fetch the new character and assign it.
+                 */
+                if( *pCharWorker == *(charLookup[j]) ){
+                    printf( "Detected char: %c \n", *pCharWorker   ); 
+                    *pCharWorker = *(charLookup[j]+1);
+                    printf( "Replaced with char: %c \n", *pCharWorker   ); 
+                    finishedFlag = 1;   
+                }
+                j++;
+            }
+    //  }    
+        printf( "======================= \n"  );             
+        pCharWorker++;      
+    }
+    return pCharArg1;     
+}
+
+
+int main( int argc,  char* argv[] ){
+    unsigned char* z = argv[1];
+    printf( "PRINT : %s \n",  z ); 
+    unsigned char* p2 = sanitizeString( z);
+    printf( "Sanitized string: %s \n",  p2 ); 
+    return 0;
+}
+
+
+Gives for example when executing:
+koen@beite-f1:~$ gcc -o san sanitize.c 
+koen@beite-f1:~$ ./san ç
+PRINT : ç 
+STARTING NEXT CHAR 
+Analazying *pCharWorker CHAR : � 
+...
+Sanitized string: �� 
+
+A great thanks for any input
+br, Koen.

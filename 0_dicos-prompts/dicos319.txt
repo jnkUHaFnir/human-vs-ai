@@ -1,0 +1,28 @@
+
+I am getting More data is available error with the GetComputerNameEx function, but no idea how to fix it.
+This is my code:
+int wmain()
+{
+    COMPUTER_NAME_FORMAT nameType = ComputerNameDnsFullyQualified;
+    WCHAR computerName[MAX_COMPUTERNAME_LENGTH + 1];
+    DWORD size = ARRAYSIZE(computerName);
+
+    BOOL pcName = GetComputerNameEx(nameType, computerName, &size);
+
+    DWORD error = GetLastError();
+
+
+
+    if (pcName != 0)
+    {
+        wprintf("Computer name: %s\n", computerName);
+    }
+    else
+    {
+        wprintf(L"Error getting the name. Code: %li\n", error);
+    }
+
+    return 0;
+}
+
+No idea how to set size variable as output so I can declare the computerName array correctly.

@@ -1,0 +1,22 @@
+
+I am trying to use an array of structs to create a symbol table. This is what I have so far, but I am having trouble allocating memory in the create function, is what I have so far correct?
+I want something like this as my final result for arr 
+{ {"sym1"; 1}, {"sym2"; 2}, {"sym3"; 3} }
+struct str_id {
+  char* s;
+  int id;
+}
+
+struct symbol_table {
+  int count;
+  struct str_id** arr;
+}
+
+struct symbol_table *symbol_table_create(void) {
+  struct symbol_table *stt = malloc(sizeof(struct symbol_table));
+  stt->count = 1;
+  stt->arr =  malloc(sizeof(struct str_id*) * stt->count);
+  return stt;
+
+}
+

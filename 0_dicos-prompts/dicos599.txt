@@ -1,0 +1,29 @@
+
+So I have this code here:
+std::cout << "Here's Question 2 now for " << char(156) << "200" << endl;
+Sleep(2000);
+
+PlaySound(TEXT("Millionaire/£100Play.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+std::cout << "In maths, which of these numbers is not referred to as a square number?" << endl;
+Sleep(2000);
+std::cout << "A: 0" << endl;
+Sleep(2000);
+std::cout << "B: 1" << endl;
+Sleep(2000);
+std::cout << "C: 2" << endl;
+Sleep(2000);
+std::cout << "D: 4" << endl;
+Sleep(2000);
+
+answerQues2:    
+        std::cout << "So, A, B, C or D?";
+        std::cin >> answer2;
+
+if (answer2 == "C" || answer2 == "c")
+    {
+        std::cout << "That's correct, you've won " << char(156) << "200!" << endl;
+        PlaySound(TEXT("Millionaire/£100correct.wav"), NULL, SND_FILENAME);
+        Sleep(2000);
+    }
+
+Now, the code itself is not the problem. What this is essentially is a quiz with a question and then 4 answers (A, B, C and D). Now in order to actually make up more questions, you'd have to go into the code itself and go through a lengthy process to edit everything. I want to make a text file that you can edit the questions and answers inside the text file, hence replacing everything in the code (So for example, if I wanted to change Q1, I could open the text file, replace the question and when I load up the program, the question will be changed). How would I be able to do this?

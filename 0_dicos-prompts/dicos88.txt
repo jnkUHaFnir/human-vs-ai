@@ -1,0 +1,26 @@
+
+
+
+
+I'm dealing with small text files that i want to read into a buffer while i process them, so i've come up with the following code:
+...
+char source[1000000];
+
+FILE *fp = fopen("TheFile.txt", "r");
+if(fp != NULL)
+{
+    while((symbol = getc(fp)) != EOF)
+    {
+        strcat(source, &symbol);
+    }
+    fclose(fp);
+}
+...
+
+Is this the correct way of putting the contents of the file into the buffer or am i abusing strcat()?
+I then iterate through the buffer thus:
+for(int x = 0; (c = source[x]) != '\0'; x++)
+{
+    //Process chars
+}
+

@@ -1,0 +1,47 @@
+
+So I have this exercise where I need to show the N first prime numbers, but I need to specifically create a function to know if the number is a prime number
+#include <stdio.h>
+#include <stdlib.h>
+
+int prime(int num){
+    int cont,i,j=0,b;
+
+    b=num;
+
+    do{
+        j++;
+        i=0;
+        for(cont=1;cont<j;cont++){
+            if(j%cont == 0)
+                i++;
+        }
+        if(i == 1){
+            return(j);
+            c=j;
+            b--;
+        }
+    } while (b > 0);
+}
+
+int main(){
+    int *v,n,cont;
+
+    do{
+        printf("Input an integer: ");
+        scanf("%d",&n);
+    } while (n <= 0);
+
+    v = (int *)malloc(n *  sizeof(int));    
+
+    for(cont=0;cont<n;cont++){
+        v[cont] = prime(n);
+    }
+
+
+    for(cont=0;cont<n;cont++){
+        printf("%d ",v[cont]);
+    }
+
+}
+
+The problem with the way i've done this is that the variable J is aways being set to 0 when i call the function again, i've tried to set something like c=j so when the program return to the prime function it would have the 'previous' j value but it gets a weird random number. So I wanted to know if is there a way to 'return' the result in the main function to the prime function, i couldn't find anything that helped me, not that i could understand at least

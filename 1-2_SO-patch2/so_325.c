@@ -1,0 +1,1 @@
+    size_t current_size = SIZE;

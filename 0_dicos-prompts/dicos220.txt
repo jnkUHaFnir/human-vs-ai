@@ -1,0 +1,13 @@
+
+
+
+
+I have something of this sort:
+int n,m;
+scanf("%d %d",&m,&n);
+int *arr = malloc(sizeof(int)*n*m);
+for(int i=0;i<m*n;scanf("%d",arr+i),i++);
+
+Now for say n=2 and m = 3, It accepts the first five numbers, and gives a segmentation fault on the sixth number. I tried printing stuff immediately after the loop, but its not being printed, any idea what the problem could be? I've used similar constructs extensively and have never encountered a problem before.
+EDIT 1:
+The problem was later on in the program, but the thing is I had a printf immediately after the loop, and it didn't print anything, so I assumed that it had to be here. Why didn't the printf print anything? Does it have something to do with parallel execution? And sorry for the bad format, I'm new to stack overflow.

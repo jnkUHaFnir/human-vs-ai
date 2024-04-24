@@ -1,0 +1,68 @@
+
+I want to write a function that read line by line from a socket buffer obtained from third parameter from read() function from unistd.h header.
+I have wrote this:
+int sgetline(int fd, char ** out)
+{
+    int buf_size = 128;
+    int bytesloaded = 0;
+    char buf[2];
+    char * buffer = malloc(buf_size);
+    char * newbuf;
+    int size = 0;
+
+    assert(NULL != buffer);
+
+    while( read(fd, buf, 1) > 0 )
+    {
+        strcat(buffer, buf);
+        buf[1] = '\0';
+        bytesloaded += strlen(buf);
+        size = size + buf_size;
+
+        if(buf[0] == '\n')
+        {
+            *out = buffer; 
+            return bytesloaded;
+        }
+
+        if(bytesloaded >= size)
+        {
+            size = size + buf_size;
+            newbuf = realloc(buffer, size);
+
+            if(NULL != newbuf)
+            {
+                buffer = newbuf;
+            }
+            else 
+            {
+                printf("sgetline() allocation failed!\n");
+                exit(1);
+            }
+        }
+    }
+
+    *out = buffer;
+    return bytesloaded;
+}
+
+but I have some problems with this function, for example, if the input is something like:
+HTTP/1.1 301 Moved Permanently\r\n
+Cache-Control:no-cache\r\n
+Content-Length:0\r\n
+Location\r\nhttp://bing.com/\r\n
+\r\n\r\n
+
+and I do
+int sockfd = socket( ... );
+//....
+char* tbuf;
+while(sgetline(sockfd, &tbuf) > 0)
+{
+    if(strcmp(tbuf,"\r\n\r\n") == 0)
+    {
+       printf("End of Headers detected.\n");
+    }
+}
+
+the above C application does not output "End of Header detected.". Why is this, and how can I fix this?

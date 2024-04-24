@@ -1,0 +1,24 @@
+
+using a simple code:
+#include <stdio.h>
+
+int main(int argc, int **argv)
+{
+    int A, B, C, D, E, F; 
+    printf ("input 1  : ");
+    scanf ("%d", &A);
+    printf ("input 2 : ");
+    scanf ("%d", &B);
+    C = A + B;
+    D = A - B;
+    E = A * B;
+    F = A / B;
+    printf ("sum  : %d\n", C);
+    printf ("difference : %d\n", D);
+    printf ("product  : %d\n", E);
+    printf ("quotient : %d\n", F);
+    return 0;
+}
+
+My question is as such, in the first scanf [p.s I know I can use other input methods its for a project] if you input a float/double number such as 1.3 or 20.5
+the sum and difference are quite random for me,anyone can explain to me why the results are what they are?

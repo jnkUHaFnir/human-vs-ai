@@ -1,0 +1,19 @@
+
+I have a piece of code that looks like this
+#include <stdio.h>
+int main()
+{
+    int i;
+    int number_of_chunks = 12;
+    char *final_string = NULL;
+
+    for(i = 0; i < number_of_chunks; i++) 
+    {
+        char *chunk = some_hash_table.pop(i);
+        asprintf(&final_string, "%s%s", (final_string==NULL?"":final_string), chunk);
+    }
+    free(final_string);
+    return 0;
+}
+
+Here I am concatinating string chunks dynamically,  meaning I don't know the size of each chunk in advance. For this I am using asprintf. The code works fine, however rise some serious memory issue. My doubt is asprintf allocates memory in each iteration and the code loses pointer in each iteration. If there is any other way I can concate string inside loop please guide me

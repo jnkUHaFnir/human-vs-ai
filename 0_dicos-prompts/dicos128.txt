@@ -1,0 +1,28 @@
+
+I'm trying to start a thread as soon as an interrupt occurs. However, I have realized that I can't start a thread from within an interrupt handler (or any function that is directly or indirectly being called by the interrupt handler). So, what I have decided to do is have the handler assert a flag. Then, a separate thread continously monitors that flag and if it's asserted it will in turn create (and start) a thread. Here's a pseudocode:
+int interrupt_flag = 0;
+
+interrupt_handler(void)
+{
+  interrupt_flag = 1
+}
+
+monitoring_thread(void) //this thread is started at the start of the program
+{
+  while(1)
+  {
+    if(interrupt_flag)
+    {
+      interrupt_flag = 0;
+      //start the thread here
+      sleep(/*some amount of time*/);
+    }
+  }
+}
+
+I'm not really happy with having a dedicated while loop constantly monitoring a flag. The problem with this is that it significantly reduces the speed of the other threads in my program. For this reason, I'm calling the sleep function to increase the speed of the other threads in my program.
+Question: Is there a way I can truly start a thread upon interrupt, without having a dedicated while loop? Is there a workaround for starting a thread from within an interrupt handler?
+If it makes any difference, I'm using the POSIX library.
+Thanks,
+PS. This question is somewhat related to an earlier question posted here:
+Sharing data between master thread and slave thread in interrupt driven environment in C

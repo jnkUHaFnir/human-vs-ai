@@ -1,0 +1,87 @@
+
+As far of my concern if realloc fails we loose the information and realloc set the Buffer(pointer) to NULL
+Consider de following program:
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(void){
+    char *ptr = malloc(256);
+
+    if (!ptr){
+        printf("Error, malloc\n");
+        exit(1);
+    }
+
+    strcpy(ptr, "Michi");
+
+    ptr = realloc (ptr, 1024 * 102400000uL); /* I ask for a big chunk here to make realloc to fail */
+
+    if (!ptr){
+        printf("Houston we have a Problem\n");
+    }
+
+    printf("PTR = %s\n", ptr);
+
+    if (ptr){
+        free(ptr);
+        ptr = NULL;
+    }
+}
+
+And the output of course is:
+Houston we have a Problem
+PTR = (null)
+
+I just lost the information inside ptr.
+Now to fix this we should use a temporary buffer(pointer) before to see if we get that chunk of memory and if we get it we can use it, if not we still have the main buffer(pointer) safe.
+Now please consider the following program, where instead of calling realloc I call malloc on a temporary buffer(pointer):
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main(void){
+    char *ptr = malloc(256);
+    char *tmpPTR = NULL;
+
+    if (!ptr){
+        printf("Error, malloc\n");
+        exit(1);
+    }
+
+    strcpy(ptr, "Michi");
+
+    tmpPTR = malloc (1024 * 102400000uL);
+    if (tmpPTR){
+        strcpy(tmpPTR, ptr);
+        strcat(tmpPTR, " - Aloha");
+
+        if (ptr){
+            free(ptr);
+            ptr = NULL;
+        }
+    }else{
+        printf("Malloc failed on tmpPTR\n\n");
+    }
+
+
+    if (ptr){
+        printf("PTR = %s\n", ptr);
+
+        free(ptr);
+        ptr = NULL;
+    }else if (tmpPTR){
+        printf("tmpPTR = %s\n", tmpPTR);
+
+        free(tmpPTR);
+        ptr = NULL;
+    }
+}
+
+And the output is:
+Malloc failed on tmpPTR
+
+PTR = Michi
+
+Now why should I ever use realloc? 
+Is there any benefit of using realloc instead of malloc based on this context?

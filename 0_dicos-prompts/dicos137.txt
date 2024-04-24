@@ -1,0 +1,43 @@
+
+I am trying to make a function that input an unknown length of a string , but I don't want it to return anything I want it to make changes by using the pointer that I pass.
+this was my attempt .
+#include <stdlib.h>
+#include <stdio.h>
+
+void get(char * string){
+
+    int size=1;
+    string = malloc(size);
+    char c;
+    int i=0;    
+
+    while(1){
+        c = getchar();
+        if(c=='\n'){break;}
+        string[i] = c;
+        i++;
+        string = realloc(string , ++size);
+    }
+
+    string[i] = '\0';
+
+}
+
+int main(){
+
+    char *buff;
+
+    printf("String :");
+    get(buff);
+    printf("%s" , buff);
+
+
+    return 0;
+}
+
+the output on my gcc windows os :
+PE
+
+1- what is the PE
+2- what is wrong here
+3- is the c=='\n' line good for the test if the user pressed an enter or should i use EOF or something else

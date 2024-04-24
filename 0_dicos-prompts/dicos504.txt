@@ -1,0 +1,82 @@
+
+EDIT: I added two more benchmarks, to compare the use of realloc with the C array and of reserve() with the std::vector. From the last analysis it seems that realloc influences a lot, even if called only 30 times. Checking the documentation I guess this is due to the fact that realloc can return a completely new pointer, copying the old one.
+To complete the scenario I also added the code and graph for allocating completely the array during the initialisation. The difference from reserve() is tangible.
+Compile flags: only the optimisation described in the graph, compiling with g++ and nothing more.
+Original question:
+I made a benchmark of std::vector vs a new/delete array, when I add 1 billion integers and the second code is dramatically faster than the one using the vector, especially with the optimisation turned on.
+I suspect that this is caused by the vector internally calling realloc too many times. This would be the case if vector does not grows doubling its size every time it gets filled (here the number 2 has nothing special, what matters is that its size grows geometrically). 
+In such a case the calls to realloc would be only O(log n) instead of O(n).
+If this is what causes the slowness of the first code, how can I tell std::vector to grow geometrically?
+Note that calling reserve once would work in this case but not in the more general case in which the number of push_back is not known in advance.
+
+black line
+#include<vector>
+
+int main(int argc, char * argv[]) {
+    const unsigned long long size = 1000000000;
+
+    std::vector <int> b(size);
+    for(int i = 0; i < size; i++) {
+        b[i]=i;
+    }    
+    return 0;
+}
+
+blue line
+#include<vector>
+
+int main(int argc, char * argv[]) {
+    const int size = 1000000000;    
+    std::vector <int> b;
+    for(int i = 0; i < size; i++) {
+        b.push_back(i);
+    }    
+
+    return 0;
+}
+
+green line
+#include<vector>
+
+int main(int argc, char * argv[]) {
+    const int size = 1000000000;
+    std::vector <int> b;
+    b.reserve(size);
+    for(int i = 0; i < size; i++) {
+        b.push_back(i);
+    }    
+
+    return 0;
+}
+
+red line
+int main(int argc, char * argv[]) {
+    const int size = 1000000000;
+    int * a = new int [size];
+    for(int i = 0; i < size; i++) {
+        a[i] = i;
+    }
+    delete [] a;   
+    return 0;
+}
+
+orange line
+#include<vector>
+
+int main(int argc, char * argv[]) {
+    const unsigned long long size = 1000000000;
+    int * a = (int *)malloc(size*sizeof(int));
+    int next_power = 1;
+    for(int i = 0; i < size; i++) {
+        a[i] = i;
+        if(i == next_power - 1) {
+            next_power *= 2;
+            a=(int*)realloc(a,next_power*sizeof(int));
+        }
+    }
+    free(a);
+    return 0;
+}
+
+
+EDIT: checking .capacity(), as suggested, we saw that the growth is indeed exponential. So why the vector is so slow?

@@ -1,0 +1,28 @@
+
+So basically according to definition of array we cannot change array size. But if I am adding element to a same array by shifting other elements to the right  of array, so the array size is going to increase. 
+How this is possible?
+#include<stdio.h>
+
+int main() {
+  int n, j, k, item;
+  printf("Enter size of array:\n");
+  scanf("%d", &n);
+  printf("Enter element to insert and position of element:\n");
+  scanf("%d,%d", &item, &k);
+  int a[n];
+  for (j = 0; j < n; j++) {
+    printf("Enter a[%d] element:\n", j);
+    scanf("%d", &a[j]);
+  }
+  j = n - 1;
+  while (j >= k - 1) {
+    a[j + 1] = a[j];
+    j = j - 1;
+  }
+  a[k - 1] = item;
+  for (j = 0; j <= n; j++) {
+    printf("%d\n", a[j]);
+
+  }
+}
+

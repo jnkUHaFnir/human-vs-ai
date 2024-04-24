@@ -1,0 +1,20 @@
+
+If I have  a while or do while loop in C, is there some (native) way I can have something happen on the second loop?
+I ask for getting inputs; I have this:
+int size;
+do {
+        printf("Size of tower (0 <= x <= 23): ");
+        scanf("%i", &size);
+} while (size > 23 || size < 0);
+
+If the user inputs some value which is not between 0 and 23, I want to display an error message and ask for another value. Obviously I could do it like this:
+int size;
+int error = 0;
+do {
+        if (error) { printf("Invalid size\n"); }
+        printf("Size of tower (0 <= x <= 23): ");
+        scanf("%i", &size);
+        error = 1;
+} while (size > 23 || size < 0);
+
+However, this feels gross. I'm looking for an elegant solution, and I figure that having something run on the second loop would work.

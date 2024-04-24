@@ -1,0 +1,2 @@
+delete pSomeObject;
+pSomeObject = nullptr;

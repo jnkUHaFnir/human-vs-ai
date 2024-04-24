@@ -1,0 +1,62 @@
+
+
+
+
+i am trying to read lines from a text file into char array, but there is something wrong. Please see the code and let me know what am i doing wrong.
+thanks.
+#include <stdio.h>
+#include <stdlib.h>
+int main(void) {
+    int i=0,j;
+    char* string[100];
+    char line[100];
+    FILE *file; 
+    file = fopen("patt", "r"); 
+    while(fgets(line, sizeof line, file)!=NULL) {
+        printf("%d %s",i, line);
+        string[i]=line;
+        i++;
+    }
+    for (j=0 ; j<i ; j++) {
+        printf("string[%d] %s",j, string[j]);
+    }
+    fclose(file);
+    return 0;
+}
+
+the input file patt has the following contents.
+rec
+cent
+ece
+ce
+recent
+nt
+
+On executing the codes above i get this
+0 rec
+1 cent
+2 ece
+3 ce
+4 recent
+5 nt
+string[0] nt
+string[1] nt
+string[2] nt
+string[3] nt
+string[4] nt
+string[5] nt
+
+what i expect is this
+0 rec
+1 cent
+2 ece
+3 ce
+4 recent
+5 nt
+string[0] rec
+string[1] cent
+string[2] ece
+string[3] ce
+string[4] recent
+string[5] nt
+

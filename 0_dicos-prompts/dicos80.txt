@@ -1,0 +1,16 @@
+
+Obviously I'm not going to post my whole code here as it IS very long, it is a tax calculator after all. This problem applies to all my scanfs that need double values as input from the user. Basically as the title says, my program doesn't ask the user to input another value even if it's a character, which obviously isn't a double value so some help will be very appreciated. Forgive me as I'm still in the first year of my course and don't know everything about programming.
+double salary;
+printf("This program will compute your yearly and monthly witholding tax for you \n");
+printf("How much is your total monthly salary? ");
+fflush(stdin);
+scanf("%lf", &salary);
+while (salary < 0)
+{
+    printf("\n");
+    printf("Invalid Input\n");
+    printf("How much is your total monthly salary? ");
+    fflush(stdin);
+    scanf("%lf", &salary);
+}
+

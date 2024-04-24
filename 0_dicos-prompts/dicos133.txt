@@ -1,0 +1,25 @@
+
+
+
+
+#include<stdio.h>
+#include<ctype.h>
+int main()
+{
+    int number, sum = 0;
+
+    // loop body is executed at least once
+    do
+    {
+        printf("Enter a number: ");
+        scanf("%d", &number);
+        sum += number;
+    }
+    while(number != 0);
+
+    printf("Sum = %d",sum);
+
+}
+
+This code was supposed to print the sum of all the integers entered by the user. But when the user enters a letter as an input, instead of throwing an error, it was going into an infinite loop, printing the "enter a number" statement but not running any other statement in the loop.
+Can someone tell me why this happens?

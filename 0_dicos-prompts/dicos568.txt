@@ -1,0 +1,27 @@
+
+So I have the txt file from which I need to read the number of students written in that file, and because every student is in separate line, it means that I need to read the number of lines in that document. So I need to:
+
+Print all lines from that document
+Write the number of lines from that document.
+
+So, I write this:
+#include "stdafx.h"
+#include <stdio.h>
+
+int _tmain(int argc, _TCHAR* Argo[]){
+
+    FILE *student;
+    char brst[255];
+
+    student = fopen("student.txt", "r");
+
+    while(what kind of condition to put here?)
+    {
+        fgetc(brst, 255, (FILE*)student);
+        printf("%s\n", brst);
+    }
+
+    return 0;
+}
+
+Ok, I understand that I can use the same loop for printing and calculating the number of lines, but I can't find any working rule to end the loop. Every rule I tried caused an endless loop. I tried brst != EOF, brst != \0.  So, it works fine and print all elements of the document fine, and then it start printing the last line of document without end. So any suggestions? I need to do this homework in C language, and I am using VS 2012 C++ compiler.

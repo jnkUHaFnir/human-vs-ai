@@ -1,0 +1,104 @@
+
+This function reads the values from a text file with space separated values, into a 2d array. When I run it, works just fine - but a memory leak check through Valgrind confirms Xcode's suspicions that "char *splitString" is never freed, the two times which it is called. I don't understand this, considering my "char *buffer" seems to be freed just fine. Any help is super appreciated!
+int** readMatrixFile(char* inFileName, int** matrix, int sizeY, int sizeX)
+{
+    FILE* matrixFP;
+    int ii=0, jj=0, fileValid = 1;
+    char *buffer, *splitString;
+    const char delim[]=" \n\r";
+
+    matrixFP = fopen(inFileName, "r");
+    if(matrixFP != NULL)
+    {
+        /*Check if file is the same size as specified by the command line
+         *assumed valid until the file is checked*/
+        splitString = malloc(100*sizeof(char)); <------where allocated
+        buffer = malloc(5000*sizeof(char));
+        do
+        {
+            fgets(buffer, 5000, matrixFP);
+            jj=0;
+            splitString = strtok(buffer, delim);
+            while(splitString != NULL)
+            {
+                jj++;
+                splitString = strtok(NULL, delim);
+            }
+            if(jj!=sizeX)
+            {
+                fileValid = 0;
+            }
+            ii++;
+        } while(!feof(matrixFP));
+        if(ii != sizeY || buffer==NULL)
+        {
+            fileValid = 0;
+        }
+
+        free(splitString); <-----Appears to do nothing?
+        free(buffer);
+
+        if(fileValid) /*Files match to specified command line values*/
+        {
+            ii=0;
+            rewind(matrixFP);
+            matrix = (int**)malloc(sizeY * sizeof(int *));
+            do
+            {
+                matrix[ii] = (int*)malloc(sizeX * sizeof(int));
+                jj=0;
+                do
+                {
+                    fscanf(matrixFP, "%d", &matrix[ii][jj]);
+                    jj++;
+                } while(jj<sizeX);
+                ii++;
+            } while(ii<sizeY && !feof(matrixFP));
+        }
+        else
+        {
+            printf("Error: File does not match size specified by the command line\n");
+        }
+        fclose(matrixFP);
+    }
+    else
+    {
+        perror("Error: File does not exist or is invalid");
+        matrix = NULL;
+    }
+
+    return matrix;
+}
+
+And Valgrind output:
+==14087== Memcheck, a memory error detector
+==14087== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==14087== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==14087== Command: ./pmms a b 10 3 10
+==14087== 
+/*irrelevent program output*/ 
+==14087== 
+==14087== HEAP SUMMARY:
+==14087==     in use at exit: 200 bytes in 2 blocks
+==14087==   total heap usage: 21 allocs, 19 frees, 11,680 bytes allocated
+==14087== 
+==14087== 100 bytes in 1 blocks are definitely lost in loss record 1 of 2
+==14087==    at 0x4A06A2E: malloc (vg_replace_malloc.c:270)
+==14087==    by 0x400B55: readMatrixFile (matrix_reader.c:35)
+==14087==    by 0x40095E: main (pmms.c:23)
+==14087== 
+==14087== 100 bytes in 1 blocks are definitely lost in loss record 2 of 2
+==14087==    at 0x4A06A2E: malloc (vg_replace_malloc.c:270)
+==14087==    by 0x400B55: readMatrixFile (matrix_reader.c:35)
+==14087==    by 0x400982: main (pmms.c:24)
+==14087== 
+==14087== LEAK SUMMARY:
+==14087==    definitely lost: 200 bytes in 2 blocks
+==14087==    indirectly lost: 0 bytes in 0 blocks
+==14087==      possibly lost: 0 bytes in 0 blocks
+==14087==    still reachable: 0 bytes in 0 blocks
+==14087==         suppressed: 0 bytes in 0 blocks
+==14087== 
+==14087== For counts of detected and suppressed errors, rerun with: -v
+==14087== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 6 from 6)
+

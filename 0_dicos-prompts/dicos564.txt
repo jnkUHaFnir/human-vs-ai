@@ -1,0 +1,15 @@
+
+I want to write a program which asks user some input values and gives results according to the input values. The following code works but when I enter "John" only 4 spaces are used in the 100 memory. Other 96 are wasted. Also, there is no guarantee that input will be smaller than 100 characters (very unlikely but possible). Is there a way to optimize this?
+P.S: When I researched about it, some sites say I should use sscanf() or fgets() but I didn't understand how to use them in my code.
+P.P.S : I am very new to C so please show me the simplest way.
+#include <stdio.h>
+int main()
+{
+     char name[100];
+     printf("Your name: \n");
+     scanf("%100s", name);
+     printf("Name: %s  \n", name);
+
+    return 0;
+}
+

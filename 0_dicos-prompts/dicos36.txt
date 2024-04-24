@@ -1,0 +1,89 @@
+
+I have puzzles that looks like this:
+    === ==== 
+=== ===
+    === ====
+
+left edge has length from 0 to 10 000 and right also, middle part is from 1 to 10 000.
+So the question is if i can build a rectangle? like first puzzle has length of left edge equal to 0 and the last puzzle has right edge of length 0 and in the middle they fit perfectly?
+I am given the number of puzzle i have and their params like this:
+6
+1 9 2
+0 3 1
+0 4 1
+8 9 0
+2 9 0
+1 5 0
+
+and result can be any of that:
+2
+0 3 1
+1 5 0
+
+or
+3
+0 3 1
+1 9 2
+2 9 0
+
+or
+2
+0 4 1
+1 5 0
+
+But if there is no result i have to printf("no result")
+I have to do this in C, I thought about doing some tree and searching it with BFS where vertices would have edge lengths and edge would have middle length and when reached 0 i would go all way up and collect numbers but it's hard to code. So i decided to do recursion but im also stuck:
+#include<stdio.h>
+
+int main(){
+
+    int a;
+    scanf("%d", &a);//here i get how many puzzles i have
+    int tab[a][3];//array for puzzles
+    int result[][3];//result array
+    int k = 0;//this will help me track how many puzzles has my result array
+
+    for(int i = 0; i < a; i++){//upload puzzles to array
+        for(int j = 0; j < 3; j++){
+            scanf("%d", &tab[i][j]);
+        }
+    }
+
+    findx(0, a, tab, result, k);//start of recursion, because start has to be length 0
+
+}
+int findx(int x, int a, int *tab[], int *result[], int k){//i am looking for puzzle with length x on start
+    for(int i = 0; i < a; i++){
+        if(tab[a][0] == x){//there i look for puzzles with x length at start
+            if(tab[a][2] == 0){//if i find such puzzle i check if this is puzzle with edge length zero at the end
+                for(int m = 0; m < 3; m++){//this for loop add to my result array last puzzle
+                    result[k][m] = tab[a][m];
+                }
+                return print_result(result, k);//we will return result go to print_result function
+            }
+            else{//if i have puzzle with x length on the left and this is not puzzle which ends rectangle i add this puzzle
+                    //to my result array and again look for puzzle with x equal to end length of puzzle i found there
+                for(int m = 0; m < 3; m++){
+                    result[k][m] = tab[a][m];
+                    k += 1;
+                }
+                findx(tab[a][2], a, tab, result, k);
+            }
+        }
+    }
+    printf("no result");
+}
+
+int print_result(int *result[], int k){
+    printf("%d", &k);//how many puzzles i have
+    printf("\n");
+    for(int i = 0; i < k; i++){//printing puzzles...
+        for(int j = 0; j < 3; j++){
+            printf("%d ", &result[i][j]);
+        }
+        printf("\n");//...in separate lines
+    }
+}
+
+
+I have an error that result array can't look like this int result[][3] because of of [] but I don't know how many puzzles I'm gonna use so?... and I have implicit declaration for both of my functions. Guys please help, I dont know much about C and its super hard to solve this problem.

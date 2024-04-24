@@ -1,0 +1,363 @@
+
+I am trying to make a multi-threaded server-client file transfer system in C. There are clients which will send or list or do some other choice (in a switch case you can see) and a server storing the files and serving a lot of clients.
+Multi-thread ideology is really difficult as far as I can see. It needs too much experience instead of knowledge. I have been working on the project for more than one week and I haven't been able to get on top of the problems.
+There are 4 choices: first one is lists local files of client in its directory, second one is list files which are transferred between the client and server, third reading filename from user and copy the file into server's directory.
+My vital issue here is about multi-threading. I cannot connect multiple clients. I have read the code from a to z heaps of times but I really can't catch my errors and am stuck.
+The other issue is that the client will end when the SIGINT is caught, but, for instance, after choosing list files when press ctrl-c it doesn't stop. Same issue for the server file as well. It is more troublesome compared to the client's catching because when server gets SIGINT, clients will be disconnected respectively from the server.
+Thanks for your helps!
+
+server.c
+/*
+ Soner
+ Receive a file over a socket.
+
+ Saves it to output.tmp by default.
+
+ Interface:
+
+ ./executable [<port>]
+
+ Defaults:
+
+ - output_file: output.tmp
+ - port: 12345
+ */
+
+#define _XOPEN_SOURCE 700
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <netdb.h> /* getprotobyname */
+#include <netinet/in.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include <pthread.h>
+
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
+enum { PORTSIZE = 5 };
+
+void* forClient(void* ptr);
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+        printf("!!  OUCH,  CTRL - C received  by server !!\n");
+}
+
+int main(int argc, char **argv) {
+    struct addrinfo hints, *res;
+    int enable = 1;
+    int filefd;
+    int server_sockfd;
+    unsigned short server_port = 12345u;
+    char portNum[PORTSIZE];
+
+    socklen_t client_len[BUFSIZ];
+    struct sockaddr_in client_address[BUFSIZ];
+    int client_sockfd[BUFSIZ];
+    int socket_index = 0;
+
+    pthread_t threads[BUFSIZ];
+
+    if (argc != 2) {
+        fprintf(stderr, "Usage   ./server  <port>\n");
+        exit(EXIT_FAILURE);
+    }
+    server_port = strtol(argv[1], NULL, 10);
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;       //ipv4
+    hints.ai_socktype = SOCK_STREAM; // tcp
+    hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+
+    sprintf(portNum, "%d", server_port);
+    getaddrinfo(NULL, portNum, &hints, &res);
+
+    server_sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (server_sockfd == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    if (setsockopt(server_sockfd, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR), &enable, sizeof(enable)) < 0) {
+        perror("setsockopt(SO_REUSEADDR) failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (bind(server_sockfd, res->ai_addr, res->ai_addrlen) == -1) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_sockfd, 5) == -1) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(stderr, "listening on port %d\n", server_port);
+
+
+    while (1) {
+        client_len[socket_index] = sizeof(client_address[socket_index]);
+        puts("waiting for client");
+        client_sockfd[socket_index] = accept(
+                               server_sockfd,
+                               (struct sockaddr*)&client_address[socket_index],
+                               &client_len[socket_index]
+                               );
+        if (client_sockfd[socket_index] < 0) {
+            perror("Cannot accept connection\n");
+            close(server_sockfd);
+            exit(EXIT_FAILURE);
+        }
+
+        pthread_create( &threads[socket_index], NULL, forClient, (void*)client_sockfd[socket_index]);
+
+        if(BUFSIZ == socket_index) {
+            socket_index = 0;
+        } else {
+            ++socket_index;
+        }
+
+        pthread_join(threads[socket_index], NULL);
+        close(filefd);
+        close(client_sockfd[socket_index]);
+    }
+    return EXIT_SUCCESS;
+}
+void* forClient(void* ptr) {
+    int connect_socket = (int) ptr;
+    int filefd;
+    ssize_t read_return;
+    char buffer[BUFSIZ];
+    char *file_path;
+    char receiveFileName[BUFSIZ];
+
+    int ret = 1;
+    // Thread number means client's id
+    printf("Thread number %ld\n", pthread_self());
+    pthread_mutex_lock( &mutex1 );
+
+    // until stop receiving go on taking information
+    while (recv(connect_socket, receiveFileName, sizeof(receiveFileName), 0)) {
+
+        file_path = receiveFileName;
+
+        fprintf(stderr, "is the file name received? ?   =>  %s\n", file_path);
+
+        filefd = open(file_path,
+                      O_WRONLY | O_CREAT | O_TRUNC,
+                      S_IRUSR | S_IWUSR);
+        if (filefd == -1) {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
+        do {
+            read_return = read(connect_socket, buffer, BUFSIZ);
+            if (read_return == -1) {
+                perror("read");
+                exit(EXIT_FAILURE);
+            }
+            if (write(filefd, buffer, read_return) == -1) {
+                perror("write");
+                exit(EXIT_FAILURE);
+            }
+        } while (read_return > 0);
+    }
+
+    pthread_mutex_unlock( &mutex1 );
+
+    fprintf(stderr, "Client dropped connection\n");
+    pthread_exit(&ret);
+}
+
+
+client.c
+/*
+ Soner
+ Send a file over a socket.
+
+ Interface:
+
+ ./executable [<sever_hostname> [<port>]]
+
+ Defaults:
+
+ - server_hostname: 127.0.0.1
+ - port: 12345
+ */
+
+#define _XOPEN_SOURCE 700
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <signal.h>
+
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <netdb.h>                      /* getprotobyname */
+#include <netinet/in.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+// NOTE/BUG: this didn't provide enough space for a 5 digit port + EOS char
+#if 0
+enum { PORTSIZE = 5 };
+#else
+enum { PORTSIZE = 6 };
+#endif
+
+void
+sig_handler(int signo)
+{
+    if (signo == SIGINT)
+        printf("!!  OUCH,  CTRL - C received on client  !!\n");
+}
+
+int
+main(int argc, char **argv)
+{
+    struct addrinfo hints,
+    *res;
+    char *server_hostname = "127.0.0.1";
+    char file_path[BUFSIZ];
+    char *server_reply = NULL;
+    char *user_input = NULL;
+    char buffer[BUFSIZ];
+    int filefd;
+    int sockfd;
+    ssize_t read_return;
+    struct hostent *hostent;
+    unsigned short server_port = 12345;
+    char portNum[PORTSIZE];
+    char remote_file[BUFSIZ];
+    int select;
+    char *client_server_files[BUFSIZ];
+    int i = 0;
+    int j;
+
+    // char filename_to_send[BUFSIZ];
+
+    if (argc != 3) {
+        fprintf(stderr, "Usage   ./client  <ip>  <port>\n");
+        exit(EXIT_FAILURE);
+    }
+
+    server_hostname = argv[1];
+    server_port = strtol(argv[2], NULL, 10);
+
+    /* Prepare hint (socket address input). */
+    hostent = gethostbyname(server_hostname);
+    if (hostent == NULL) {
+        fprintf(stderr, "error: gethostbyname(\"%s\")\n", server_hostname);
+        exit(EXIT_FAILURE);
+    }
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;          // ipv4
+    hints.ai_socktype = SOCK_STREAM;    // tcp
+    hints.ai_flags = AI_PASSIVE;        // fill in my IP for me
+
+    sprintf(portNum, "%d", server_port);
+    getaddrinfo(NULL, portNum, &hints, &res);
+
+    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (sockfd == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Do the actual connection. */
+    if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
+        perror("connect");
+        return EXIT_FAILURE;
+    }
+
+    while (1) {
+        if (signal(SIGINT, sig_handler)) {
+            break;
+        }
+
+        puts("connected to the server");
+        puts("-----------------");
+        puts("|1 - listLocal| \n|2 - listServer| \n|3 - sendFile| \n|4 - help| \n|5 - exit| ");
+        puts("-----------------");
+        while (1) {
+            scanf("%d", &select);
+
+            switch (select) {
+                case 1: // list files of client's directory
+                    system("find . -maxdepth 1 -type f | sort");
+                    break;
+
+                case 2: // listServer
+                    puts("---- Files btw Server and the Client ----");
+                    for (j = 0; j < i; ++j) {
+                        puts(client_server_files[j]);
+                    }
+                    break;
+
+                case 3: // send file
+                    memset(file_path, 0, sizeof file_path);
+                    scanf("%s", file_path);
+
+                    memset(remote_file, 0, sizeof remote_file);
+                    // send file name to server
+                    sprintf(remote_file, "%s", file_path);
+                    send(sockfd, remote_file, sizeof(remote_file), 0);
+
+                    filefd = open(file_path, O_RDONLY);
+                    if (filefd == -1) {
+                        perror("open send file");
+                        //exit(EXIT_FAILURE);
+                        break;
+                    }
+
+                    while (1) {
+                        read_return = read(filefd, buffer, BUFSIZ);
+                        if (read_return == 0)
+                            break;
+                        if (read_return == -1) {
+                            perror("read");
+                            //exit(EXIT_FAILURE);
+                            break;
+                        }
+                        if (write(sockfd, buffer, read_return) == -1) {
+                            perror("write");
+                            //exit(EXIT_FAILURE);
+                            break;
+                        }
+                    }
+
+                    // add files in char pointer array
+                    client_server_files[i++] = file_path;
+
+                    close(filefd);
+                    break;
+
+                case 5:
+                    free(user_input);
+                    free(server_reply);
+                    exit(EXIT_SUCCESS);
+
+                default:
+                    puts("Wrong selection!");
+                    break;
+            }
+
+        }
+    }
+
+    free(user_input);
+    free(server_reply);
+    exit(EXIT_SUCCESS);
+}
+

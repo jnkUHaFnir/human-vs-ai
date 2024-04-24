@@ -1,0 +1,5 @@
+This code segment first converts the `float32` data to `int32_t`, where `32767` is the maximum positive value that can be represented by `int16_t`. The gain is applied, and clipping is performed in the high precision integer range. The result is then converted back to `float32` for output.
+
+Even though this is the more controlled way to apply gain, it doesn't necessarily mean that it will improve the quality of the signal, as that is limited by the initial recording quality. If you increase the gain too much, it will still result in a poor-quality signal with noticeable clipping.
+
+Remember that PortAudio allows you to select the sample format. In your code, `paFloat32` is used, but this might not be the best choice for your use case, especially if you want to perform operations such as gain adjustment in the integer domain. The best format to use depends on the needs of your specific application, including the desired trade-off between precision, dynamic range, and computational efficiency.

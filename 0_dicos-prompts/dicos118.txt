@@ -1,0 +1,64 @@
+
+A text file holds information about a softball team. Each line has data arranged as follows:
+
+4 Jessie Joybat 5 2 1 1
+
+The first item is the player's number, conveniently in the range 0–18. The second item is the player's first name, and the third is the player's last name. Each name is a single word. The next item is the player's official times at bat, followed by the number of hits, walks, and runs batted in (RBIs). The file may contain data for more than one game, so the same player may have more than one line of data, and there may be data for other players between those lines. Write a program that stores the data into an array of structures. The structure should have members to represent the first and last names, the at bats, hits, walks, and RBIs (runs batted in), and the batting average (to be calculated later). You can use the player number as an array index. The program should read to end-of-file, and it should keep cumulative totals for each player.
+The world of baseball statistics is an involved one. For example, a walk or reaching base on an error doesn't count as an at-bat but could possibly produce an RBI. But all this program has to do is read and process the data file, as described next, without worrying about how realistic the data is.
+The simplest way for the program to proceed is to initialize the structure contents to zeros, read the file data into temporary variables, and then add them to the contents of the corresponding structure. After the program has finished reading the file, it should then calculate the batting average for each player and store it in the corresponding structure member. The batting average is calculated by dividing the cumulative number of hits for a player by the cumulative number of at-bats; it should be a floating-point calculation. The program should then display the cumulative data for each player along with a line showing the combined statistics for the entire team.
+
+team.txt (text file I'm working with): 
+4 Jessie Joybat 5 2 1 1
+4 Jessie Joybat 7 3 5 3
+7 Jack Donner 6 3 1 2
+11 Martin Garder 4 3 2 1
+15 Jaime Curtis 7 4 1 2
+2 Curtis Michel 3 2 2 3
+9 Gillan Morthim 9 6 6 7
+12 Brett Tyler 8 7 4 3
+8 Hans Gunner 7 7 2 3
+14 Jessie James 11 2 3 4 
+12 Brett Tyler 4 3 1 3
+
+
+Since I'm a beginner in C, either I misinterpreted the task from what was asked originally or it's unfairly complex (I believe the former is the case). I'm so lost that I can't think of the way how could I fill in by the criteria of index (player number) every piece of data, keep track of whether he has more than one game, calculate and fetch bat average and then print. 
+What I have so far is:
+#define LGT 30
+struct profile {
+     int pl_num;
+     char name[LGT];
+     char lname[LGT];
+     int atbat[LGT/3];
+     int hits[LGT/3];
+     int walks[LGT/3];
+     int runs[LGT/3];
+     float batavg;
+};
+
+//It's wrong obviously but it's a starting point
+int main(void)
+{
+    FILE *flx;
+    int i,jc,flow=0;
+    struct profile stat[LGT]={{0}};
+
+    if((flx=fopen("team.txt","r"))==NULL) {
+        fprintf(stderr,"Can't read file team!\n");
+        exit(1);      
+    }
+
+    for( jc = 0; jc < 11;  jc++) {
+        fscanf(flx,"%d",&i);
+        stat[i].pl_num=i;
+
+        fscanf(flx,"%s",&stat[i].name);
+        fscanf(flx,"%s",&stat[i].lname);
+
+        fscanf(flx,"%d",&stat[i].atbat[flow]);
+        fscanf(flx,"%d",&stat[i].hits[flow]);
+        fscanf(flx,"%d",&stat[i].walks[flow]);
+        fscanf(flx,"%d",&stat[i].runs[flow]);
+        flow++;
+    }
+}
+

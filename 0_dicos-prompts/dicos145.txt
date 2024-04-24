@@ -1,0 +1,30 @@
+
+Scenario: We are trying to download 2500 PDFs from our website and we need to find the response time of this scenario when run with other business flows of the application. The custom code I had written for selecting and downloading PDFs dynamically worked fine for the size of 200-300 PDFs both on vugen and even on controller. But, when we ran the  same script with 2500 PDFs loaded to the DB, the script worked fine on vugen, but failed running out of memory on controller. I tried running this script alone on controller for concurrent users (20) and even then it failed giving the same out of memory error.I started getting this error as soon as the concurrent users started running on the server.I tried following things and my observations:
+1. I checked the LG we are using and had no high cpu usage/memory usage at the time I got this memory error.
+2. I tried turning off the logging completely and also turned off the "Generate snapshot on error".
+3. I increased the network buffer size from default 12KB to a higher value around 2MB as the server was responding with THAT PDF size.
+4. Also, increased JavaScript runtime memory value to a higher value but I know it's something to do with the code.
+5. I have set web_set_max_html_param_len("100000");
+Here is my code:
+int download_size,i,m;
+m=atoi(lr_eval_string("{DownloadableRecords_FundingNotices_count}"));
+for(i=1;i<=m;i++)   
+lr_param_sprintf("r_buf","%sselectedNotice=%s&",lr_eval_string("{r_buf}"),lr_paramarr_idx("DownloadableRecords_FundingNotices",i));
+lr_save_string(lr_eval_string("{r_buf}"), "dpAllRecords");
+
+I am not able to find what the issue with my code as it is running fine in vugen.One thing is: it creates huge mdrv.log file to accommodate all the 2500 members in the format shown above
+"%sselectedNotice=%s&".
+I need help on this.
+Okay, since that did not work and I could not find the root cause, I tried modifying the code with string buffer to hold the value instead of the parameter. This time my code did not work properly and I could not get the proper formatted value resulting in my web_custom_request failing
+so, here is the code with sprintf
+char *r_buf=(char *) malloc(55000);
+int download_size,i,m;
+m=atoi(lr_eval_string("{DownloadableRecords_FundingNotices_count}"));
+for(i=1;i<=m;i++)   
+sprintf(r_buf,"%sselectedNotice=%s&",r_buf,lr_paramarr_idx    ("DownloadableRecords_FundingNotices",i));
+lr_save_string(r_buf, "dpAllRecords");
+
+I also tried using this:
+lr_save_string(lr_eval_string("{r_buf}"), "dpAllRecords");
+
+though it is for embedded parameters but in vain

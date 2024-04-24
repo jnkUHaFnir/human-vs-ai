@@ -1,0 +1,84 @@
+
+edit for clarity:
+fscanf is working the way it is written here...it's getting the data into the array that's broken.
+another edit for clarity:
+The only point of failure is the memcpy line on the second iteration through the loop where fileindex is 0 and i is 1. the memcpy line works fine when i is 0.
+
+I'm converting a program that used to read data from a binary file directly into an array using fread into reading from ascii text. Here's the setup:
+#define MAX_FLIGHT_ENTRIES    27000
+#define MAX_PLANES_IN_A_FLIGHT 10
+
+typedef struct {
+    double local_x;
+    double local_y;
+    double local_z;
+    float pitch;
+    float roll;
+    float heading;
+    float gearpos;
+    float flappos;
+    float speedbrakepos;
+    float canopypos;
+    float afterburnerOn;
+    float kias;
+    float time;     // record timestamp
+} FLIGHT_ENTRY_TYPE;
+static FLIGHT_ENTRY_TYPE FlightEntries [MAX_PLANES_IN_A_FLIGHT][MAX_FLIGHT_ENTRIES];
+
+The way this used to work is, in a loop, the array would be filled via:
+fread (&FlightEntries[fileIndex][i], sizeof (FLIGHT_ENTRY_TYPE), 1, pFile);
+
+And I believe this would actually instantiate each entry in the array by putting the data directly into memory.  Now I'm reading from a text file and I've tried everything I can to get the values into the array, but it only ever writes the first entry FlightEntries[0][0].  Any attempt to read or write to FlightEntries[0][1] crashes. Here's my current best attempt.
+for ( i = 0; i < MAX_FLIGHT_ENTRIES; i++)
+{               
+        // If the file end is found before it should be, set values to defaults
+        // and save the file
+        if (feof(pFile))
+        {
+            FlightInfo[fileIndex].endFrameIndex = i - 1;
+            break;
+        }
+        else
+        {
+            float plocalx, plocaly, plocalz;
+            float ppitch, proll, pheading, pgearpos, pflappos, pbrakepos, pcanopypos, pafterburnon, pkias, ptime;
+            
+            int fresult;
+            fresult = fscanf(pFile, "%f %f %f %f %f %f %f %f %f %f %f %f %f\n",
+                &plocalx,
+                &plocaly,
+                &plocalz,
+                &ppitch,
+                &proll,
+                &pheading,
+                &pgearpos,
+                &pflappos,
+                &pbrakepos,
+                &pcanopypos,
+                &pafterburnon,
+                &pkias,
+                &ptime);
+
+                FLIGHT_ENTRY_TYPE newEntry;
+
+            newEntry.local_x = (double)plocalx;
+            newEntry.local_y = (double)plocaly;
+            newEntry.local_z = (double)plocalz;
+            newEntry.pitch = ppitch;
+            newEntry.roll = proll;
+            newEntry.heading = pheading;
+            newEntry.gearpos = pgearpos;
+            newEntry.flappos = pflappos;
+            newEntry.speedbrakepos = pbrakepos;
+            newEntry.canopypos = pcanopypos;
+            newEntry.afterburnerOn = pafterburnon;
+            newEntry.kias = pkias;
+            newEntry.time = ptime;
+
+            memcpy (&FlightEntries[fileIndex][i], &newEntry, sizeof FLIGHT_ENTRY_TYPE);
+        }
+}
+
+I don't think the array entries are getting allocated properly.  I've tried accessing the individual structure members directly via FlightEntries[fileIndex][i].local_x = (double)plocalx; and I've also tried using memcpy to do the same thing for each member...am I doing my pointers wrong or something?  I have no idea where to go with this. Every time I get past one stumbling block, something else comes up and I think it's all related to the array as opposed to reading from file. Do I have to do something to allocate space?
+The big question is:
+What does fread do with binary data in FlightEntries[0][1] that memcpy isn't doing? And is my memcpy line correct? Do I need to do some kind of malloc?

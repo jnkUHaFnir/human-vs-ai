@@ -1,0 +1,23 @@
+
+I have this struct.  
+Struct Wizard{
+ char name[50];
+ int maxHealth;
+ int attackMin, attackRange;
+ int curHealth, winCount;
+};
+
+And I need to make a function save the stats to a txt file.
+I was given this bit of code to start it.
+int saveWiz(struct Wizard * wiz)
+{
+  File * fp = fopen("champion.txt","w");
+  char * buff = malloc(100);
+  sprintf(buff,... );
+  sprintf(buff,...);
+  //Todo: replace ... with appropriate string, using tags like %d for variables
+  fputs(buff,fp);
+  fclose(fp);
+}
+
+Any help would be much appreciated. I think I am supposed to use the wiz pointer to access the struct but I'm not exactly sure.

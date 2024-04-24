@@ -1,0 +1,9 @@
+
+I'm using this function in my program:
+static void free_envp(char **envp)
+{
+    free(envp);
+}
+
+I can't figure out how I should manage errors and which errors can occur, neither online nor in the man page.
+Does anyone know what I should be aware of using it?

@@ -1,0 +1,17 @@
+
+I want to copy values into a struct using a pointer.
+I keep getting segmentation fault from this small piece of code.
+struct companyInfo
+{
+    double sharePrice;
+    char companyName[100];
+}; 
+
+int main()
+{
+    struct companyInfo * pdata = NULL;
+    strcpy(pdata->companyName, "sdfsd");
+
+    exit(0);
+}
+

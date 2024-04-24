@@ -1,0 +1,3 @@
+
+I need to read and store integers from standard input using C received in the following format: "35:27,5,10" There is an undefined number of integers on each line and an undefined number of lines. Ideally, I would like to have a loop inside of which I could use the values from the most recently scanned line to perform other tasks. How would I go about scanning and storing the integers in an array and then overwriting the array when scanning the next line, and so on until I hit EOF?
+I presume I have to use a combination of scanf() and strtok(), but I can't seem to figure out how to. I have also tried to use getchar() but that only complicated things more.

@@ -1,0 +1,35 @@
+
+I am writing a program that streams words from a text file and puts them into an array. I've also added a display of array data to see if everything is ok but I get a segmentation fault after compiling. 
+I am new to system programming so I am aware I might have done some basic mistakes. Please find the code below and tell me where have I gone wrong. 
+#include <stdio.h>
+
+#define BUFFER 100
+
+int main() {
+    char tab[BUFFER];
+    FILE *wp;
+    wp = fopen("tab_file_b_words.txt", "r");
+    if(wp == NULL)
+    {
+        printf("error/n");
+        return -1;
+    }
+    int i;
+    for(i=0; i<sizeof(wp); i++) {
+        if(wp != NULL)
+            fscanf(wp, "%s", &tab[i]);
+        else 
+            break;
+        }
+    printf("Content: \n");
+    for(i = 0; i < BUFFER; i++) {
+        if(tab[i] != NULL)
+            printf("%s\n", tab[i]);
+        else 
+            break;
+        }
+    fclose(wp);
+    return 0;
+}
+
+

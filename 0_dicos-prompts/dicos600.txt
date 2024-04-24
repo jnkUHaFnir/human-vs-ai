@@ -1,0 +1,24 @@
+
+I have an array of strings. I need to initialize each array element with some formatted data, i.e. each element should hold a constant string "data" plus a generated number. The final array should hold elements that look something like this, "data1", "data2", "data3", ... "dataN".
+I used sprintf() but whenever the compile sees my sprintf() function, the program crashes. What am I doing wrong ?
+//import necessary headers
+#include <stdio.h>
+#include <stdlib.h>
+
+//variable to hold server data 
+char *serverData[255];
+
+//loop variable
+int loop_index = 0;
+
+//program entry
+int main() {
+    //initialize the serverData array elements with string "data" and
+    //append number x to each element. i.e. x <= 255
+    //use a for loop for the initialization
+    for (; loop_index < sizeof(serverData) / sizeof(serverData[0]); loop_index++) {
+        sprintf((char*)serverData[loop_index], "%s%d", "data", loop_index); //program crashes when this line is reached
+    }
+    return 0;
+}
+

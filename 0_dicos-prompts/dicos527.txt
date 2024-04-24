@@ -1,0 +1,17 @@
+
+
+
+
+#include<stdio.h>
+void fun1(int a[100])
+{
+  a[4]=1;
+}
+void main()
+{
+   int a[2]={1,2};
+   fun1(a);
+   printf("%d",a[4]);   // Output 1
+}
+
+I know that arrays get decayed to pointer to first element when we pass it as a function argument. But how does the size of array increase in main function ?

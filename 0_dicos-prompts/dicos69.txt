@@ -1,0 +1,53 @@
+
+I am trying to write a simple program for a practice problem, written below:
+
+(Sales-Commission Calculator) One large chemical company pays its salespeople on a com-
+mission basis. The salespeople receive $200 per week plus 9% of their gross sales for that week. For example, a salesperson who sells $5000 worth of chemicals in a week receives $200 plus 9% of
+$5000, or a total of $650. Develop a program that will input each salesperson’s gross sales for last
+week and will calculate and display that salesperson’s earnings. Process one salesperson's figures at a
+time.
+
+I am trying to handle if the user inputs things other than numbers, e.g. strings/char. But, when I try running it and test it by inputting a string/char, it keeps on looping until VSC crashes.
+My code:
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void){
+    float sales = 0;
+    float salary = 0;
+
+    while (sales != -1)
+    {
+        printf("Enter sales in dollars (-1 to end): ");
+        scanf("%f", &sales);
+
+        while ((sales != -1) && !(sales >= 0))
+        {
+            puts("Input error, please try again");
+            fflush(stdin);
+            printf("Enter sales in dollars (-1 to end): ");
+            scanf("%f", &sales);
+        }
+
+        if (sales != -1)
+        {
+            salary = 200 + (0.09 * sales);
+
+            printf("Salary is: $%.2f\n", salary);
+        }
+    }
+
+    return 0;
+}
+
+I used a similar approach in another program and it works just fine, so I don't know what the problem is here.
+The code of the other program:
+while(!(collected >= 0))
+{
+    fflush(stdin);
+    puts("Input error, please try again.");
+    printf("Enter total amount collected (-1 to quit): $");
+    scanf("%f", &collected);
+}
+
+An explanation would be highly appreciated!

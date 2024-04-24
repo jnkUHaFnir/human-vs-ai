@@ -1,0 +1,21 @@
+
+
+
+
+I want to make dynamically allocated c-string table, but I think i don't understand the topic very well, could You explain it to me or correct my code?
+#include <stdio.h>
+
+    int main()
+    {
+        int i;
+    char** t;
+        t=(char**)malloc(16*sizeof(char*));
+
+    for(i<0;i<100;i++)
+    {
+        *t[i]=(char*)malloc(16*sizeof(char));
+    }
+
+    return 0;
+    }
+

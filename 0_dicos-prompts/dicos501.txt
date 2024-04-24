@@ -1,0 +1,9 @@
+
+I often see legacy code checking for NULL before deleting a pointer, similar to,
+if (NULL != pSomeObject) 
+{
+    delete pSomeObject;
+    pSomeObject = NULL;
+}
+
+Is there any reason to checking for a NULL pointer before deleting it? What is the reason for setting the pointer to NULL afterwards?

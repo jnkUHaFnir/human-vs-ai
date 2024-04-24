@@ -1,0 +1,12 @@
+
+Might not be the most efficient way, but is it correct and portable?  
+int are_overlapping(const char *a, const char *b) {
+  return (a + strlen(a) == b + strlen(b));
+}
+
+To clarify: what I'm looking for is overlap in memory, not in the actual content. For example:  
+const char a[] = "string";
+const char b[] = "another string";
+are_overlapping(a, b); // should return 0
+are_overlapping(a, a + 3); // should return 1
+

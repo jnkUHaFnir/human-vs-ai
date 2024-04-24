@@ -1,0 +1,66 @@
+
+so I'm having a little problem with my struct array not doing what its supposed to. I get no compiler warnings or errors when building the program.
+int Array_Size=0;;
+int Array_Index=0;
+FILE *Writer;
+struct WordElement
+{
+    int Count;
+    char Word[50];
+};
+
+struct WordElement *StructPointer; //just a pointer to a structure
+
+int Create_Array(int Size){
+StructPointer = (struct WordElement *) malloc(Size * sizeof(StructPointer));
+Array_Size = Size;
+return 0;
+}
+
+int Add_To_Array(char Word[50]){
+    int Word_Found=0;
+    for(int i=0; i <= Array_Size && Word_Found!=1; i++)
+    {
+        if(strcmp(StructPointer[i].Word, Word)) // This should only run if the word exists in struct array 
+        {
+            StructPointer[i].Count++;
+            Word_Found=1;
+
+        }
+
+    }
+    if(Word_Found==0) // if the above if statement doesnt evualate, this should run 
+    {
+        strcpy(StructPointer[Array_Index].Word, Word); //copying the word passed by the main function to the struct array at a specific index
+        printf("WORD: %s\n", StructPointer[Array_Index].Word); // printing it just to make sure it got copied correctly
+        Array_Index++;
+    }
+
+    return 0;
+}
+
+int Print_All(char File_Name[50])
+{
+    Writer = fopen(File_Name, "w");
+    printf("Printing starts now: \n");
+     for(int i=0; i < Array_Size; i++)
+    {
+        fprintf(Writer, "%s\t\t%d\n",StructPointer[i].Word, StructPointer[i].Count);
+
+    } 
+    free(StructPointer);
+    return 0;
+}
+
+These functions get called from a different file, The Add_To_Array is called when the program reads a new word form the text file. That function is supposed to check if the word already exists in the struct array and if it does, it should just increment the counter. If it doesn't, then it adds it. 
+The Print_All function is called after all the words have been stored in the struct array. Its supposed to loop through them and print each word and their occurrence. In the text file, there are 2 of every words but my program outputs:
+    this        13762753
+document        -1772785369
+contains        1129268256
+two     6619253
+of      5701679
+every       5570645
+word        3342389
+doccontains     5374021
+
+I don't know what to make of this as im really new to C programming... It's probably worth mentioning the if(Word_Foun==0) doesn't execute 

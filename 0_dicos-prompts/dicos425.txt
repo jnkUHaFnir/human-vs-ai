@@ -1,0 +1,10 @@
+
+Using the following code:
+char *name = malloc(sizeof(char) + 256); 
+
+printf("What is your name? ");
+scanf("%s", name);
+
+printf("Hello %s. Nice to meet you.\n", name);
+
+A user can enter their name but when they enter a name with a space like Lucas Aardvark, scanf() just cuts off everything after Lucas. How do I make scanf() allow spaces

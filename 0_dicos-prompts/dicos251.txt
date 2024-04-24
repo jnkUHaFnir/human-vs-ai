@@ -1,0 +1,128 @@
+
+int main(int argc, char **argv) {
+if (argc < 3) {
+    printf("Aufruf: %s <anzahl> <bundesland>\n", argv[0]);
+    printf("Beispiel: %s 100 Bayern\n", argv[0]);
+    printf("Klein-/Großschreibung beachten!\n");
+    exit(1);
+}
+int anzahl = atoi(argv[1]);
+char *bundesland = argv[2];
+
+// Statisch allokierter Speicher
+char staedte[MAX_LAENGE_ARR][MAX_LAENGE_STR];
+char laender[MAX_LAENGE_ARR][MAX_LAENGE_STR];
+int bewohner[MAX_LAENGE_ARR];
+
+int len = read_file("staedte.csv", staedte, laender, bewohner);
+
+// Hier implementieren
+int x=0;
+int d=0;
+//int b=0;
+//char* zeile_array=(char*) malloc (len * sizeof(char));
+char *zeile_array[50];
+char *zeile;
+zeile=(char*) malloc(100); //allocating memory
+    for(x=0;x<len;x++)
+    {
+        if(strcmp(laender[x],bundesland) == 0 && bewohner[x] >= anzahl)
+        {
+            sprintf(zeile, "Die Stadt %p hat %d Einwohner.",staedte[x],bewohner[x]);
+            zeile_array[d]=zeile;   // putting it into array
+            d=d+1;
+        }
+    }
+//b++;
+}
+write_file(zeile_array,d);
+free(zeile);
+}
+
+input3.c :
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include "input3.h"
+
+int MAX_LAENGE_STR = 255;
+int MAX_LAENGE_ARR = 100;
+
+void write_file(char *result[], int len) {
+    FILE *fp = fopen("resultat.txt", "w");
+    if (fp == NULL){
+        perror("resultat.txt");
+        exit(1);
+    }
+    for (int i=0; i<len; i++) {
+        fprintf(fp, "%s\n", result[i]);
+    }
+    fclose(fp);
+}
+
+int read_file(char *dateiname, char staedte[][MAX_LAENGE_STR], char      laender[][MAX_LAENGE_STR], int bewohner []) {
+FILE *fp = fopen(dateiname, "r");
+
+if (fp == NULL){
+    perror(dateiname);
+    exit(1);
+}
+
+char stadt[MAX_LAENGE_STR];
+char land[MAX_LAENGE_STR];
+int anzahl;
+int i = 0;
+int len;
+
+while(fscanf(fp, "\"%[^\"]\";\"%[^\"]\";%d\n", stadt, land, &anzahl) != EOF)
+{
+    if (i >= MAX_LAENGE_ARR) {
+        printf("ERROR: Die Datei ist größer als erwartet!");
+        return i;
+    }
+    len = strlen(land) + 1;
+    strncpy(laender[i], land, len-1);
+    laender[i][len-1] = '\0';
+
+    len = strlen(stadt) + 1;
+    strncpy(staedte[i], stadt, len-1);
+    staedte[i][len-1] = '\0';
+
+    bewohner[i] = anzahl;
+    i++;
+}
+fclose(fp);
+return i;
+}
+
+input3.h:
+extern int MAX_LAENGE_ARR;
+extern int MAX_LAENGE_STR;
+
+void write_file(char *result[], int len);
+int read_file(char *dateiname, char staedte[][MAX_LAENGE_STR], char `laender[][MAX_LAENGE_STR], int bewohner []);
+
+`
+Invalid read of size 2
+==23056==    at 0x4EC361B: __GI_mempcpy (memcpy.S:83)
+==23056==    by 0x4EB054C: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1320)
+==23056==    by 0x4E82904: vfprintf (vfprintf.c:1661)
+==23056==    by 0x4E8B336: fprintf (fprintf.c:32)
+==23056==    by 0x400EE0: write_file (input3.c:17)
+==23056==    by 0x400E52: main (d.c:56)
+==23056==  Address 0x51fc391 is 33 bytes inside a block of size 100 free'd
+==23056==    at 0x4C2BDEC: free (in /usr/lib/valgrind/vgpreload_memcheck-  amd64-linux.so)
+==23056==    by 0x400E14: main (d.c:50)
+
+first 4 lines of staedte.csv:
+"Berlin";"Berlin";3460725 
+"Hamburg";"Hamburg";1786448 
+"MÃ¼nchen";"Bayern";1353186
+"KÃ¶ln";"Nordrhein-Westfalen";1007119
+"Frankfurt am Main";"Hessen";679664
+
+I just wanted to write some string into a new file but im getting everytime the same memory error.
+I cant help myself
+I need help to fix this error guys.
+I dont know how top fix it and im desperate.

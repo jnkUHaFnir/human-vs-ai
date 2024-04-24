@@ -1,0 +1,3 @@
+
+I am entering valid name Steve xyz @ //1 then also it is showing invalid name @ //2. I am unable to compare the name in structure and name inputted by user.
+

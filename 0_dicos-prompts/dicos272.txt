@@ -1,0 +1,16 @@
+
+
+
+
+What I've done is ask a user to input how many times the program will loop, it then records values into 3 different arrays. Everything is working great, but what I need it to do is print the elements of one array if the corresponding element in another array meets the requirements. Everything else runs great, I'll post the two arrays that I'm trying to use for this.
+char *names[50][32];
+char *states[50][2];
+  i = 0;
+while ( i < b) {
+    if (state[i] = "tx");{
+      printf("a string %s\n",  names[i]);}
+      i = i + 1;
+   }
+
+for this : if (state[i] = "tx");{ I've tried with and without quotes and using 116120...
+Basically, it asks for peoples names and where they live. I can get it to print the array element values for each name(it runs in a loop) but I want it to only print the names for the people who live in tx.

@@ -1,0 +1,77 @@
+
+I'm trying to create a function (in C) to solve an addition that is placed in a buffer variable. So far it works for equations that result in single-digit numbers, however if the result is more than one digit, it causes problems.. For example, if I place 2+3+5+2 in the buffer, outputs 102, not 12. Can anyone point out where my errors are and how I can fix them?
+Here's my code:
+char buffer[50];
+
+void *adder(void)
+{
+    int bufferlen;
+    int value1, value2;
+    int startOffset, remainderOffset;
+    int i;
+    char result[10];
+    while (1) 
+    {
+        startOffset = remainderOffset = -1;
+        value1 = value2 = -1;
+
+        bufferlen = strlen(buffer);
+        for (i = 0; i < bufferlen; i++) {
+            if(value1 == -1)
+            {
+                if(isNumeric(buffer[i]))
+                {
+                    value1 = string2int(&buffer[i]);
+                    startOffset = i;
+                }
+            }
+            else
+            {
+                if(buffer[i] == 43)
+                {
+                    if(isNumeric(buffer[i+1]))
+                    {
+                        value2 = string2int(&buffer[i+1]);
+                        remainderOffset = i+1;
+                    }
+                }
+            }
+
+            if(value1 != -1 && value2 != -1)
+            {
+                int k=0;
+                int j=0;
+                int2string((value1 + value2),result);
+                /* print out the number we've found */
+                fprintf(stdout, "Re:%s\n", result);
+                int resultlen = strlen(result);
+                for(k=startOffset; k < bufferlen; k++)
+                {
+                    if(j < resultlen)
+                    {
+                        buffer[k] = result[j];
+                        j++;
+                    }
+                    else
+                    {
+                        /* shift the remainder of the string to the left */
+                        printf("A1-Buffer:%s\nk=%i\n", buffer, k);
+                        if(j > 0)
+                        buffer[k] = buffer[k+2];
+                        else
+                        buffer[k] = buffer[k+2];
+                        printf("A2-Buffer:%s\n", buffer);
+                        i = i - remainderOffset;
+                        startOffset = remainderOffset = -1;
+                        value1 = value2 = -1;   
+                    }
+                }
+            }
+        }
+    break;
+    }
+
+}
+
+Edit: Ah, sorry, forgot about the extra functions. This function is for a school assignment and the isNumeric() and String2int() are exactly the same as isdigit() and atoi() and were given to us to use in the function.
+Edit 2: After the numbers are added, the result has to be added back into the buffer in the expressions place like so: (2+3) -> (5) the reason is that eventually more functions will be written to handle multiplication, division, etc. This is where my main frustration lies - putting the result in place of the expression and shifting the buffer left the proper amount.

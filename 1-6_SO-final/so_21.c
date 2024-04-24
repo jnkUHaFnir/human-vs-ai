@@ -1,0 +1,1 @@
+    Query new = malloc(sizeof(struct Query) + 4*sizeof(int));

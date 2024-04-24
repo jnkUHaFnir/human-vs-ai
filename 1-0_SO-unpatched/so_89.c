@@ -1,0 +1,1 @@
+    snode[count - 1].data = (struct stock_data *) calloc(1, sizeof(struct stock_data));

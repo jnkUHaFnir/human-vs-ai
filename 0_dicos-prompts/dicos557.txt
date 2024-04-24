@@ -1,0 +1,35 @@
+
+I'm using a do-while loop to print a menu to the screen. And I'm reading choice as an integer. The proplem is that if the user enter a character the program blows up. How can I avoid that?
+#include <stdio.h>
+int menu() {            // prints the main menu of labs///
+    int choice;
+    printf("1)Lab 5 ( Repetetitions ).\n2)Lab 10 ( Passing 1D-Arrays to functions ).\n3)GPA Calculation.\n4)EXIT.\n\nEnter your choice: ");
+    scanf("%d", &choice);
+    return choice;
+}
+
+int main() {
+    int choice;
+
+    do {
+
+        choice = menu();
+        if (choice != 4) {
+
+            if (choice == 1)
+                //lab5(choice);
+
+            else if (choice == 2)
+                //lab10(choice);
+
+
+            else if (choice == 3)
+                //  lab11(choice);
+            else
+                printf("invalid choice\n");
+        }
+
+    } while (choice != 4);
+    return 0;
+}        
+

@@ -1,0 +1,18 @@
+
+I just finished a test as part of a job interview, and one question stumped me, even using Google for reference. I'd like to see what the StackOverflow crew can do with it:
+
+The memset_16aligned function requires a 16-byte aligned pointer passed to it, or it will crash.
+a) How would you allocate 1024 bytes of memory, and align it to a 16 byte boundary?
+b) Free the memory after the memset_16aligned has executed.
+
+{    
+   void *mem;
+   void *ptr;
+
+   // answer a) here
+
+   memset_16aligned(ptr, 0, 1024);
+
+   // answer b) here    
+}
+

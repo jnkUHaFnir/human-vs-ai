@@ -1,0 +1,46 @@
+
+PROBLEM:
+Write a C program that prompts the user to enter a string of characters terminated by ENTER key (i.e. ‘\n’) and then count the total number of the occurrence of each vowel in the string. Your program should use the following guidelines:
+•   Your program should declare an array of 5 integer counters, namely counter.
+•   Using a loop, your program should initialize each member of the array to 0.
+•   Each character in the string is then checked to see if it is a vowel, i.e. ‘a’, ‘e’, ‘i’, ‘o’ or ‘u’.  In that case, the corresponding counter is incremented. For example if an ‘a’ is read then counter[0] is incremented, if an ‘i’ is read then counter[2] is incremented and so on. 
+•   The entered characters could be lower or upper case.
+•   Your program should use a loop to printout the contents of the 5 counters.
+•   Lastly your program should print the total number of vowels in the string.
+The result should look like:
+Please enter a string terminated by ENTER key: 
+“The brown fox jumped over the lazy dog”
+counter[0] = 1
+counter[1] = 4
+counter[2] = 0
+counter[3] = 4
+counter[4] = 1
+
+Total number of Vowels= 10 
+MY CODE: 
+#include <stdio.h>
+main(){
+int counter[5];
+int c, i;
+for(i = 0; i < 5; i++)
+counter[i] = 0;
+printf("Please enter a string terminated by ENTER key:\n");
+while((c = getchar()) != '\n')
+{
+     if((counter[i] == 'a' || counter[i] == 'e' || counter[i] == 'i' || counter[i] ==
+    'o' || counter[i] == 'u') ||(counter[i] == 'A' || counter[i] == 'E' || counter[i] == 
+    'I' || counter[i] == 'O' || counter[i] == 'U'))
+    {
+        for(i = 0; i < 5; i++)
+        {
+            if(c == 'a' + i)
+            counter[i] = counter[i] + 1;
+        }
+    }
+}
+for(i = 0; i < 5; i++)
+    printf("counter[%d] = %d\n", i, counter[i]);
+}
+
+What's wrong with my counter? 
+Thanks in advance.  

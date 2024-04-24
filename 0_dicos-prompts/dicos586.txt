@@ -1,0 +1,137 @@
+
+I basically need the equivalent result of the following Python itertools command in C:
+a = itertools.permutations(range(4),2))
+Currently my process involves first "choosing" 5 elements from 10 then generating permutations for those 5 elements as shown here
+The issue with this approach is the order of the outputs. I need it to be (a), while what i get is (b), shown below.
+a = itertools.permutations(range(4),2)
+for i in a:
+    print(i)
+
+(0, 1)
+(0, 2)
+(0, 3)
+(1, 0)
+(1, 2)
+(1, 3)
+(2, 0)
+(2, 1)
+(2, 3)
+(3, 0)
+(3, 1)
+(3, 2)
+
+b = itertools.combinations(range(4),2) 
+for i in b:
+    c = itertools.permutations(i)
+    for j in c:
+        print(j)
+(0, 1)
+(1, 0)
+(0, 2)
+(2, 0)
+(0, 3)
+(3, 0)
+(1, 2)
+(2, 1)
+(1, 3)
+(3, 1)
+(2, 3)
+(3, 2)
+
+An alternate approach which I am using is as follows
+void perm(int n, int k)
+{
+    bool valid = true;
+    int h = 0, i = 0, j = 0, limit = 1;
+    int id = 0;
+    int perm[10] = { 0,0,0,0,0,0,0,0,0,0 };
+    for (i = 0; i < k; i++)
+        limit *= n;
+    for (i = 0; i < limit; i++)
+    {
+        id = i;
+        valid = true;
+        for (j = 0; j < k; j++)
+        {
+            perms[j] = id % n;
+            id /= n;
+            for (h = j - 1; h >= 0; h--)
+                if (perms[j] == perms[h])
+                {
+                    valid = false; break;
+                }
+            if (!valid) break;
+        }
+        if (valid)
+        {
+            for (h = k - 1; h > 0; h--)
+                printf("%d,", perms[h]);
+            printf("%d\n", perms[h]);
+            count++;
+        }
+    }
+}
+
+Memory is my constraint, so I cannot store the permutations indefinitely. Performance needs to be better than the algorithm above, as when n is 50 and k is 10, I end up iterating through more invalid combinations(60+%)
+I am aware of Heap's algorithm for generating permutations in place but again it generates for entire array not k of n like I need.
+Questions.
+
+Is there a better way to do this than iterate n^k times?
+Can I make a lazy iterator which moves to next permutation given current permutation?
+
+EDIT this is not a duplicate of std::next_permutation implementation as that will permute and entire range of the input.
+I have clearly mentioned i need k of n permutation .ie if my range is 10 I want all permutations of a length (k) say 5,  std::next_permutation works when length or permutation is same as length of input range
+UPDATE
+Here is an ugly recursive NextPerm solution which is about 4 times faster than my older solution and gives the incremental nextPerm like a Python lazy iterator.
+int nextPerm(int perm[], int k, int n)
+{
+    bool invalid = true;
+    int subject,i;
+    if (k == 1)
+    {
+        if (perm[0] == n - 1)
+            return 0;
+        else { perm[0]=perm[0]+1; return 1; }
+    }
+    subject = perm[k - 1]+1;
+    
+    while (invalid)
+    {
+        if (subject == n)
+        {
+            subject = 0;
+            if (!nextPerm(perm, k - 1, n))
+                return 0;
+        }
+        for (i = 0; i < k-1; i++)
+        {
+            if (perm[i] != subject)
+                invalid = false;
+            else
+            {
+                invalid = true;subject++; break; 
+            }
+        }
+    }
+    perm[k - 1] = subject;
+    return 1;
+}
+int main()
+{
+    int a, k =3 ,n = 10;
+    int perm2[3] = { 0,1,2}; //starting permutation
+    unsigned long long count = 0;
+    int depth = 0;
+    do
+    {
+        for (a = 0; a < k - 1; a++)
+            printf("%d,", perm2[a]);
+        printf("%d\n", perm2[k - 1]);
+        count++;
+    }
+    while (nextPerm(perm2,k,n));
+    printf("\n%llu", count);
+    getchar();
+    return 0;
+}
+

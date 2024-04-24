@@ -1,0 +1,17 @@
+
+I want to validate user input, making sure they enter only regular characters (combination of 0-9, A-Z, and a-z).
+This is what I have, but its matching strings like "adsifj%a%%dosif". Which I do not want. It wont match if those invalid characters were at the beginning. How can I fix this?
+int main(){
+char name[128];
+
+int match = scanf(" %[0-9a-zA-Z^\n]", name); 
+printf("%d", match);    
+
+if (match == 1){
+    printf("Matched");
+}else{
+    printf("Invalid");
+}
+return 0;
+
+}

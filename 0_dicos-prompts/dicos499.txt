@@ -1,0 +1,47 @@
+
+I am fairly new when it comes down to C programmming. That's why i am working my way up by doing some of the easier exercises. The exercise i'm working on is the "guess the number" game, where the user must guess the number that lies between two numbers (upper and lower bounds). The program is doing what it must, with one exception: when the user enters a character instead of an integer, the program gets stuck in an infinite loop. The only way to break out of this loop is by using a break statement and restarting the program. What i want instead, is to have the program request for the users input again, untill an integer is entered. 
+Can someone tell me why the programm gets stuck in this infinite loop and why it is not requesting for input again trough scnanf like it did in the first iteration? your help will be appreciated. thank you.
+//globals
+int secret_nr;
+int guess;
+int upper_bound = 100;
+int lower_bound = 1;
+int total_guesses = 1;
+
+
+void check_input(void) {
+    if (guess < lower_bound || guess > upper_bound) {
+        printf("Invalid input! Your guess must be between %d and %d\n", lower_bound, upper_bound);
+    }
+    else if (guess < secret_nr) {
+        printf("Higher\n");
+        total_guesses++;
+    }
+    else if (guess > secret_nr) {
+        printf("Lower\n");
+        total_guesses++;
+    }
+    else if (guess == secret_nr) {
+        printf("correct! You guessed the number after guessing %d times!\n", total_guesses);
+    }
+}
+
+
+int main(int argc, char* argv[]) {
+    srand(time(NULL));
+    secret_nr = (rand() % upper_bound) + 1;
+
+    printf("Guess the number between %d and %d:\n", lower_bound, upper_bound);
+    do {
+        if (scanf("%d", &guess)) {
+            check_input();
+        }
+        else {
+            printf("Invalid input! Only integer values are allowed!\n");
+            //break;
+        }
+    } while (guess != secret_nr);
+
+    return 0;
+}
+

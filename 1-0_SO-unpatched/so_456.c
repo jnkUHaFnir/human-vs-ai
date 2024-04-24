@@ -1,0 +1,1 @@
+    if (strcmp("q", buffer) == 0)

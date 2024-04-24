@@ -1,0 +1,2 @@
+
+I know it may sound sci-fi but I truly want to call a function x times, by using an array of function pointers to it and without involving a loop or anything that may slow down the target program. Is that possible and if yes, how exactly?

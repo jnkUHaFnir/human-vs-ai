@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int secret_nr;
+int guess;
+int upper_bound = 100;
+int lower_bound = 1;
+int total_guesses = 0;
+
+void check_input(void) {
+    if (guess < lower_bound || guess > upper_bound) {
+        printf("Invalid input! Your guess must be between %d and %d\n", lower_bound, upper_bound);
+    }
+    else if (guess < secret_nr) {
+        printf("Higher\n");
+        total_guesses++;
+    }
+    else if (guess > secret_nr) {
+        printf("Lower\n");
+        total_guesses++;
+    }
+    else if (guess == secret_nr) {
+        printf("Correct! You guessed the number after %d tries!\n", total_guesses);
+    }
+}
+
+int main(int argc, char* argv[]) {
+    srand(time(NULL));
+    secret_nr = (rand() % upper_bound) + 1;
+
+    printf("Guess the number between %d and %d:\n", lower_bound, upper_bound);
+    do {
+        if (scanf("%d", &guess) == 0) {
+            printf("Invalid input! Only integer values are allowed!\n");
+            while (getchar() != '\n'); // Clear input buffer
+        } else {
+            check_input();
+        }
+    } while (guess != secret_nr);
+
+    return 0;
+}

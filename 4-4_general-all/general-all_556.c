@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int Array_Size = 0;
+int Array_Index = 0;
+FILE *Writer;
+struct WordElement
+{
+    int Count;
+    char Word[50];
+};
+
+struct WordElement *StructPointer;
+
+int Create_Array(int Size) {
+    StructPointer = (struct WordElement *)malloc(Size * sizeof(struct WordElement));
+    Array_Size = Size;
+    return 0;
+}
+
+int Add_To_Array(char Word[50]) {
+    int Word_Found = 0;
+    for (int i = 0; i < Array_Index; i++) {
+        if (strcmp(StructPointer[i].Word, Word) == 0) {
+            StructPointer[i].Count++;
+            Word_Found = 1;
+            break; // If word found, exit the loop
+        }
+    }
+
+    if (Word_Found == 0) {
+        strcpy(StructPointer[Array_Index].Word, Word);
+        StructPointer[Array_Index].Count = 1;
+        Array_Index++;
+    }
+
+    return 0;
+}
+
+int Print_All(char File_Name[50]) {
+    Writer = fopen(File_Name, "w");
+    printf("Printing starts now: \n");
+    for (int i = 0; i < Array_Index; i++) {
+        fprintf(Writer, "%s\t\t%d\n", StructPointer[i].Word, StructPointer[i].Count);
+    }
+    free(StructPointer);
+    return 0;
+}

@@ -1,0 +1,66 @@
+
+I'm trying to allocate a 2d array in a C program. It works fine in the main function like this (as explained here):
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char ** argv)
+{
+    int ** grid;
+    int i, nrows=10, ncols=10;
+    grid = malloc( sizeof(int *) * nrows);
+
+    if (grid == NULL){
+        printf("ERROR: out of memory\n");
+        return 1;
+    }
+
+    for (i=0;i<nrows;i++){
+        grid[i] = malloc( sizeof(int) * ncols);
+        if (grid[i] == NULL){
+            printf("ERROR: out of memory\n");
+            return 1;
+        }
+    }
+    printf("Allocated!\n");
+
+    grid[5][6] = 15;
+    printf("%d\n", grid[5][6]);
+    return 0;
+}
+
+But since I have to do this several times with different arrays, I was trying to move the code into a separate function.
+#include <stdio.h>
+#include <stdlib.h>
+
+int malloc2d(int ** grid, int nrows, int ncols){
+    int i;
+    grid = malloc( sizeof(int *) * nrows);
+
+    if (grid == NULL){
+        printf("ERROR: out of memory\n");
+        return 1;
+    }
+
+    for (i=0;i<nrows;i++){
+        grid[i] = malloc( sizeof(int) * ncols);
+        if (grid[i] == NULL){
+            printf("ERROR: out of memory\n");
+            return 1;
+        }
+    }
+    printf("Allocated!\n");
+    return 0;
+}
+
+int main(int argc, char ** argv)
+{
+    int ** grid;
+
+    malloc2d(grid, 10, 10);
+    grid[5][6] = 15;
+    printf("%d\n", grid[5][6]);
+    return 0;
+}
+
+However, although it doesn't complain while allocating, I get segmentation fault when accessing the array. I read different posts on decayed arrays and similar topics, but I still can't figure out how to solve this problem. I imagine I'm not passing the 2d array correctly to the function.
+Many thanks.

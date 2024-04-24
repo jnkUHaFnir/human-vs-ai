@@ -1,0 +1,18 @@
+
+I've created a program to determine largest number, but my lecturer says it isn't perfect, can anybody make it perfect?
+ #include <stdio.h>
+ int main () {
+     double a,b=0,n, i;
+     printf("limit of n input: ");
+     scanf ("%lf",&n);
+
+     for (i=1;i<=n;i++) {
+         scanf("%lf",&a);
+         if (a>b) b=a;
+     }
+
+     printf("%.2lf", b);
+
+     return 0;
+ }
+

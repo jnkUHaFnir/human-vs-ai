@@ -1,0 +1,12 @@
+
+
+
+
+I am comparing two strings each coming from arrays.
+while(countX<10){
+    if(strcmp(scanWord[countX], currentWord[countX]) == 0)
+        {scoreCurrent++;scoreCurrent++;}
+    countX++;
+}
+
+"scanWord[countX]" and "currentWord[countX]" don't compare; each time coming up that they aren't the same even if they are. It works if I compare things that aren't those and I have printed them to screen to check too. They just don't seem to play well. Thanks in advance.

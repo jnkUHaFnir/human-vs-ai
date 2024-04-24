@@ -1,0 +1,2 @@
+
+Take note to always check if `fopen` was successful to avoid segmentation faults. This program will read team names and scores from `"data.csv"` and write them in exactly the same format into `"matrix.csv"`. It will stop when the end of the input file is reached or when there was an error (like a mismatch between the format you specified and the actual format of the data in the file) or when all 32 teams were read.

@@ -1,0 +1,55 @@
+
+Consider the following code snippet  
+  struct node {
+    char *name;
+    int m1;
+    struct node *next;
+    };
+
+    struct node* head = 0; //start with NULL list
+
+    void addRecord(const char *pName, int ms1)
+    {   
+        struct node* newNode = (struct node*) malloc(sizeof(struct node)); // allocate node
+
+        int nameLength = tStrlen(pName);
+        newNode->name = (char *) malloc(nameLength);
+        tStrcpy(newNode->name, pName);
+
+        newNode->m1 = ms1;
+        newNode->next = head; // link the old list off the new node
+        head = newNode;
+    }
+
+    void clear(void)
+    {
+        struct node* current = head;
+        struct node* next;
+        while (current != 0) 
+        {
+            next = current->next; // note the next pointer
+    /*      if(current->name !=0)
+            {
+                free(current->name);
+            }
+    */
+            if(current !=0 )
+            {
+                free(current); // delete the node
+            }
+            current = next; // advance to the next node
+        }
+        head = 0;
+    }
+
+Question:
+I am not able to free current->name, only when i comment the freeing of name, program works.
+If I uncomment the free part of current->name, I get Heap corruption error in my visual studio window.
+How can I free name ?
+Reply:
+@all,YES, there were typos in struct declaration. Should have been char* name, and struct node* next. Looks like the stackoverflow editor took away those two stars. 
+The issue was resolved by doing a malloc(nameLength + 1). 
+However,If I try running the old code (malloc(namelength)) on command prompt and not on visual studio, it runs fine. 
+Looks like, there are certain compilers doing strict checking. 
+One thing that I still do not understand is , that free does not need a NULL termination pointer, and chances to overwrite the allocated pointer is very minimal here.
+user2531639 aka Neeraj

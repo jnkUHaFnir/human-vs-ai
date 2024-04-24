@@ -1,0 +1,1 @@
+    if (strlen(user) + 1 > sizeof(buf))

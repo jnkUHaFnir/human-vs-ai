@@ -1,0 +1,1 @@
+    scanf("%99s", pAlbum[i].title);

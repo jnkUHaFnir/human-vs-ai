@@ -1,0 +1,29 @@
+
+I want to create a new intarr_t with initial size len, but I've never handled this type of problem with a typedef'ed variable.
+My problem is that intarr_create() should allocate the array space and then return a pointer to it if malloc was successful or a pointer to NULL if I failed. How can I fix this?
+Also, why there is a * symbol in the function?  
+Here's my code:
+#include <stdio.h>
+
+typedef struct {
+    int* data;
+    unsigned int len;
+} intarr_t;
+
+intarr_t* intarr_create(unsigned int len) { 
+    //intarr_t with initial size len
+    intarr_t = (int *) malloc(len); // not working here, can someone explain why?
+    if(intarr_t != NULL) {
+        return intarr_t;
+    } else {
+        return NULL;
+    }
+}
+
+int main() {
+    int len = 15;
+    int h = intarr_create(len);
+    printf("%d\n", h);
+    return 0;
+}   
+

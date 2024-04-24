@@ -1,0 +1,23 @@
+
+I am trying to read a textfile like this
+    1234567890 1234
+    9876543210 22
+
+into a List struct in my program. I read in the files via fgets() and then use strtok to seperate the numbers, put them into variables and then finally into the List. However, I find that in doing this and printing the resulting strings, strtok always takes the final string in the final line to be NULL, thus resulting in a segmentation fault.
+fgets(fileOutput,400,filePointer); //Read in a line from the file
+
+inputPlate = strtok(fileOutput," "); // Take the first token, store     into inputPlate
+
+while(fileOutput != NULL)
+{
+    string = strtok(NULL," ");
+    mileage = atoi(string); //Convert from string to integer and store into mileage
+
+    car = initializeCar(mileage,dateNULL,inputPlate);
+    avail->next = addList(avail->next,car,0);
+
+    fgets(fileOutput,400,filePointer);
+    inputPlate = strtok(fileOutput," ");
+} 
+
+How do I resolve this?

@@ -1,0 +1,17 @@
+BMPImage * readImage(FILE * fp) {
+    BMPHeader header;
+    fread(&header, sizeof(BMPHeader), 1, fp);
+
+    BMPImage * image = malloc(sizeof(BMPImage));
+    image->header = header;
+    image->pixels = malloc(header.height_px * sizeof(Pixel *));
+    
+    for (int i = 0; i < header.height_px; i++) {
+        image->pixels[i] = malloc(header.width_px * sizeof(Pixel));
+        for(int j = 0; j < header.width_px; j++) {
+            fread(&image->pixels[i][j], sizeof(Pixel), 1, fp);
+        }
+    }
+
+    return image;
+}

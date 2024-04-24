@@ -1,0 +1,38 @@
+
+I'm writing a family tree program and I'm having troubles deleting a node off of the family tree. I have a delete method, which takes the name of the node to delete, finds it, then removes it. I free the trash node, the node I'm trying to delete, and set it to NULL, but it is still there when I test it. Am I supposed to assign new left and right paths for a node rather than trying to set it to NULL?
+struct node {
+    char *data;
+    struct node *left;
+    struct node *right;
+}*child;
+
+
+void delete(node* root){
+    char array[13];
+    node *toDelete;
+    printf ("Please specify a name to delete\n");
+    scanf("%s", array);
+    toDelete = scan(root, array); 
+    if(toDelete == NULL) {
+            printf("ERROR -- Node does not exist");
+    } else {
+    removeChild(&toDelete); 
+    }
+}
+
+void removeChild(node **trash){
+    if((*trash)->left == NULL && (*trash)->right == NULL) { //no parents
+            free(*trash);
+            *trash = NULL;
+    }
+    else if((*trash)->left == NULL && (*trash)->right != NULL) { //have mother
+            removeChild((*trash)->right);
+    }
+    else if((*trash)->left != NULL && (*trash)->right == NULL) { //have father
+            removeChild((*trash)->left);
+    } else{  //have both
+            removeChild((*trash)->left);
+            removeChild((*trash)->right);
+    }
+}
+

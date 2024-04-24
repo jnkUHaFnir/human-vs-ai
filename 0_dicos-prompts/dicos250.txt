@@ -1,0 +1,13 @@
+
+I have a file with millions of lines, each line has 3 floats separated by spaces. It takes a lot of time to read the file, so I tried to read them using memory mapped files only to find out that the problem is not with the speed of IO but with the speed of the parsing.
+My current parsing is to take the stream (called file) and do the following
+float x,y,z;
+file >> x >> y >> z;
+
+Someone in Stack Overflow recommended to use Boost.Spirit but I couldn't find any simple tutorial to explain how to use it.
+I'm trying to find a simple and efficient way to parse a line that looks like this:
+"134.32 3545.87 3425"
+
+I will really appreciate some help. I wanted to use strtok to split it, but I don't know how to convert strings to floats, and I'm not quite sure it's the best way.
+I don't mind if the solution will be Boost or not. I don't mind if it won't be the most efficient solution ever, but I'm sure that it is possible to double the speed.
+Thanks in advance.

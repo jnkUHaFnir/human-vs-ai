@@ -1,0 +1,32 @@
+
+I have a bash script which prints a single huge line of variable output.
+All the examples I've seen uses a fixed buffer of 1024 bytes or so, in order to read line by line.
+#include <stdio.h>
+#include <stdlib.h>
+
+int main( int argc, char *argv[] ) {
+
+  FILE *fp;
+  char path[1024];
+
+  /* Open the command for reading. */
+  fp = popen("bash /home/ouhma/myscript.sh", "r");
+  if (fp == NULL) {
+    printf("Failed to run command\n" );
+    exit(1);
+  }
+
+  /* Read the output a line at a time - output it. */
+  while (fgets(path, sizeof(path)-1, fp) != NULL) {
+    printf("%s", path);
+  }
+
+  /* close */
+  pclose(fp);
+
+  return 0;
+}
+
+Link reference: C: Run a System Command and Get Output?
+But what if I don't know if the output line has a length even bigger of 1024 bytes?
+How could I handle it through reading with popen() command?

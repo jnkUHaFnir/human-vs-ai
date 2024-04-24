@@ -1,0 +1,28 @@
+
+I'm trying to create a function to read a single line from a file of text using fgets() and store it in a dynamically allocating char* using malloc()but I am unsure as to how to use realloc() since I do not know the length of this single line of text and do not want to just guess a magic number for the maximum size that this line could possibly be.
+#include "stdio.h"
+#include "stdlib.h"
+#define INIT_SIZE 50
+
+void get_line (char* filename)
+
+    char* text;
+    FILE* file = fopen(filename,"r");
+
+    text = malloc(sizeof(char) * INIT_SIZE);
+
+    fgets(text, INIT_SIZE, file);
+
+    //How do I realloc memory here if the text array is full but fgets
+    //has not reach an EOF or \n yet.
+
+    printf(The text was %s\n", text);
+
+    free(text);
+
+int main(int argc, char *argv[]) {
+    get_line(argv[1]);
+}
+
+I am planning on doing other things with the line of text but for sake of keeping this simple, I have just printed it and then freed the memory.
+Also: The main function is initiated by using the filename as the first command line argument.

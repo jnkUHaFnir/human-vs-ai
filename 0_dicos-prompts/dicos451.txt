@@ -1,0 +1,17 @@
+
+I am trying to get a full sentence eg. "This is a sentence." to be stored in the global variable string named 'global'. It will then print out the sentence back out. However after entering my input, I can only get the first word of the sentence printed (This). Anyone got any ideas? 
+#include <string.h>
+
+char** global;
+
+int main () {
+
+    printf("Please Enter Text: \n");
+    scanf("%s", &global);
+
+    printf("%s", &global);
+
+
+    return 0;
+}
+

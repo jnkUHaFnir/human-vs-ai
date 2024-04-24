@@ -1,0 +1,72 @@
+
+Hello there I've been struggling with this problem for some time and after some research on the internet that didn't bear any fruit I decided to ask for some help.
+I need to read some integers from a file and from a specific line and then do something with them.
+I know this trick for handling strings of characters                                                               
+ while(fgets(pointer_to_string, length, "file_name.txt"))
+ line++;       /*increment line-integer type- by 1*/
+
+ if(line == your_line) /*do something with the strings at that line*/
+
+I know that 'fgets()' will read everything until it reaches a newline '\n' so that makes it easy,but my problem is a bit different.
+I need to read from a file integers, for example:
+5
+1 78 45 32 2
+
+In my particular case the number on the first line represents the number of integers located on the second line separated by a blank space, so i need to read the first number then create a pointer to an array to which I will allocate memory:
+int a[20];
+int num; /*number on first line*/
+int* p;
+p = a;
+p = (int*)malloc(num*sizeof(int));
+
+Of course the memory allocation will be done after I read the first number from the file.
+So I guess I'd be easier to just show you my struggle:
+int main()
+{
+
+FILE* file = fopen("files.txt", "r");
+
+int a[20], first_num, j = 0;
+int* p = a, line = 1;
+while(!feof(file))
+{
+
+    if ( line == 1 )
+    {
+
+
+        fscanf(file, "%d", &first_num);
+        p = (int*)malloc(first_num*sizeof(int));
+    }
+    else
+    {
+
+
+        for ( j = 0; j <  first_num; j++)
+            fscanf(file, "%d", (p + j));
+    }
+
+
+    line++;
+
+}
+
+for ( j = 0; j < first_num; j++)
+{
+    printf("\t%d\t", *(p + j));
+}
+printf("\n%d", first_num);
+free(p);
+
+fclose(file);
+
+
+return 0;
+}
+
+Weirdly enough this program actually works for this example ( number of elements on the 1st line and array on the 2nd ) but I have a feeling that it is flawed or at least I can't call it "clean" mostly because I'm not really sure how that loop works I know that 'feof' function is used to reach the end of a file so as long as I'm not there yet it will return a non-zero value and that's why I can memorize the number on the 1st line but I don't know when and how it checks the loop.At first I thought that it does it at the end of every line  so but that would imply that if I were to change the 'else' with:
+else if ( line == 2 )
+
+it would still need to work properly, which it doesn't.So I would appreciate some explanations for how that loop actually works.
+My guess is that I need a loop in the 'while' to check when I reached the end of a line or something like that but I'm really stuck.
+My real question is for how to read integers separated by space from a specific line from a file and not necessarily the example I gave you ( that one is for someone who wouldn't mind helping me out ) 

@@ -1,0 +1,6 @@
+
+What is the best way to get the contents of a file into a single character array?
+I have read this question:
+Easiest way to get file's contents in C
+But from the comments, I've seen that the solution isn't great for large files. I do have access to the stat function. If the file size is over 4 gb, should I just return an error?
+The contents of the file is encrypted and since it's supplied by the user it could be as large as anyone would want it to be. I want it to return an error and not crash if the file is too big. The main purpose of populating the character array with the contents of a file, is to compare it to another character array and also (if needed and configured to do so) to log both of these to a log file (or multiple log files if necessary).

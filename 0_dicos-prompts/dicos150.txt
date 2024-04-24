@@ -1,0 +1,32 @@
+
+I'm trying to free memory that's reallocated but I get an error...
+float * foo = NULL;
+float * bar = NULL;
+
+void update()
+{
+    ...
+    foo = (float *)malloc( a * 2 * sizeof(float));
+    ...
+    bar = (float *)realloc( foo, a * 2 * sizeof(float));
+    ...
+    free( foo );
+    ...
+    // when i do
+    if(bar != NULL)
+    {
+        free(bar); // <-- error at executing
+    }
+}
+
+I get error: http://d.pr/mpBF and visual studio shows me the following file:
+osfinfo.c
+=========
+void __cdecl _unlock_fhandle (
+        int fh
+        )
+{
+        LeaveCriticalSection( &(_pioinfo(fh)->lock) );
+}
+
+Any ideas?

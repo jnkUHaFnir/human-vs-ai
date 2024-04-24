@@ -1,0 +1,3 @@
+    #define MAXA 20
+    ...
+        int arr[MAXA] = {0};    /* always initialize arrays */

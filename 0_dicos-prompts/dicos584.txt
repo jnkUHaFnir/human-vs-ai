@@ -1,0 +1,12 @@
+
+The snprintf function is perfect when the output buffer may not be big enough to hold the formatted string. But if a call to snprintf stopped due to insufficient buffer length, how to continue printing to another buffer?
+char buf1[16] = {0};
+char buf2[16] = {0};
+int n = snprintf(buf1, sizeof buf1, "Lorem ipsum %d dolor sit", 123456);
+assert(strcmp(buf1, "Lorem ipsum 123") == 0);  // ok
+
+// Insert solution here
+
+assert(strcmp(buf2, "456 dolor sit") == 0);  // expected result
+
+P.S. I'm not hellbound on snprintf, any solution confined to the standard C library will do.

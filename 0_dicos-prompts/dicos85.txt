@@ -1,0 +1,31 @@
+
+I did this program to reverse the order of the words in the give string. (And it works)
+i.e. Output: sentence first the is This
+However I am stuck when it comes to adding another sentence to the array.
+For example I need to have an array {"This is the first sentence", "And this is the second"} producing as output: sentence first the is This , second the is this And
+int main() {
+
+    char str[] = {"This is the first sentence"};
+    int length = strlen(str);
+
+    // Traverse string from end
+    int i;
+    for (i = length - 1; i >= 0; i--) {
+        if (str[i] == ' ') {
+
+    // putting the NULL character at the position of space characters for 
+    next iteration.
+        str[i] = '\0';
+
+        // Start from next character
+        printf("%s ", &(str[i]) + 1);
+        }
+}
+
+    // printing the last word
+    printf("%s", str);
+
+    return 0;
+}
+
+I am new to C so its not surprising that I got stuck even if the solution is quite easy. Any help would be appreciated! Thanks!

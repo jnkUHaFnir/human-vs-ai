@@ -1,0 +1,25 @@
+
+I'm creating my own toUpper function in C, but keep getting a segmentation fault every time I attempt to run it. Can anyone provide me with any hints as to how to fix this problem?
+int toUpper(char *str)
+{
+    int i;
+    for(i=0;i< i <= strlen(str); i++) {
+        if(str[i] >= 97 && str[i] <= 122) {
+            str[i] = str[i] -32;
+        }
+    }
+    return(str[i]);
+}
+
+int main()
+{
+    char string[20];
+
+    printf("Enter any string:\n");
+    scanf("%s", string);
+
+    char result= (char)(toUpper(string));
+
+    printf("The string in upper case is:%s\n", result);
+}
+

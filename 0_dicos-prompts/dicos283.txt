@@ -1,0 +1,111 @@
+
+Is it correct to use an if statement before opening a switch case and avoid using the default keyword?
+For example I want a program which takes as input the number of a month and tells you its name. This is the code which uses the switch case statement:
+#include <stdio.h>
+#include <stdlib.h>
+
+main() {
+    int month;
+    printf("Insert the number of the month and the program will return its name");
+    scanf("%i", &month);
+    switch (month) {
+      case (1):
+        printf("The month is January");
+        break;
+      case (2):
+        printf("The month is February");
+        break;
+      case (3):
+        printf("The month is March");
+        break;
+      case (4):
+        printf("The month is April");
+        break;
+      case (5):
+        printf("The month is May");
+        break;
+      case (6):
+        printf("The month is June");
+        break;
+      case (7):
+        printf("The month is July");
+        break;
+      case (8):
+        printf("The month is August");
+        break;
+      case (9):
+        printf("The month is September");
+        break;
+      case (10):
+        printf("The month is October");
+        break;
+      case (11):
+        printf("The month is November");
+        break;
+      case (12):
+        printf("The month is December");
+        break;
+      default:
+        printf("not valid");
+    }
+    system("pause");
+    return 0;
+}
+
+Then, I was wondering if I can put the non-validity condition in an if statement rather than in the default keyword. To me it seems correct since I want to verify the value before the program executes the switch case statement. What do you think, would it be correct? If I'm not asking too much, would you please tell me why?
+The code with the if statement:
+#include <stdio.h>
+#include <stdlib.h>
+
+main() {
+    int month;
+    printf("Insert the number of the month and the program will return its name");
+    scanf("%i", &month);
+    if (month >= 1 && month <= 12) {
+        switch (month) {
+          case (1):
+            printf("The month is January");
+            break;
+          case (2):
+            printf("The month is February");
+            break;
+          case (3):
+            printf("The month is March");
+            break;
+          case (4):
+            printf("The month is April");
+            break;
+          case (5):
+            printf("The month is May");
+            break;
+          case (6):
+            printf("The month is June");
+            break;
+          case (7):
+            printf("The month is July");
+            break;
+          case (8):
+            printf("The month is August");
+            break;
+          case (9):
+            printf("The month is September");
+            break;
+          case (10):
+            printf("The month is October");
+            break;
+          case (11):
+            printf("The month is November");
+            break;
+          case (12):
+            printf("The month is December");
+            break;
+          default:;
+        }
+    } else {
+        printf("not valid");
+    }
+    system("pause");
+    return 0;
+}
+
+Thank you and sorry for my English but it is not my mother tongue. Let me know if I haven't explained myself clearly.

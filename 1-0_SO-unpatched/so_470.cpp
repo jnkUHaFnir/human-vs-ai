@@ -1,0 +1,1 @@
+    while (Sequence[i] != delim&& Sequence[i2] != '\0')

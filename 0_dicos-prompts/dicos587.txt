@@ -1,0 +1,11 @@
+
+I need to parse strings of four hex characters to an integer. The characters appear inside a longer string, and there are no separators - I just know the offset they can be found in. The hex characters are case insensitive. Example with offset 3:
+"foo10a4bar" -> 4260
+
+I'm looking for a snippet that is
+
+Short (too much code always creates complexity)
+Simple (simple to understand and verify that it is correct)
+Safe (invalid input is detected and signalled, no potential memory problems)
+
+I'm a bit leery of using the 'sscanf' family of functions for this, but if there's a safe ANSI C solution using them, they can be used.

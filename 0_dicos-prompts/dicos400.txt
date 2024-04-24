@@ -1,0 +1,31 @@
+
+I'm following a tutorial on youtube and was doing a dice generator.
+It basically print out 3 dice result and sum out the dice result.
+After which, the user will look at the sum, and based on the sum, the user going to guess whether the next roll is going to be higher,lower, or the same.
+Below is my code, suppose, when I typed 'yes', it should be doing the code inside the if statement. However, it went straight to the else statement. Can someone please tell me what's wrong?
+int answer;
+int guess;
+int diceRoll4 = 0;
+printf("Would you like to guess your next dice? Y/N \n");
+scanf(" %c", &answer);
+
+if (answer == 'yes' ){
+
+    printf("What is your guess?\n");
+    printf("please key in your number \n");
+    scanf(" %d", &guess);
+    if (guess > diceRoll4 ){
+        printf(" You got it wrong, too high!");
+    }
+    else if (guess < diceRoll4){
+            printf(" You got it wrong, too low!");
+    }
+    else {
+        printf("You got it right");
+    }
+
+}
+else{
+    printf("Thanks for playing");
+}
+

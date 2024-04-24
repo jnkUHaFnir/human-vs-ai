@@ -1,0 +1,46 @@
+
+My problem is such that I need to read string from file. File example:
+
+Example 1 sentence
+Example sentence number xd 595 xd 49 lol
+
+but I have to read only the string part, not numbers. I guess I have to use fscanf() with %s for it but let me know what you guys think about it.
+The part where my problem begins is how to read the string (it is unknown length) using malloc(), realloc()? I tried it by myself, but I failed (my solution is at bottom of my post).
+Then I need to show the result on the screen.
+P.S. I have to use malloc()/calloc(), realloc() <-- it has to be dynamically allocated string :) (char *)
+Code I've tried:
+    int wordSize = 2;
+    char *word = (char *)malloc(wordSize*sizeof(char));
+    char ch;
+
+    FILE* InputWords = NULL;
+    InputWords = fopen(ListOfWords,"r"); /* variable ListOfWords contains name of the file */
+
+    if (InputWords == NULL)
+    {
+      printf("Error while opening the file.\n");
+      return 0;
+    }
+
+    int index = 0;
+    while((ch = fgetc(InputWords)) != -1)
+    {
+      if(ch == ' ')
+      {
+        printf("%s\n", word);
+        wordSize = 2;
+        index = 0;
+        free(word);
+        char* word = (char *)malloc(wordSize*sizeof(char));
+      }
+      else
+      {
+        wordSize++;
+        word = (char *)realloc(word, wordSize*sizeof(char));
+        strcpy(word,ch);
+        index++;
+      }
+    }
+  fclose(InputWords);
+
+

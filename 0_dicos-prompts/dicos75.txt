@@ -1,0 +1,20 @@
+
+I am trying to store an array of char pointer to another array of char pointer. I am getting segmentation fault for the same.
+int main(int argc, const char* argv[])
+{   
+    int argcCpy = argc;
+    char* argvCpy[10] = {};
+
+    for(argcCpy = argc; argcCpy>0; argcCpy--)
+    {   
+        argvCpy[argcCpy] = (char *) malloc(strlen(argv[argcCpy]));
+        memcpy(argvCpy[argcCpy], argv[argcCpy], strlen(argv[argcCpy]));
+        printf("\nCount: %d, string: %s", argcCpy, argvCpy[argcCpy]);
+    }
+    return 0;
+}
+
+I spent more than enough time to make this work but I am not able to do it. Also, the same kind of question is already asked which is also left unanswered. If anybody can let me know the working code for the same, it would be really so helpful. 
+Hoping this to be answered.
+Link of the similar question left out unawnsered -- C Beginner - Copying a char *array to another char *array
+Thanks.

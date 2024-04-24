@@ -1,0 +1,24 @@
+
+I am using GCC compiler
+I wanted to scan white character as well so I used scanf("%[^\n]s",&name) and it just worked fine.
+say the code is
+void main(){
+    char name[20];
+    scanf("%[^\n]s",&name);
+    printf("%s",name);
+}
+
+but when i tried to use it with a structure variable the statement doesnt work anymore.
+struct book { char name[20];};
+main(){
+    struct book buk[10];
+    int i;
+    for(i=0;i<3;i++)
+    {
+        printf("Enter name of book %d",i+1);
+        scanf("%[^\n]s",&buk[i].name);}
+    }
+
+The scanf statement just don't execute.
+But if I use simple scanf("%s",&name); it works just fine.
+Can someone please help me with this?

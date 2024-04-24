@@ -1,0 +1,19 @@
+
+I have the following input:
+((1828,299),(2729,2553),(2797,2929),(2200,1383),(2894,876))
+
+and following struct:
+struct x{
+int a;
+int b;
+}
+
+How can I read the input with scanf() to create an array of my structs?
+I have tried
+scanf("%[^, ()],%d", &arr);
+    if (i % 2 == 0){
+        arr[i].x = scanf("%d");
+    }else
+        arr[i].y = scanf("%d");
+
+But when I tried to print these values out I got some strange characters

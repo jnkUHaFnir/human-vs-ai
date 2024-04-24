@@ -1,0 +1,11 @@
+
+so I have this code :
+char address[1000] ;
+
+printf("Enter you address : ") ;
+scanf("%s", &address) ;
+
+printf(" Your address is : %s ", address) ;
+
+When i type for example "New York City", only "New" will be displayed and I don't know why. Help please.
+Thanks

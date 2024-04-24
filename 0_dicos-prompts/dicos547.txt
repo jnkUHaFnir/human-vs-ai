@@ -1,0 +1,77 @@
+
+I am confused about scanf's behaviour in the following program. scanf appears to input once, and then not input again, until a stream of characters is printed.
+Below in a C program 
+#include<stdio.h>
+int main()
+{
+    int i, j=0;
+
+    do
+    {
+        ++j;
+        scanf("%d", &i);
+        printf("\n\n%d %d\n\n", i, j);
+    }
+    while((i!=8) && (j<10));  
+
+    printf("\nJ = %d\n", j);
+    return 0;
+}
+
+here, Till i am inputting any integer program works perfectly fine, but when a character is inputted it goes on printing the last inputed value of i and never stops(untill j is 10 when loop exits) for scanf to take next input.
+output::  
+1    <-----1st input
+1 1
+2    <---- 2nd input
+2 2
+a    <---- character input
+2 3  
+2 4
+2 5
+2 6
+2 7
+2 8
+2 9
+2 10
+
+J = 10  
+
+same thing is happening in c++ also.  
+#include<iostream>
+using namespace std;
+int main()
+{
+    int i, j=0;
+
+    do
+    {
+        ++j;
+        cin>>i;
+        cout<<i<<" "<<j<<"\n";
+    }
+    while((i!=8) && (j<10));
+
+    cout<<"\nj = "<<j<<"\n";
+}   
+
+
+output of c++ program ::  
+1     <-----1st input
+1 1
+2     <-----2nd input
+2 2
+a    <------ character input
+0 3
+0 4
+0 5
+0 6
+0 7
+0 8
+0 9
+0 10
+
+j = 10  
+
+only change in c++ is that 0 is being printed instead of last value.
+I know here integer values are expected by the program, but i want to know what happens when character is inputted in place of an integer?
+what is the reason of all happening above? 

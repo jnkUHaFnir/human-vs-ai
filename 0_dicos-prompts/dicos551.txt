@@ -1,0 +1,19 @@
+
+I have a #define to my new macro, to use my own allocator, such as MYNEW(Type, Allocator) where I will go and allocate some raw memory using malloc, then later use placement new to allocate the type on the raw memory such as
+#define MYNEW(Type, Allocator) Allocator->Alloc<Type>(sizeof(Type));`
+template<typename Type>
+Type* Alloc(unsigned int size) // Allocator::Alloc<Type>
+{
+    return (Type*)new(malloc(reportedSize)) Type;
+}
+
+However, I am running into issues when there is no default constructor for Type. One scenario I tried was doing something such as MYNEW_1(Type, Allocator, ConVar1) where ConVar1 would be passed such as 
+#define MYNEW_1(Type, Allocator, ConVar1) Allocator->Alloc<Type>(sizeof(Type), ConVar1);`
+template<typename Type, typename ConVarType>
+Type* Alloc(unsigned int size, ConVarType Convar1) // Allocator::Alloc<Type>
+{
+    return (Type*)new(malloc(reportedSize)) Type(Convar1);
+}
+
+The problem with this approach is that for my custom Vector, I am also using MYNEW to allocation memory. However, for some Type's used for my Vector, there is no default constructor and I can't tell how many variables the constructor may require. 
+Does anyone have any insight into how this problem could be solved? (Without of course saying using std:: types instead of my own. I am doing this to learn more). I do not wish to just overload operator new as I have memory tracking in there as I do not wish to have the memory tracked twice (there is more internal tracking to Alloc, but what I have shown is the simplified example) and would rather just use malloc.

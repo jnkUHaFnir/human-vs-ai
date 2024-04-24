@@ -1,0 +1,129 @@
+
+I'm working on a function that counts the number of occurences of words in a file, I trim the words I find(space delimited), check if they already exist in my string array and if not I expand that array and add the string.
+when I try to compile I get the following:
+In file included from lsa.c:2:0:
+read_file.h: In function 'read_file':
+read_file.h:57:13: warning: ignoring return value of 'realloc', declared with attribute warn_unused_result [-Wunused-result]
+      realloc(words, (sizeof(char *) * number_of_words));
+             ^
+
+And when I run:
+number of words: 1
+ELF
+number of words: 2
+H������H�������ee@b�g�"6,�&@2016-03-04-21.18PID     : 2529                 TID : 140564200679168 PROC : db2sysc 0
+PID
+number of words: 3
+*** Error in `./a.out': realloc(): invalid next size: 0x00000000020b5010 ***
+
+at which point I have to press ctrl + c to exit the function, the file I'm giving to the program starts at:
+2016-03-04-21.18
+there's no ELF or these characters, I'm assuming I'm doing something wrong, probably with my trim function:
+void trim(char * word)
+{
+  if(word[strlen(word) -1 ] < 48 || word[strlen(word) -1 ] > 57 //numeric characters
+      && word[strlen(word) -1 ] < 65 || word[strlen(word) -1 ] > 90  //uppercase characters
+      && word[strlen(word) -1 ] < 97 || word[strlen(word) -1 ] > 122
+    )
+  {
+    word[strlen(word) -1 ] = '\0';
+    if(strlen(word) > 0)
+      trim(word);
+  }
+  if(word[0] < 48 || word[0] > 57 //numeric characters
+      && word[0] < 65 || word[0] > 90  //uppercase characters
+      && word[0] < 97 || word[0] > 122
+      )
+  {
+    memmove(word, word+1, strlen(word));
+    if(strlen(word) > 0)
+      trim(word);
+  }
+}
+
+I have the following code:
+#include<string.h>
+#include"trim.h"
+#include <stdlib.h>
+
+extern char **words;
+extern int number_of_words;
+
+void append(char * string,char ch)
+{
+    int size=strlen(string);
+    char temp[size+1];
+    strcpy(temp,string);
+    temp[size]=ch;
+    temp[size+1]='\0';
+    strcpy(string,temp);
+}
+
+void read_file(char *file_name , int file_number) 
+{
+  FILE *file = fopen(file_name,"r");
+  char line[2048];
+  int i = 0;
+  char word[64];
+  while (fgets(line, sizeof line, file) != NULL) 
+  {
+    i = 0;
+    while (i < strlen(line) && line[i] != '\n' )
+    {
+      if (line[i] != ' ')
+      {
+    append(word,line[i]);
+      }
+      else 
+      {
+    if (strlen(word) > 1){
+      //trim the word
+      trim(word);
+      //do your magic
+      int a = 0;
+      int exists = 0;
+
+
+      while (a < 1)
+      {
+        if(strcmp(words[a],word) == 0) //word exists in the words array
+        {
+          exists = 1;
+          printf("%s\n",words[a]);
+            }
+        a++;
+      }
+
+          if (exists < 1)
+      {
+        printf("number of words: %i\n", number_of_words);
+        number_of_words++;
+        char **temp = realloc(words, (sizeof(char *) * number_of_words));
+        if(temp == NULL) {
+              //realloc failed.
+                  perror("realloc");
+                      exit(EXIT_FAILURE);
+                      }
+                      words = temp;
+        words[number_of_words] = malloc(strlen(word) + 1);
+        strcpy(words[number_of_words], word);
+      }
+
+       printf("%s\n",word);
+
+      memset(word,0,strlen(word));
+    }
+      }
+      i++;
+    }
+
+  }
+  fclose(file);
+}
+
+initialization:
+char **words;
+words = malloc(9*sizeof(char *));
+  words[0] = malloc(strlen("the"));
+  strcpy(words[0],"the");
+

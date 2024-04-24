@@ -1,0 +1,4 @@
+
+I'm writing a small app that will allow a user to eject (or safely remove) a USB drive. My app works fine, except the situation when a folder on the USB drive (or several folders) are opened in Windows Explorer. In that case the eject function fails as the drive appears to be locked.
+So I'm curious, since the user is issuing a command through my app to eject the USB drive, is there any way to make Explorer close those open windows from the USB drive?
+PS. Note that I don't want to close all processes belonging to the Windows Explorer, but only the ones that opened folders on a specific drive.

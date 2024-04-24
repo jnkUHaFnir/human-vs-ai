@@ -1,0 +1,3 @@
+
+I used open3 of perl to run a command, the custom command behaves like a shell it takes input and displays output and waits for another input till quit is given
+Now I've to use same command and write it in C language, do we have something similar to IPC::Open3 in C or C++ ?

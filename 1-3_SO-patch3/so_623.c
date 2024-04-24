@@ -1,0 +1,1 @@
+scanf(" %9999[^\n]", address )

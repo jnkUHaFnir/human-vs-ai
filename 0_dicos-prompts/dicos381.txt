@@ -1,0 +1,20 @@
+
+I've written a function in C to get the size of the terminal:
+int get_terminal_size()
+{
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    return w.ws_row * w.ws_col;
+}
+
+However, I want to use it as the size parameter when initialising an array in a struct:
+struct level
+{
+    [...]
+    char level_data[get_terminal_size()];
+}
+
+However, this doesn't compile, as the compiler tells me that the initialiser element needs to be constant (which makes sense, but assigning the return value to a const int doesn't work either).
+Is there any other way of doing what I need to do in C?
+Thanks in advance.

@@ -1,0 +1,1 @@
+    char **arr = calloc(num, 50 * sizeof(char));

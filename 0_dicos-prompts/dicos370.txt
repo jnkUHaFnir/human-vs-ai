@@ -1,0 +1,34 @@
+
+In this program, I am attempting to read a name and their GPA from a file. The first name is Audrey, then a white space, and then 3.6. 
+The second line is Oakley, then a white space, and 3.5.     
+int main()
+{
+    FILE * fPtr;
+    FILE * fPtr2;
+
+    char x[10] = { "Oakley " };
+    double y;
+    int z;
+
+    fPtr = fopen("data.txt", "r");
+
+    if (fPtr == NULL) // open failure
+        puts("File open for read failed");
+    else
+    {
+        while (scanf("%d", &z) != EOF)
+        {
+            fscanf(fPtr, "%s", x);
+            fscanf(fPtr, "%lf", &y);
+            fprintf(stdout, "Value read = %s\n", x);
+            fprintf(stdout, "GPA = %lf \n", y);
+        }
+    }
+
+    fclose(fPtr);
+    system("pause");
+    return 0;
+}
+
+So, I tried this once before and it worked. In that attempt, "x[10] = Audrey" and this was the first name in the list. It worked, and the fscanf gave me her GPA. The second time, I tried scanning for Oakley and I still get Audrey, but when I remove that line I get a really large negative number.
+I used fscanf because it tokenizes around whitespace, so my theory is that if the cursor gets to the proper name then it will read the next number and that will be the GPA? Right? How do I get it to search for Oakley?

@@ -1,0 +1,1 @@
+    buffer = realloc(buffer, new_size);

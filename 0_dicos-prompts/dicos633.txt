@@ -1,0 +1,37 @@
+
+what is wrong with my code?
+When given the following input (through file): 
+6.02
+110 223 144 208 199.5 890
+200 69.5 300 138.7 190 601
+
+it prints ERROR: invalid price in airline # 1 while it should not do so.
+Here is a look at my code.
+int fillPricesTable(double flightsPrices[][DEST],int n,double* dollarRate)
+{
+    //n is the number of rows
+    double Price;
+    int  AirLinesCounter=0;
+    while (scanf("%lf",dollarRate)==EOF || *dollarRate<=0)
+    {
+        errorDollar();
+        fflush(stdin);
+    }
+    for (int i=0;i<n;++i)
+    {
+        for (int j=0;j<6;++j)
+        {
+            if (scanf("%lf",&Price)==EOF || Price<=0)
+            {
+                printf("ERROR: invalid price in airline # %d\n", i);
+                return -1;
+            }
+            flightsPrices[i][j]=Price;
+        }
+        AirLinesCounter++;
+        if(scanf("%lf",&Price)==EOF)
+            break;
+    }
+    return AirLinesCounter;
+}
+

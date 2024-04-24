@@ -1,0 +1,27 @@
+
+How can I find the first repeated character in a string?
+If the input is "abcdexyzbwqpoolj", the 
+output should be b.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main()
+{
+    int i,j;
+char str[1000];
+
+scanf("%s",str);//input the string
+for( i=0;i<strlen(str);i++)
+{
+    for(j=i+1;j<strlen(str);j++)
+    {
+        if(str[i]==str[j])//compare
+        {
+            printf("%c",str[i]);
+        }
+    }
+}
+}
+
+This is printing all the repeating characters, but I only want to print the first one. Please correct this code.

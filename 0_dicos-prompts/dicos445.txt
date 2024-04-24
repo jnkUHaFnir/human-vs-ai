@@ -1,0 +1,2 @@
+
+I am writing a piece of software, and It require me to handle data I get from a webpage with libcurl. When I get the data, for some reason it has extra line breaks in it. I need to figure out a way to only allow letters, numbers, and spaces. And remove everything else, including line breaks. Is there any easy way to do this? Thanks.

@@ -1,0 +1,43 @@
+
+
+
+
+Sorry, I did a mistake that I tot im using C++, but Im using C language.Im writing a program code about calculating some formulae. 1st of all, I set up a menu for the user to select. Then I let them choose from 3 formulae. Example pressure=force/area. I want to get the value of force and area as float from the user. I want to program it as if force is more than or equal to 0, the program continue to ask for the value of area. Else, display error and ask the same question. I tested my program, it works if i key in a negative value. But if i key in a word, the program repeat the loop unstoppable. 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main (void)
+{
+int menu_selection,error_flag,repeater;
+float force, area, pressure;
+
+printf("Please select a formula. [0 - 3]\n>>");
+scanf("%d",&menu_selection);
+if(menu_selection==1)
+    {
+    error_flag=0;
+    system("cls"); 
+
+    printf("Pressure's formula\n\n");
+        do{
+            error_flag=0;
+            printf("Please key in the force applied.(N)\n>>");
+            scanf("%f",&force);
+            if(force>0)
+            {
+                printf("Please key in the surface area.(m^2)\n>>");
+                scanf("%f",&area);
+
+                pressure = force/area;
+
+                printf("The pressure is %.2fPa.\n\n",pressure);
+            }
+            else
+            {
+                error_flag=1;
+                printf("Invalid input, please key in a positive number.");
+            }
+        }while(error_flag==1);
+    }
+
+When I key in alphabet, the word "Invalid input, please key in a positive number." is spamming in the console and the system goes wrong. I know its about the data type problem. How to solve it?? Help please!! And thank you if you provide me the full solution. Thank.

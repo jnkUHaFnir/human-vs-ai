@@ -1,0 +1,13 @@
+
+I have been on this fow quite some time now and i dont seem to figure it out. 
+I have this code:
+    unsigned char *src;
+    int length = (parameterArray[i].sizeInBits/8) + 1; // check how long array should be
+    unsigned char tmp[length]; // declare array
+
+    memcpy(tmp, (char*)&parameterArray[i].valueU8, length); // in this case copy char to array
+    src = realloc(src, strlen(src) + strlen(tmp)); // reallocate space for total string
+    strncat(src, tmp, strlen(tmp)); // merge 
+
+every time the code crashes on the reallocating part.
+I have tried almost everything and nothing works. Please help

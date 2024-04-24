@@ -1,0 +1,10 @@
+
+
+
+
+This long code is sending a POST request using a Socket, the whole code works without any complain, but what i'm facing right now is, that it eating a lot of cpu power, uses too much memory (RAM) 
+I can see that, because my laptop is getting hot very fast and by looking checking at my mac. 
+i have tried to find the bug or where , that very large memory Issue is, but couldn't. I have spent over a month trying to fix it by my own, but don't know what i'm doing to be honest.
+i was so desperate, that i putted all kind of freeing metod.. even that it wrong.. just to see if that made a change, but nothing did..
+So now i don't know what wrong or how to fix this, please help me out…
+Going update the code with select, moment... trying to clean it up first

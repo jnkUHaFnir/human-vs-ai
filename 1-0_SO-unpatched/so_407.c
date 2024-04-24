@@ -1,0 +1,1 @@
+        char title[50]; // Holds up to 49 characters, plus termination

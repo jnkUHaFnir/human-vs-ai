@@ -1,0 +1,110 @@
+
+I have a problem with a rather big piece of code. Knowing myself, it's some kind of a silly mistake, or, more likely, lack of understanding of pointers. I really need some help, so if someone could look at it I would be so grateful! I'm going to explain it now.
+It's a program for my programming class. The teacher gave us a number (N) and a letter (X) in a txt file, and wants us to create a structure with three fields(int, char and float), and then four functions:
+function #1 takes the number N as an argument and dynamically allocates memory for an array of pointers to N structures. then it assigns values to the fields in the structures - int and char are set to random values, and the float field is set to the number of the structure. the function returns the address of the array.
+function #2 takes the size of the created array (the number of pointers in it) and a pointer to the array as arguments and deletes the array, freeing the memory.
+function #3 takes the size of the created array and a pointer to the array as arguments, and then sorts the structures based on the int field, using bubble sort
+function #4 searches through the structures and counts how many times the letter (X) is repeated in the char fields of the structures.
+Here's the code with comments and errors. Please, can someone explain what am I doing wrong? To be honest I'm almost out of time, but I'm willing to stay up all night to understand and fix this.
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <conio.h>
+ #include <time.h>
+
+ struct Foo {
+ int fieldint;
+ char fieldchar;
+ float fieldfloat;
+ };
+
+ Foo *initialize(int N);
+ int sort(int N, Foo *tablica);
+ int count(int N, Foo *tablica, char*X);
+ int deleting(int N, Foo **tablica);
+
+ int main () {
+
+      //this reads the number N and the letter to find from the .txt file:
+      FILE *file = fopen("inlab01.txt", "r");
+      int number;
+      char letter[1];
+      if (file == NULL) {
+           printf("Error opening file");
+           exit(-1);
+      } 
+      while (fscanf(file, "%d%s", &number, letter) != EOF);
+      fclose(file);
+
+      //creating the array
+      //again, it's supposed to be an array of pointers to N structures:
+      Foo *arr[number]; 
+      *arr = initialize(number);
+
+      //sorting:
+      sort(number, *arr); //the program crashes at this function
+
+      //counting how many times the given letter appears:
+      //count(number, *arr, letter);
+
+      //we're supposed to print the first 20 of the structures
+      //this loop prints one structure and then the program crashes
+      for(int i=0;i<20;i++) {
+          printf("Structure %d:\nfield int:%d\nfield char:%c\nfield float:\f\n\n", i+1, arr[i]->fieldint, arr[i]->fieldchar, arr[i]->fieldfloat);
+      }
+
+      //deleting:
+      deleting(number, arr);
+
+      getch();
+      return 0;
+}
+
+Foo *initialize(int N) { 
+     Foo **array;
+     array = (Foo **)malloc(sizeof(Foo) * N);
+     srand( time( NULL ) );    
+
+     for(int i=0; i<N; i++) {
+          array[i] = (Foo*)malloc(sizeof(Foo));           
+          array[i] -> fieldint = rand();  //random number
+          array[i] -> fieldchar = ( char )( rand() % 24 ) + 65; //random letter
+          array[i] -> fieldfloat=i;     
+     }
+
+     return *array; 
+}
+
+ int sort(int N, Foo *array) {  
+     int temp;
+     for (int i=0;i<N;i++){
+         for (int j=N-1;j>=j;j--) {
+             if(array[j].fieldint < array[j-1].fieldint) {
+                 temp = array[j-1].fieldint;
+                 array[j-1].fieldint = array[j].fieldint;
+                 array[j].fieldint = temp;
+             }
+         }
+     }
+     return 0;
+ }
+
+ int count(int N, Foo *array, char*X){ 
+     int counter = 0;
+     for(int i=0;i<N;i++) {
+         if (array[i].fieldchar == 'X') {
+             counter = counter+1;
+         }
+     }
+     return counter;
+ }
+
+ int deleting(int N, Foo **array) {
+     for (int i=0;i<N;i++) {
+         free(array[i]);
+     }  
+     free(array);
+     return 0;
+ }
+
+The whole thing compiles, but then the program crashes instead of doing anything, really.
+Please help.

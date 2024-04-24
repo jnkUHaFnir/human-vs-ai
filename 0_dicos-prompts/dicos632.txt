@@ -1,0 +1,39 @@
+
+I am writing a program in C, and I am reading a text file using fread and I cannot read correctly integers. 
+The value of a in the text file is 16, the output I get is:
+ a= 538976288
+
+I have used an analogous code that read successfully binary files. I would like to learn what is the best way to read ASCII tables in c.
+The table size is given by the integers on the top of the file. The data are separated by spaces.
+This is the simple code I wrote:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char *argv[])
+{
+  int a, flag_fread;
+  FILE * p_finput = NULL;
+  char * filename = NULL;
+
+  filename = malloc(sizeof(char) * (strlen(argv[1]) + 1));
+  strncpy(filename, argv[1],strlen(argv[1]));
+  filename[strlen(argv[1])] = '\0';
+
+  p_finput = fopen(filename, "r");
+  if (p_finput == NULL)
+    {
+      printf("couldn't open %s \n", filename);
+      abort();
+    }
+
+
+  flag_fread = fread(&(a), sizeof(int), 1, p_finput);
+
+  printf("a= %d \n", a);  
+
+  fclose(p_finput);
+  free(filename);
+  return 0;
+}
+

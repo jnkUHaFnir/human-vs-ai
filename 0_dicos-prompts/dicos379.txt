@@ -1,0 +1,49 @@
+
+I am working on an exercise which asks me to:
+
+read 20 words from the user,
+save them on pointers array depending on their size with memory,
+allocation.
+find the frequency of the letters,
+print them out on histogram.
+
+Step 1 and 2 work fine on my code. The problem is on the frequency. I have placed a testing printf to see if it's working and it comes out that it doesn't count the chars.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define N         20
+#define MAX_SIZE  200
+
+int main() {
+    char *words[N];
+    int i, c = 0, length;
+    char *temp;
+    int freq[26] = { 0 };
+
+    temp = (char *)malloc(MAX_SIZE * sizeof(char));
+
+    for (i = 0; i < N; i++) {
+        printf("Give a word:");
+        gets(temp);
+        length = strlen(temp);
+        *(words + i) = (char *)malloc((length + 1) * sizeof(char));
+        strcpy(*(words + i), temp);
+        printf("%s\n", *(words + i));
+    }
+    free(temp);
+
+    while (*words[c] != '\0' && c < 20) {
+        if ((*words[c] >= 'a' && *words[c] <= 'z') || (*words[c] >= 'A' &&  *words[c] <= 'Z')) {                    
+            freq[*words[c] - 'a']++;
+            words[c]++;
+        }
+        c++;
+    }
+
+    for (i = 0; i < 26; i++) {
+        printf("%c occurs %d times in the entered string.\n", i + 'a', freq[c]);
+    }
+    return 0;
+}
+

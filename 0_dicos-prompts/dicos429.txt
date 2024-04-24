@@ -1,0 +1,41 @@
+
+I want to give the user the option to specify one file (here it is ground_truth_filename). If he does not specify the option, I want to make assumptions on the default filename. 
+However, I am not able to check if the ground_truth_filename is NULL or zero even though I initialized it as 0 in the main program. If the argument is passed by user I assign ground_truth_filename to that argument. But the check ground_truth_filename == 0 gives me an assert error. 
+Any help will be appreciated.
+int processFile(const char *filename, 
+                YAML::Emitter &out_yaml, 
+                char *ground_truth_filename)
+{   
+    std::cout << "Here" << std::endl;
+
+    if (ground_truth_filename == 0)
+        sprintf(ground_truth_filename,"%s.yaml",filename);        
+
+    std::ifstream imgstrm(filename, std::ios::binary | std::ios::in);
+
+    if (imgstrm.bad() || !imgstrm.is_open())
+    {
+        fprintf(stderr, "Failed to open file: %s\n", filename);
+        return FILE_ERROR;
+    }
+
+    // get ground truth
+    std::ifstream ground_truth_stream(ground_truth_filename);
+
+    if (!ground_truth_stream.is_open()) 
+    {
+        fprintf(stderr, "Failed to open file: %s\n", ground_truth_filename);
+        return FILE_ERROR;
+    }
+}
+
+Here is how the function is called. Perhaps I should initialize ground_truth_filename = '\0'?
+char *ground_truth_filename = 0;
+for (int i = 1; i + 1 < argc; i += 2) {
+            if (!strcmp(argv[i], "--snapshot-markup")) {
+                ground_truth_filename = argv[i + 1];
+                markupFlag = true;
+            }
+        }
+processFile(filename, out_yaml, ground_truth_filename)
+

@@ -1,0 +1,8 @@
+
+I came across this question while looking for an effective way to allocate large multi-dimensional arrays contiguously in memory. The accepted answer suggests that for a 3D array of size sz[0] x sz[1] x sz[2] one should use this method, which is currently melting my feeble brain:
+int (*a)[sz[1]][sz[2]] = calloc(sz[0], sizeof(*a));
+...
+free(a)
+
+the left hand of that statement looks like a 2D array of int * allocated on the stack. The right side is a single (?!) call to calloc() that allocates int * on the heap. Since sizeof(*a)==sizeof(int *) (right?) this looks like too few allocations to make any sense, since it appears to allocate sz[0]x int * bytes, and yet it works to index over the full intended size of the array.
+Can someone please help me understand how exactly this definition works to produce the intended result? Is the C compiler repeating the call to calloc for every entry in the table defined on the left? And if so, how does a single call to free() suffice to get rid of it? Does the resulting array reside entirely on the heap, or is it mixing a reference table on the stack that points to memory allocated on the heap?

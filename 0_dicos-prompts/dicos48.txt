@@ -1,0 +1,53 @@
+
+i have a file needed to be read by code. The file is shown as below. The very ﬁrst line of the ﬁle contains a single integer, indicating the number of journal entries in the ﬁle. I need to write a C program to read a ﬁle and store the contents in a dynamically-allocated array of structs. 
+4
+12/04/2010 
+Interview went well I think, though was told to wear shoes. 
+18/04/2010 
+Doc advised me to concentrate on something... I forget. 
+03/05/2010
+Was asked today if I was an art exhibit. 
+19/05/2010 
+Apparently mudcakes not made of mud, or angry wasps.
+
+I was able to strtok() the day, month and year to store in my struct, however I am stuck in saving the strings to my structs.
+Here is my code for strtok(),
+FILE* file=fopen("struct.txt","r");
+        if (file==NULL){
+            perror("Error opening file\n.");}
+            else {
+                fscanf(file,"%d",&size);
+                 res=(Diary*)malloc(size*sizeof(Diary));
+                 fscanf(file,"%*[^\n]");
+while(fgets(day,1024,file)!= NULL){
+    oken=strtok(day,"/");
+    h[i]=atoi(oken);          */h[i] is my day
+    oken=strtok(NULL,"/");
+    fre[i]=atoi(oken);        */fre[i] is the month
+    oken=strtok(NULL,"/");
+    re[i]=atoi(oken);          */ re[i] is the year
+    okena=strtok(day,"\n");
+    strcpy(rese[i],okena);    */i had declared rese as char rese[1024]
+    printf("%s",okena);
+    i++;
+   }
+
+the program is not working with that strcpy(), when i run it, it keep crashing. However if i remove the strcpy(), it will print as follow:
+12
+Interview went well I think, though was told to wear shoes. 
+18
+Doc advised me to concentrate on something... I forget. 
+03
+Was asked today if I was an art exhibit. 
+19
+Apparently mudcakes not made of mud, or angry wasps.
+
+which this is not the strings i want to store in my struct as well. I am stuck in how to store the strings into a struct. My struct is 
+typedef struct journal{
+int day;
+int month;
+int year;
+char entry[1024];
+} Diary;
+
+Any good souls could tell me what is wrong?

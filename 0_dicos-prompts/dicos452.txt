@@ -1,0 +1,16 @@
+
+So, I am building a program that should modify a specific number of bytes in a binary. You first input the binary, then the offset from which point you want the hex instructions to be replaced and then the bytes themselves.
+Example:
+I load example.exe
+I specify offset 0 (beginning of the file)
+I specify hex instructions: 4D FF 33 FD FE
+The first 5 instructions of the file should be replaced with the ones I provided. I use fwrite to do the modifications and scanf to get the offset and the hex instructions, however, I can't find a way to actually store them as hex. The fwrite actually writes 4D FF 33 FD FE as text inside the binary file instead of hex. I assume I save them wrong in the char in the first place. I am new to C, so what I found online didn't really help.
+Here's my code:
+      scanf("%ld",&offset_ed);//get the offset from the user.
+      fseek(f, offset_ed, SEEK_SET);
+      printf("Specify HEX bytes to be written to the binary:  ");
+      scanf("%s\n", &hexes);
+      fwrite (hexes , sizeof(char), sizeof(hexes), f);
+      fclose (f);
+
+Where hexes is a char hexes;

@@ -1,0 +1,30 @@
+
+The interview question is more complicated, so i simplified it as
+
+input data will be in a format of A,B
+A is a number between 0 and 18446744073709551615(mysql bigint)
+B is a random string
+we will provide IO part 
+
+You should provide two functions in c/c++
+
+set(unsigend long long A, char *B) 
+get(unsigend long long A)
+
+data struct and algorithm is up to you.
+Requirements
+
+set should be O(1)
+get should be O(1)
+
+Put in mind that we might call set 100 million times
+Any ideas? I did not give a good answer
+my answer was incomplete:
+typedef data {
+    unsigned long long A;
+    char *B;
+    data *next;
+}
+
+set is just malloc a new data and append to the list
+but failed in get part.

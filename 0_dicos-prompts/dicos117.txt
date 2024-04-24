@@ -1,0 +1,97 @@
+
+These are the errors I'm getting for my program.
+myString1.cpp: In constructor ‘MyString1::MyString1(char*, int)’:
+myString1.cpp:6: error: expected primary-expression before ‘]’ token
+myString1.cpp:6: error: expected primary-expression before ‘]’ token
+myString1.cpp: In member function ‘MyString1 MyString1::append(MyString1)’: 
+myString1.cpp:11: error: invalid use of member (did you forget the ‘&’ ?) 
+myString1.cpp: In member function ‘void MyString1::clear()’:
+myString1.cpp:25: error: expected primary-expression before ‘]’ token 
+myString1.cpp:25: error: expected primary-expression before ‘{’ token
+myString1.cpp:25: error: expected `;' before ‘{’ token 
+myString1.cpp: In member function ‘bool MyString1::empty()’:
+myString1.cpp:29: error: expected primary-expression before ‘]’ token
+myString1.cpp:31: error: expected primary-expression before ‘else’ 
+myString1.cpp:31: error: expected `;'  before ‘else’
+
+And here is my program in the three different parts.
+myString1.h
+#ifndef MYSTRING1_H
+#define MYSTRING1_H
+
+class MyString1
+{
+  private:
+   char chars[];
+   int size;
+  public:
+   MyString1();
+   MyString1(char chars[], int size);
+   MyString1 append(MyString1 s);
+   char at(int index);
+   int length();
+   void clear();
+   bool empty();
+   int find(char ch);
+};
+#endif
+
+myString1.cpp
+#include "myString1.h"
+using namespace std;
+
+MyString1::MyString1(char chars[], int size)
+{
+  this->chars[] = chars[];
+  this->size = size;
+}
+MyString1 MyString1::append(MyString1 s)
+{
+  for(int i = size; i > size - s.length; i++)
+    chars[i] = s.at(i);
+}
+char MyString1::at(int index)
+{
+  return chars[index];
+}
+int MyString1::length()
+{
+  return size;
+}
+void MyString1::clear()
+{
+  size = 0;
+  chars[] = {};
+}
+bool MyString1::empty()
+{
+  if(chars[]){
+    return true;
+    else
+      return false;
+  }
+}
+int MyString1::find(char ch)
+{
+  for(int i = 0; i < size; i++)
+    if(chars[i] = ch)
+      return i;
+}
+
+testMyString1.cpp
+#include <iostream>
+#include "myString1.h"
+using namespace std;
+
+int main()
+{
+  MyString1 first("cat", 4);
+  MyString1 second("dog", 4);
+  cout << first.at(1) << " and " << second.at(1) << endl;
+  first.append(second);
+  cout << first.at(6) << endl;
+
+  return 0;
+}
+
+Im a newbie just trying to learn how to use the g++ compiler so just looking for some help reading the error messages and debugging my code.  Also I'm sure there is some very bad code so any help is appreciated.

@@ -1,0 +1,10 @@
+
+I want to print the data stored in a file which is randomly cased in all caps and strupr() seems to be something that's been listed by someone previously but its not a standard function and may not be cross platform. Is there something which is cross platform?
+EDIT 1: 
+                                fgets(input1,254,title);
+                                fgets(input2,254,author);
+                                input1[strcspn(input1, "\n")] = '\0';
+                                input2[strcspn(input2, "\n")] = '\0';
+                                printf("<%s> <%s>\n",input1,input2 );
+
+I want to print the string stored in input1 and input2 in uppercase. How to do that?

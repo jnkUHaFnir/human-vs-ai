@@ -1,0 +1,1 @@
+    if (strcmp(string1, string2) == 1)

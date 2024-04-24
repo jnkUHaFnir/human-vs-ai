@@ -1,0 +1,8 @@
+
+I have a FILE * from a pipe (popen), and I wanna pass it to char *artist.
+The size of information that will be in the FILE is unknown, so it should use malloc().
+FILE *tmp1;
+char *artist;
+tmp1 = popen("cmus-remote -Q | grep 'tag artist' | sed s/'tag artist'/''/g | sed '1s/^.//'", "r");
+
+How can I do this?

@@ -1,0 +1,7 @@
+
+I have a program that reads a "raw" list of in-game entities, and I intend to make an array holding an index number (int) of an indeterminate number of entities, for processing various things. I would like to avoid using too much memory or CPU for keeping such indexes...
+A quick and dirty solution I use so far is to declare, in the main processing function (local focus) the array with a size of the maximum game entities, and another integer to keep track of how many have been added to the list.
+This isn't satisfactory, as every list holds 3000+ arrays, which isn't that much, but feels like a waste, since I'll possible use the solution for 6-7 lists for varying functions.
+I haven't found any C (not C++ or C#) specific solutions to achieve this. I can use pointers, but I am a bit afraid of using them (unless it's the only possible way).
+The arrays do not leave the local function scope (they are to be passed to a function, then discarded), in case that changes things.
+If pointers are the only solution, how can I keep track of them to avoid leaks?
